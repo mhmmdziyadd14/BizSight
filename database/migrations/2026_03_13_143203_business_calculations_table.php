@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             // Menghubungkan ke user (karena kamu sudah install Breeze)
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('hpp_calculation_id');
             
             $table->string('product_name');
             $table->decimal('hpp', 15, 2);

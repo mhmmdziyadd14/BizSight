@@ -4,37 +4,51 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () { return view('welcome'); });
+/*
+|--------------------------------------------------------------------------
+| BIZSIGHT SECURE ROUTES
+|--------------------------------------------------------------------------
+*/
 
-// --- PENGATUR LALU LINTAS (Dashboard) ---
-// Route ini yang dipanggil Laravel Breeze setelah login sukses
-Route::get('/dashboard', function () {
-    if (auth()->user()->role === 'admin') {
-        return redirect()->route('admin.users');
-    }
-    return redirect()->route('business.index');
-})->middleware(['auth'])->name('dashboard');
+// 1. AKSES PUBLIK
+Route::get('/', function () { 
+    return view('welcome'); 
+})->name('landing');
 
-
-// --- AKSES USER (Wajib Login & Wajib Approved) ---
-Route::middleware(['auth', 'approved'])->group(function () {
+// 2. AKSES PROTEKSI (Hanya User Login yang bisa buka HPP & Checker)
+// Laravel akan otomatis mengarahkan Tamu ke halaman Login jika mencoba akses rute di bawah ini.
+Route::middleware(['auth', \App\Http\Middleware\CheckAppApproved::class])->group(function () {
+    
+    // Fitur Utama (Sekarang di dalam Auth agar tidak error layout)
+    Route::get('/hpp-calculator', [BusinessController::class, 'hppCreate'])->name('hpp.create');
     Route::get('/viability-checker', [BusinessController::class, 'index'])->name('business.index');
-    Route::post('/calculate', [BusinessController::class, 'store'])->name('calculate');
+    Route::get('/starter-kit', [BusinessController::class, 'downloadTemplate'])->name('download.template');
+
+    // Proses Simpan Data
+    Route::post('/calculate-viability', [BusinessController::class, 'store'])->name('calculate');
+    Route::post('/save-hpp', [BusinessController::class, 'hppStore'])->name('hpp.store');
+    
+    // Cetak Laporan
     Route::get('/print-pdf/{id}', [BusinessController::class, 'printPdf'])->name('print.pdf');
+    Route::get('/print-hpp/{id}', [BusinessController::class, 'hppPrint'])->name('hpp.print');
+
+    // Dashboard Hub
+    Route::get('/dashboard', function () {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.users');
+        }
+        return redirect()->route('business.index');
+    })->name('dashboard');
 });
 
-
-// --- AKSES ADMIN (Wajib Login & Role Admin) ---
-// Admin dipisah dari middleware 'approved' agar tidak ikut terblokir
+// 3. AKSES ADMIN
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
-    // Hilangkan kata 'admin' di depan /users karena sudah ada prefix
     Route::patch('/users/{id}/approve', [AdminController::class, 'approve'])->name('admin.users.approve');
-    Route::get('/all-products', [AdminController::class, 'allProducts'])->name('admin.product');
+    Route::get('/all-products', [AdminController::class, 'allProducts'])->name('admin.products');
 });
 
-
-// Route Menunggu Persetujuan (Halaman statis)
+// Rute Tunggu Approval
 Route::get('/waiting-approval', function () {
     return view('errors.waiting_approval');
 })->name('waiting.approval');

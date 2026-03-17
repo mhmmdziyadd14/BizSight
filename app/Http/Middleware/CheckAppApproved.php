@@ -22,7 +22,7 @@ class CheckAppApproved
 
             // Cek approval untuk user biasa
             if (!auth()->user()->is_approved) {
-                return response()->view('errors.waiting_approval');
+                return response()->view('waiting_approval');
             }
         }
 

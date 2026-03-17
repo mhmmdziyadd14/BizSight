@@ -1,196 +1,79 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Laporan Kelayakan Bisnis - {{ $data->product_name }}</title>
     <style>
-        /* CSS khusus untuk dompdf agar rapi saat diprint */
-        body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 12px;
-            color: #333;
-            line-height: 1.5;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #444;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            margin: 0;
-            text-transform: uppercase;
-            font-size: 20px;
-            color: #1a202c;
-        }
-        .header p {
-            margin: 5px 0 0;
-            color: #718096;
-        }
-        .section-title {
-            background-color: #f7fafc;
-            padding: 8px 12px;
-            font-weight: bold;
-            border-left: 4px solid #ecc94b; /* Warna kuning sesuai tema app */
-            margin-top: 20px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-        }
-        table th, table td {
-            text-align: left;
-            padding: 10px;
-            border-bottom: 1px solid #edf2f7;
-        }
-        table th {
-            background-color: #fdfdfd;
-            color: #4a5568;
-            width: 40%;
-        }
-        .verdict-box {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 10px;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 8px 15px;
-            border-radius: 99px;
-            font-weight: bold;
-            font-size: 14px;
-            background-color: #fefcbf;
-            border: 1px solid #ecc94b;
-            color: #744210;
-        }
-        .reason-text {
-            font-style: italic;
-            color: #4a5568;
-            margin-top: 10px;
-        }
-        .action-box {
-            background-color: #ebf8ff;
-            border-left: 4px solid #4299e1;
-            padding: 15px;
-            margin-top: 15px;
-        }
-        .action-box strong {
-            display: block;
-            margin-bottom: 5px;
-            color: #2b6cb0;
-        }
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 10px;
-            color: #a0aec0;
-            padding: 10px 0;
-            border-top: 1px solid #edf2f7;
-        }
-        .metric-row {
-            display: table;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .metric-col {
-            display: table-cell;
-            width: 33.33%;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #edf2f7;
-        }
-        .metric-value {
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-        }
-        .metric-label {
-            font-size: 9px;
-            color: #718096;
-            text-transform: uppercase;
-        }
+        @page { margin: 1cm; }
+        body { font-family: 'Helvetica', sans-serif; font-size: 11px; color: #1a1a1a; line-height: 1.5; }
+        .header { border-bottom: 3px solid #FACC15; padding-bottom: 20px; margin-bottom: 30px; }
+        .brand { font-size: 24px; font-weight: 900; font-style: italic; color: #000; letter-spacing: -1px; }
+        .brand span { color: #FACC15; }
+        .doc-title { float: right; font-size: 10px; font-weight: bold; color: #666; text-transform: uppercase; letter-spacing: 2px; }
+        .meta-grid { width: 100%; margin-bottom: 30px; }
+        .meta-label { font-size: 9px; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 5px; }
+        .meta-value { font-size: 14px; font-weight: bold; color: #000; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th { background-color: #f8f8f8; color: #666; font-size: 9px; font-weight: bold; text-transform: uppercase; padding: 12px 15px; border-bottom: 1px solid #eee; text-align: left; }
+        td { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; }
+        .text-right { text-align: right; }
+        .footer-note { margin-top: 50px; border-top: 1px solid #eee; pt-10; color: #999; font-size: 9px; text-align: center; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .total-container { float: right; width: 250px; background: #000; color: #fff; padding: 20px; border-radius: 10px; }
+        .total-label { font-size: 9px; color: #FACC15; text-transform: uppercase; margin-bottom: 5px; }
+        .total-amount { font-size: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <h1>Laporan Kelayakan Bisnis</h1>
-        <p>Produk: <strong>{{ $data->product_name }}</strong> | Tanggal: {{ $data->created_at->format('d F Y') }}</p>
+        <span class="brand"><span>Biz</span>Sight</span>
+        <span class="doc-title">Business Analysis Report</span>
     </div>
 
-    <div class="section-title">A. Data Input (Variabel Bisnis)</div>
-    <table>
+    <table class="meta-grid">
         <tr>
-            <th>HPP (COGS)</th>
-            <td>Rp {{ number_format($data->hpp, 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <th>Harga Jual ke Customer</th>
-            <td>Rp {{ number_format($data->selling_price, 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <th>Budget Iklan per Unit</th>
-            <td>Rp {{ number_format($data->ads_per_unit, 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <th>Biaya Operasional (5%)</th>
-            <td>Rp {{ number_format($data->operational_fee, 0, ',', '.') }}</td>
-        </tr>
-        <tr>
-            <th>Estimasi Produksi (Batch)</th>
-            <td>{{ $data->est_batch_quantity }} pcs</td>
+            <td style="border:none; width:50%;">
+                <div class="meta-label">ID Perhitungan</div>
+                <div class="meta-value">#{{ $data->hpp_id ?? 'BZS-REF-'.rand(100,999) }}</div>
+            </td>
+            <td style="border:none; width:50%;">
+                <div class="meta-label">Nama Produk</div>
+                <div class="meta-value">{{ $data->name ?? 'Project Tanpa Nama' }}</div>
+            </td>
         </tr>
     </table>
 
-    <div class="section-title">B. Hasil Perhitungan Otomatis</div>
-    <div class="metric-row">
-        <div class="metric-col">
-            <span class="metric-label">Net Profit / Unit</span>
-            <span class="metric-value">Rp {{ number_format($data->net_profit, 0, ',', '.') }}</span>
-        </div>
-        <div class="metric-col">
-            <span class="metric-label">Net Margin (%)</span>
-            <span class="metric-value">{{ number_format($data->net_margin_percent, 1) }}%</span>
-        </div>
-        <div class="metric-col">
-            <span class="metric-label">BEP (Balik Modal)</span>
-            <span class="metric-value">{{ $data->bep_unit }} Unit</span>
-        </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Komponen Bahan Baku</th>
+                <th>Volume</th>
+                <th class="text-right">Harga Satuan</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(isset($data->items) && $data->items->count() > 0)
+                @foreach($data->items as $item)
+                <tr>
+                    <td><strong>{{ $item->material->name }}</strong><br><span style="color:#999; font-size:8px;">{{ $item->material->type }}</span></td>
+                    <td>{{ $item->usage_amount }} {{ $item->material->unit }}</td>
+                    <td class="text-right">Rp {{ number_format($item->material->unit_price, 0, ',', '.') }}</td>
+                    <td class="text-right">Rp {{ number_format($item->subtotal_cost, 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+            @else
+                <tr><td colspan="4" style="text-align:center; color:#999;">Tidak ada rincian bahan baku.</td></tr>
+            @endif
+        </tbody>
+    </table>
+
+    <div class="total-container">
+        <div class="total-label">Total HPP Produksi / Unit</div>
+        <div class="total-amount">Rp {{ number_format($data->total_hpp_per_unit ?? 0, 0, ',', '.') }}</div>
     </div>
 
-    <div class="section-title">C. THE VERDICT (Analisis & Rekomendasi)</div>
-    <div class="verdict-box">
-        <div style="margin-bottom: 15px;">
-            <span style="font-size: 10px; color: #a0aec0; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 5px;">Profitability Status:</span>
-            <div class="status-badge">
-                {{ $latest->status_label ?? $data->status_label }}
-            </div>
-        </div>
+    <div style="clear: both;"></div>
 
-        <div style="margin-bottom: 15px;">
-            <span style="font-size: 10px; color: #a0aec0; font-weight: bold; text-transform: uppercase; display: block;">Logic Reason:</span>
-            <p class="reason-text">"{{ $data->logic_reason }}"</p>
-        </div>
-
-        <div class="action-box">
-            <strong>Action Required:</strong>
-            {{ $data->action_required }}
-        </div>
+    <div class="footer-note">
+        Analyzed by BizSight System • Developed by Muhammad Ziyad • ITENAS Bandung
     </div>
-
-    <div class="footer">
-        Laporan ini digenerate secara otomatis oleh Business Viability System pada {{ date('d/m/Y H:i') }}.
-    </div>
-
 </body>
 </html>
