@@ -1,56 +1,49 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| BIZSIGHT SECURE ROUTES
-|--------------------------------------------------------------------------
-*/
+// Landing Page
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
-// 1. AKSES PUBLIK
-Route::get('/', function () { 
-    return view('welcome'); 
-})->name('landing');
-
-// 2. AKSES PROTEKSI (Hanya User Login yang bisa buka HPP & Checker)
-// Laravel akan otomatis mengarahkan Tamu ke halaman Login jika mencoba akses rute di bawah ini.
-Route::middleware(['auth', \App\Http\Middleware\CheckAppApproved::class])->group(function () {
+// Middleware Auth
+Route::middleware(['auth', 'verified'])->group(function () {
     
-    // Fitur Utama (Sekarang di dalam Auth agar tidak error layout)
-    Route::get('/hpp-calculator', [BusinessController::class, 'hppCreate'])->name('hpp.create');
-    Route::get('/viability-checker', [BusinessController::class, 'index'])->name('business.index');
-    Route::get('/starter-kit', [BusinessController::class, 'downloadTemplate'])->name('download.template');
-
-    // Proses Simpan Data
-    Route::post('/calculate-viability', [BusinessController::class, 'store'])->name('calculate');
-    Route::post('/save-hpp', [BusinessController::class, 'hppStore'])->name('hpp.store');
-    
-    // Cetak Laporan
-    Route::get('/print-pdf/{id}', [BusinessController::class, 'printPdf'])->name('print.pdf');
-    Route::get('/print-hpp/{id}', [BusinessController::class, 'hppPrint'])->name('hpp.print');
-
-    // Dashboard Hub
     Route::get('/dashboard', function () {
-        if (auth()->user()->role === 'admin') {
-            return redirect()->route('admin.users');
-        }
-        return redirect()->route('business.index');
+        return view('dashboard');
     })->name('dashboard');
-});
 
-// 3. AKSES ADMIN
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
-    Route::patch('/users/{id}/approve', [AdminController::class, 'approve'])->name('admin.users.approve');
-    Route::get('/all-products', [AdminController::class, 'allProducts'])->name('admin.products');
-});
+    // --- FITUR ADMIN (Prefix /admin) ---
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/product', [AdminController::class, 'product'])->name('admin.product');
+        
+        // Rute untuk Approve User (WAJIB ADA untuk tombol Grant Access)
+        Route::patch('/users/{id}/approve', [AdminController::class, 'approve'])->name('admin.users.approve');
+    });
 
-// Rute Tunggu Approval
-Route::get('/waiting-approval', function () {
-    return view('errors.waiting_approval');
-})->name('waiting.approval');
+    // --- FITUR BUSINESS & HPP ---
+    Route::get('/business', [BusinessController::class, 'index'])->name('business.index');
+    Route::post('/calculate', [BusinessController::class, 'calculate'])->name('calculate');
+    Route::get('/hpp/create', [BusinessController::class, 'create'])->name('hpp.create');
+    Route::post('/hpp/store', [BusinessController::class, 'store'])->name('hpp.store');
+
+    // Utility
+    Route::get('/print-pdf/{id}', [BusinessController::class, 'printPdf'])->name('print.pdf');
+    Route::delete('/business/{id}', [BusinessController::class, 'destroy'])->name('business.destroy');
+    Route::get('/download-template', function() {
+        return response()->json(['status' => 'success', 'message' => 'Resource siap']);
+    })->name('download.template');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 require __DIR__.'/auth.php';

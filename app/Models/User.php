@@ -47,4 +47,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Helper to quickly check if the user has admin privileges.
+     */
+    public function isAdmin(): bool
+    {
+        return isset($this->role) && strcasecmp($this->role, 'admin') === 0;
+    }
 }
