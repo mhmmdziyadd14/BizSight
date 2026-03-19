@@ -18,6 +18,10 @@
                     <p class="mt-4 text-gray-500 font-medium max-w-xl italic">
                         Input detail produksi Anda. BizSight akan menghitung Harga Pokok Penjualan secara presisi sebelum Anda menentukan harga jual.
                     </p>
+                    <div class="mt-6 inline-flex items-center gap-3 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 px-6 py-4">
+                        <span class="text-xs font-black text-yellow-200 uppercase tracking-widest">Info</span>
+                        <p class="text-xs text-gray-200">Jika belum memiliki daftar bahan, silakan tambah di halaman <a href="{{ route('materials.index') }}" class="underline text-yellow-300 hover:text-white">Bahan Baku</a>.</p>
+                    </div>
                 </div>
                 <div class="mt-6 md:mt-0">
                     <span class="bg-gray-800 text-yellow-400 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-gray-700">
@@ -40,37 +44,48 @@
                             <div class="space-y-6">
                                 <div>
                                     <label class="text-[9px] font-black text-gray-600 uppercase tracking-widest block mb-2">Nama Produk</label>
-                                    <input type="text" name="product_name" required 
+                                    <input type="text" name="name" required 
                                         class="w-full bg-black/40 border-gray-800 rounded-2xl py-4 text-sm font-bold text-white focus:ring-yellow-400 focus:border-yellow-400 transition-all" 
-                                        placeholder="Contoh: Kemeja Tactical V1">
+                                        placeholder="Contoh: Kemeja Tactical V1" value="{{ old('name') }}">
                                 </div>
                                 <div>
                                     <label class="text-[9px] font-black text-gray-600 uppercase tracking-widest block mb-2">Kategori Bisnis</label>
                                     <select name="category" class="w-full bg-black/40 border-gray-800 rounded-2xl py-4 text-sm font-bold text-white focus:ring-yellow-400">
-                                        <option value="Fashion">Fashion & Apparel</option>
-                                        <option value="F&B">Culinary / F&B</option>
-                                        <option value="Furniture">Furniture</option>
-                                        <option value="Digital">Digital Product</option>
+                                        <option value="Fashion" {{ old('category') === 'Fashion' ? 'selected' : '' }}>Fashion & Apparel</option>
+                                        <option value="F&B" {{ old('category') === 'F&B' ? 'selected' : '' }}>Culinary / F&B</option>
+                                        <option value="Furniture" {{ old('category') === 'Furniture' ? 'selected' : '' }}>Furniture</option>
+                                        <option value="Digital" {{ old('category') === 'Digital' ? 'selected' : '' }}>Digital Product</option>
                                     </select>
+                                </div>
+                                <div>
+                                    <label class="text-[9px] font-black text-gray-600 uppercase tracking-widest block mb-2">Harga Jual Target (per unit)</label>
+                                    <input type="number" name="target_selling_price" min="0" step="0.01" value="{{ old('target_selling_price', 0) }}" 
+                                        class="w-full bg-black/40 border-gray-800 rounded-2xl py-4 text-sm font-bold text-white focus:ring-yellow-400 focus:border-yellow-400 transition-all">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Card Jasa -->
                         <div class="bg-yellow-400 p-8 rounded-[2.5rem] shadow-xl shadow-yellow-400/5">
-                            <h3 class="text-[10px] font-black text-black uppercase tracking-[0.3em] mb-8">02. Biaya Jasa / Makloon</h3>
+                            <h3 class="text-[10px] font-black text-black uppercase tracking-[0.3em] mb-8">02. Biaya Tambahan</h3>
                             <div class="space-y-6">
                                 <div>
                                     <label class="text-[9px] font-black text-black/40 uppercase tracking-widest block mb-2">Jasa Sablon / Unit (Rp)</label>
                                     <input type="number" name="screen_printing_fee" 
                                         class="fee-input w-full bg-white/30 border-none rounded-2xl py-4 text-lg font-black text-black focus:ring-black" 
-                                        value="0" min="0">
+                                        value="{{ old('screen_printing_fee', 0) }}" min="0">
                                 </div>
                                 <div>
                                     <label class="text-[9px] font-black text-black/40 uppercase tracking-widest block mb-2">Jasa Jahit / Unit (Rp)</label>
                                     <input type="number" name="sewing_fee" 
                                         class="fee-input w-full bg-white/30 border-none rounded-2xl py-4 text-lg font-black text-black focus:ring-black" 
-                                        value="0" min="0">
+                                        value="{{ old('sewing_fee', 0) }}" min="0">
+                                </div>
+                                <div>
+                                    <label class="text-[9px] font-black text-black/40 uppercase tracking-widest block mb-2">Biaya Lainnya (Rp)</label>
+                                    <input type="number" name="other_fees" 
+                                        class="fee-input w-full bg-white/30 border-none rounded-2xl py-4 text-lg font-black text-black focus:ring-black" 
+                                        value="{{ old('other_fees', 0) }}" min="0">
                                 </div>
                             </div>
                         </div>
@@ -90,34 +105,40 @@
                                 <table class="w-full text-left" id="materialsTable">
                                     <thead>
                                         <tr class="bg-gray-50/50">
-                                            <th class="px-10 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest w-1/2">Nama Bahan</th>
+                                            <th class="px-10 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest w-1/3">Bahan</th>
+                                            <th class="px-10 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest">Satuan</th>
                                             <th class="px-10 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest text-center">Qty Pakai</th>
                                             <th class="px-10 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest text-right">Subtotal</th>
+                                            <th class="px-10 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest text-right">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-50">
-                                        <!-- Row Bahan Baku -->
                                         <tr class="material-row group">
                                             <td class="px-10 py-8">
-                                                <input type="text" name="material_names[]" required 
-                                                    class="w-full border-none bg-transparent text-sm font-bold text-gray-900 focus:ring-0 p-0" 
-                                                    placeholder="Contoh: Kain Cotton Combed 30s">
-                                                <div class="flex items-center mt-2 space-x-3">
-                                                    <span class="text-[8px] font-black text-gray-400 uppercase">Harga/Satuan: Rp</span>
-                                                    <input type="number" name="material_prices[]" 
-                                                        class="price-input w-24 bg-transparent border-none p-0 text-[10px] font-black text-blue-600 focus:ring-0" 
-                                                        value="0">
-                                                </div>
+                                                <select name="material_ids[]" class="material-select w-full bg-transparent border-none text-sm font-bold text-gray-900 focus:ring-0" required>
+                                                    <option value="">-- Pilih Bahan --</option>
+                                                    @foreach($materials as $material)
+                                                        <option value="{{ $material->id }}" data-unit="{{ $material->unit }}" data-price="{{ $material->price }}">
+                                                            {{ $material->name }} ({{ $material->color ?? '–' }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td class="px-10 py-8">
+                                                <span class="unit-display text-sm font-bold text-gray-700">-</span>
                                             </td>
                                             <td class="px-10 py-8">
                                                 <div class="flex items-center justify-center bg-gray-50 rounded-xl px-4 py-2 border border-transparent focus-within:border-yellow-400 transition-all">
-                                                    <input type="number" step="0.01" name="material_usages[]" 
+                                                    <input type="number" step="0.01" name="usage_amounts[]" 
                                                         class="usage-input w-16 bg-transparent border-none text-center font-black text-gray-900 focus:ring-0" 
                                                         value="0">
                                                 </div>
                                             </td>
                                             <td class="px-10 py-8 text-right font-mono font-bold text-gray-900 subtotal-display">
                                                 Rp 0
+                                            </td>
+                                            <td class="px-10 py-8 text-right">
+                                                <button type="button" class="remove-row text-red-500 font-bold hover:text-red-700" aria-label="Hapus baris">×</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -160,13 +181,14 @@
 
             function calculateTotals() {
                 let totalMaterials = 0;
-                
+
                 // Hitung setiap baris material
                 document.querySelectorAll('.material-row').forEach(row => {
-                    const price = parseFloat(row.querySelector('.price-input').value) || 0;
+                    const select = row.querySelector('.material-select');
                     const usage = parseFloat(row.querySelector('.usage-input').value) || 0;
+                    const price = parseFloat(select.selectedOptions[0]?.dataset.price || 0) || 0;
                     const subtotal = price * usage;
-                    
+
                     row.querySelector('.subtotal-display').innerText = formatRupiah(subtotal);
                     totalMaterials += subtotal;
                 });
@@ -181,9 +203,25 @@
                 totalHppDisplay.innerText = formatRupiah(grandTotal);
             }
 
-            // Event Listener untuk input yang sudah ada
+            function syncRow(row) {
+                const select = row.querySelector('.material-select');
+                const unitSpan = row.querySelector('.unit-display');
+                const selected = select.selectedOptions[0];
+
+                unitSpan.innerText = selected ? (selected.dataset.unit || '-') : '-';
+                calculateTotals();
+            }
+
+            // Update ketika material dipilih
+            tableBody.addEventListener('change', (e) => {
+                if (e.target.classList.contains('material-select')) {
+                    syncRow(e.target.closest('.material-row'));
+                }
+            });
+
+            // Update ketika qty berubah
             tableBody.addEventListener('input', (e) => {
-                if (e.target.classList.contains('price-input') || e.target.classList.contains('usage-input')) {
+                if (e.target.classList.contains('usage-input')) {
                     calculateTotals();
                 }
             });
@@ -192,30 +230,45 @@
                 input.addEventListener('input', calculateTotals);
             });
 
+            function attachRemoveHandler(row) {
+                const btn = row.querySelector('.remove-row');
+                if (!btn) return;
+
+                btn.addEventListener('click', () => {
+                    const rowCount = tableBody.querySelectorAll('.material-row').length;
+                    if (rowCount <= 1) {
+                        // Jika hanya tersisa satu baris, hanya reset nilainya
+                        row.querySelector('.material-select').value = '';
+                        row.querySelector('.unit-display').innerText = '-';
+                        row.querySelector('.usage-input').value = 0;
+                        row.querySelector('.subtotal-display').innerText = 'Rp 0';
+                        calculateTotals();
+                        return;
+                    }
+
+                    row.remove();
+                    calculateTotals();
+                });
+            }
+
+            // Pasang handler remove ke semua baris awal
+            document.querySelectorAll('.material-row').forEach((row) => attachRemoveHandler(row));
+
             // Tambah baris baru
             document.getElementById('addRow').addEventListener('click', () => {
-                const firstRow = tableBody.querySelector('tr');
+                const firstRow = tableBody.querySelector('.material-row');
                 const newRow = firstRow.cloneNode(true);
-                
-                // Reset input di baris baru
-                newRow.querySelectorAll('input').forEach(input => {
-                    if (input.type === 'number') input.value = 0;
-                    else input.value = '';
-                });
+
+                // Reset nilai baris baru
+                newRow.querySelector('.material-select').value = '';
+                newRow.querySelector('.unit-display').innerText = '-';
+                newRow.querySelector('.usage-input').value = 0;
                 newRow.querySelector('.subtotal-display').innerText = 'Rp 0';
-                
-                // Tambahkan tombol hapus jika baris lebih dari satu
-                const deleteBtn = document.createElement('button');
-                deleteBtn.type = 'button';
-                deleteBtn.innerHTML = '×';
-                deleteBtn.className = 'ml-2 text-red-500 font-bold hover:text-red-700';
-                deleteBtn.onclick = function() {
-                    newRow.remove();
-                    calculateTotals();
-                };
-                
-                // Masukkan tombol hapus ke kolom terakhir jika diperlukan atau buat kolom baru
+
+                attachRemoveHandler(newRow);
+
                 tableBody.appendChild(newRow);
+                calculateTotals();
             });
             
             // Inisialisasi awal

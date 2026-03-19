@@ -28,10 +28,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // --- FITUR BUSINESS & HPP ---
+    // Halaman List HPP (Index)
     Route::get('/business', [BusinessController::class, 'index'])->name('business.index');
-    Route::post('/calculate', [BusinessController::class, 'calculate'])->name('calculate');
+    // Halaman Form HPP (Sesuai nama file Anda: hpp_create)
     Route::get('/hpp/create', [BusinessController::class, 'create'])->name('hpp.create');
+    // Proses Simpan HPP
     Route::post('/hpp/store', [BusinessController::class, 'store'])->name('hpp.store');
+    // Lihat detail hasil HPP
+    Route::get('/hpp/{id}', [BusinessController::class, 'show'])->name('hpp.show');
+    // Cetak PDF HPP
+    Route::get('/hpp/{id}/print', [BusinessController::class, 'printPdf'])->name('hpp.print');
+
+    // --- FITUR BAHAN BAKU (MATERIALS) ---
+    Route::get('/materials', [\App\Http\Controllers\MaterialController::class, 'index'])->name('materials.index');
+    Route::post('/materials', [\App\Http\Controllers\MaterialController::class, 'store'])->name('materials.store');
+    Route::delete('/materials/{id}', [\App\Http\Controllers\MaterialController::class, 'destroy'])->name('materials.destroy');
+
+    // Proses Kalkulasi Cepat (Business Checker)
+    Route::post('/calculate', [BusinessController::class, 'calculate'])->name('calculate');
 
     // Utility
     Route::get('/print-pdf/{id}', [BusinessController::class, 'printPdf'])->name('print.pdf');
