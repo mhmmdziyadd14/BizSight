@@ -21,7 +21,73 @@ class BusinessController extends Controller
                         ->orderBy('created_at', 'desc')
                         ->get();
 
-        return view('business.index', compact('calculations'));
+        // HPP list hanya digunakan untuk mengisi pilihan HPP yang sudah dibuat (bukan untuk ditampilkan di halaman Business)
+        $hppOptions = HppCalculation::where('user_id', Auth::id())
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
+        return view('business.index', compact('calculations', 'hppOptions'));
+    }
+
+    /**
+     * Menampilkan halaman daftar HPP.
+     */
+    public function hppIndex()
+    {
+        $hppCalculations = HppCalculation::where('user_id', Auth::id())
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
+        return view('business.hpp_index', compact('hppCalculations'));
+    }
+
+    /**
+     * Menampilkan halaman Bahan (Material) untuk HPP.
+     */
+    public function bahan()
+    {
+        $materials = Material::where('user_id', Auth::id())
+                        ->orderBy('name')
+                        ->get();
+
+        return view('business.hpp_bahan', compact('materials'));
+    }
+
+    /**
+     * Menampilkan data produk (HPP master).
+     */
+    public function products()
+    {
+        $products = HppCalculation::where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('business.hpp_products', compact('products'));
+    }
+
+    /**
+     * Menampilkan data persediaan bahan (Inventory).
+     */
+    public function inventory()
+    {
+        $materials = Material::where('user_id', Auth::id())
+                        ->orderBy('name')
+                        ->get();
+
+        return view('business.hpp_inventory', compact('materials'));
+    }
+
+    /**
+     * Menampilkan Bill of Material (BOM) data.
+     */
+    public function bom()
+    {
+        $bomList = HppCalculation::with('items.material')
+                        ->where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('business.hpp_bom', compact('bomList'));
     }
 
     /**
@@ -45,25 +111,47 @@ class BusinessController extends Controller
             'product_name' => 'required|string|max:255',
             'hpp' => 'required|numeric',
             'selling_price' => 'required|numeric',
+            'ads_per_unit' => 'nullable|numeric|min:0',
+            'admin_fee_percent' => 'nullable|numeric|min:0|max:100',
+            'overhead_percent' => 'nullable|numeric|min:0|max:100',
+            'tax_percent' => 'nullable|numeric|min:0|max:100',
+            'promo_percent' => 'nullable|numeric|min:0|max:100',
             'est_batch_quantity' => 'required|integer',
         ]);
 
         $hpp = $request->hpp;
         $sellingPrice = $request->selling_price;
         $ads = $request->ads_per_unit ?? 0;
+        $adminFeePct = $request->admin_fee_percent ?? 0;
+        $overheadPct = $request->overhead_percent ?? 0;
+        $taxPct = $request->tax_percent ?? 0;
+        $promoPct = $request->promo_percent ?? 0;
         $qty = $request->est_batch_quantity;
 
-        $netProfitPerUnit = $sellingPrice - $hpp - $ads;
+        // Total biaya (menambahkan biaya admin, overhead, dan pajak sebagai persen di atas HPP)
+        $costMultiplier = 1 + ($adminFeePct + $overheadPct + $taxPct) / 100;
+        $totalCostPerUnit = $hpp * $costMultiplier;
+
+        // Margin normal (tanpa promo)
+        $netProfitPerUnit = $sellingPrice - $totalCostPerUnit - $ads;
         $totalNetProfit = $netProfitPerUnit * $qty;
         $marginPercent = ($sellingPrice > 0) ? ($netProfitPerUnit / $sellingPrice) * 100 : 0;
 
-        // Logic Verdict
-        $status = $marginPercent >= 20 ? 'HEALTHY' : ($marginPercent > 0 ? 'RISKY' : 'DANGER');
+        // Margin setelah promo
+        $sellingPricePromo = $sellingPrice * (1 - ($promoPct / 100));
+        $netProfitPromoPerUnit = $sellingPricePromo - $totalCostPerUnit - $ads;
+        $promoMarginPercent = ($sellingPricePromo > 0) ? ($netProfitPromoPerUnit / $sellingPricePromo) * 100 : 0;
+
+        // Perbandingan margin normal vs promo
+        $marginDiffPercent = $marginPercent - $promoMarginPercent;
+
+        // Logic Verdict (berdasarkan margin promo)
+        $status = $promoMarginPercent >= 20 ? 'HEALTHY' : ($promoMarginPercent > 0 ? 'RISKY' : 'DANGER');
         
-        $reason = "Margin keuntungan " . number_format($marginPercent, 1) . "%.";
+        $reason = "Margin keuntungan " . number_format($promoMarginPercent, 1) . "%.";
         $action = $status == 'HEALTHY' ? 'Bisnis sehat, silakan lanjut.' : 'Evaluasi harga atau biaya produksi.';
 
-        $marginMatch = $sellingPrice - $hpp;
+        $marginMatch = $sellingPrice - $totalCostPerUnit;
         $bepUnit = ($marginMatch > 0) ? ceil(($ads * $qty) / $marginMatch) : 0;
 
         BusinessCalculation::create([
@@ -72,9 +160,16 @@ class BusinessController extends Controller
             'hpp' => $hpp,
             'selling_price' => $sellingPrice,
             'ads_per_unit' => $ads,
+            'admin_fee_percent' => $adminFeePct,
+            'overhead_percent' => $overheadPct,
+            'tax_percent' => $taxPct,
+            'promo_percent' => $promoPct,
+            'operational_fee' => 0, // default karena Business Checker tidak meminta input ini
             'est_batch_quantity' => $qty,
             'net_profit' => $totalNetProfit,
             'net_margin_percent' => $marginPercent,
+            'promo_margin_percent' => $promoMarginPercent,
+            'margin_diff_percent' => $marginDiffPercent,
             'status_label' => $status,
             'logic_reason' => $reason,
             'action_required' => $action,
@@ -90,6 +185,7 @@ class BusinessController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'hpp_id' => 'nullable|string|max:100|unique:hpp_calculations,hpp_id',
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
             'material_ids' => 'required|array|min:1',
@@ -115,8 +211,10 @@ class BusinessController extends Controller
             }
 
             $usage = floatval($usages[$idx] ?? 0);
-            $price = floatval($material->price);
-            $subtotal = $price * $usage;
+            $unitPrice = $material->purchase_volume > 0
+                ? ($material->price / $material->purchase_volume)
+                : $material->price;
+            $subtotal = $unitPrice * $usage;
 
             $totalRaw += $subtotal;
 
@@ -135,7 +233,7 @@ class BusinessController extends Controller
 
         $calculation = HppCalculation::create([
             'user_id' => Auth::id(),
-            'hpp_id' => 'BZS-' . strtoupper(uniqid()),
+            'hpp_id' => $data['hpp_id'] ?? ('BZS-' . strtoupper(uniqid())),
             'name' => $data['name'],
             'category' => $data['category'],
             'total_raw_material_cost' => $totalRaw,
@@ -150,7 +248,7 @@ class BusinessController extends Controller
             HppMaterialItem::create(array_merge($item, ['hpp_calculation_id' => $calculation->id]));
         }
 
-        return redirect()->route('hpp.show', $calculation->id)->with('success', 'HPP calculation saved.');
+        return redirect()->route('hpp.index')->with('success', 'HPP calculation saved.');
     }
 
     public function show($id)
@@ -162,6 +260,12 @@ class BusinessController extends Controller
     public function printPdf($id)
     {
         $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
+
+        if (! $hpp->printed_at) {
+            $hpp->printed_at = now();
+            $hpp->save();
+        }
+
         $pdf = Pdf::loadView('business.hpp_pdf', compact('hpp'));
         return $pdf->download("hpp-{$id}.pdf");
     }

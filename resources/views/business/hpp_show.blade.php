@@ -7,6 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @include('business.partials.hpp_nav')
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -16,9 +17,16 @@
                             <p class="text-sm text-gray-500">ID HPP: {{ $hpp->hpp_id }}</p>
                             <p class="text-sm text-gray-500">Dibuat: {{ $hpp->created_at->format('d M Y H:i') }}</p>
                         </div>
-                        <div class="flex gap-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-3">
                             <a href="{{ route('hpp.create') }}" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition">Buat Baru</a>
-                            <a href="{{ route('hpp.print', $hpp->id) }}" class="px-6 py-3 bg-yellow-400 text-black rounded-xl font-black text-xs uppercase tracking-widest hover:bg-yellow-300 transition">Cetak PDF</a>
+                            @if($hpp->printed_at)
+                                <div class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs uppercase tracking-widest">
+                                    Sudah dicetak: {{ $hpp->printed_at->format('d M Y H:i') }}
+                                </div>
+                                <a href="{{ route('hpp.print', $hpp->id) }}" class="px-6 py-3 bg-yellow-400 text-black rounded-xl font-black text-xs uppercase tracking-widest hover:bg-yellow-300 transition">Cetak Ulang</a>
+                            @else
+                                <a href="{{ route('hpp.print', $hpp->id) }}" class="px-6 py-3 bg-yellow-400 text-black rounded-xl font-black text-xs uppercase tracking-widest hover:bg-yellow-300 transition">Cetak PDF</a>
+                            @endif
                         </div>
                     </div>
 

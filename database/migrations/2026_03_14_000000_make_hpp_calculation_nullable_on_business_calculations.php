@@ -9,10 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('business_calculations', function (Blueprint $table) {
-            // drop foreign key on hpp_calculation_id if it exists
-            $table->dropForeign(['hpp_calculation_id']);
-            // make column nullable
-            $table->unsignedBigInteger('hpp_calculation_id')->nullable()->change();
+            // Make the foreign key column optional so Business Checker can store calculations
+            // even if tidak ada HPP yang dipilih.
+            if (Schema::hasColumn('business_calculations', 'hpp_calculation_id')) {
+                $table->unsignedBigInteger('hpp_calculation_id')->nullable()->change();
+            }
         });
     }
 

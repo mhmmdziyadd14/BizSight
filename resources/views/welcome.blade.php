@@ -114,7 +114,7 @@
                 <div @click="openModal = true; activeFeature = { 
                         title: 'Kalkulator HPP Detail', 
                         desc: 'Input bahan baku dari gudang Anda, tambahkan jasa sablon, bordir, hingga jahit. Dapatkan hasil HPP per unit yang sangat presisi.',
-                        url: '{{ route('hpp.create') }}',
+                        url: '{{ route('hpp.bahan') }}',
                         icon: 'HPP',
                         theme: 'yellow'
                     }" 

@@ -44,6 +44,17 @@
                                     placeholder="Contoh: Sayur Organik X">
                             </div>
 
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Pilih HPP yang sudah dibuat</label>
+                                <select id="hppSelect" class="w-full bg-gray-50 border-gray-200 rounded-xl py-3 text-sm font-bold focus:ring-yellow-400 focus:border-yellow-400">
+                                    <option value="">-- Tidak Pakai (Isi manual) --</option>
+                                    @foreach($hppOptions as $option)
+                                        <option value="{{ $option->total_hpp_per_unit }}" data-hpp="{{ $option->total_hpp_per_unit }}">{{ $option->hpp_id }} • {{ $option->name }} • Rp{{ number_format($option->total_hpp_per_unit, 0, ',', '.') }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="mt-2 text-xs text-gray-400">Pilih HPP untuk mengisi nilai HPP ke formulir secara otomatis.</p>
+                            </div>
+
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">HPP & Selling Price</label>
@@ -58,6 +69,38 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Admin Fee (%)</label>
+                                        <div class="relative">
+                                            <input type="number" step="0.01" name="admin_fee_percent" class="w-full border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-bold focus:ring-yellow-400" value="0" placeholder="Admin Fee">
+                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Overhead (%)</label>
+                                        <div class="relative">
+                                            <input type="number" step="0.01" name="overhead_percent" class="w-full border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-bold focus:ring-yellow-400" value="0" placeholder="Overhead">
+                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Pajak (%)</label>
+                                        <div class="relative">
+                                            <input type="number" step="0.01" name="tax_percent" class="w-full border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-bold focus:ring-yellow-400" value="0" placeholder="Pajak">
+                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Promo (%)</label>
+                                        <div class="relative">
+                                            <input type="number" step="0.01" name="promo_percent" class="w-full border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-bold focus:ring-yellow-400" value="0" placeholder="Promo">
+                                            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-xs text-gray-400">Akan dibandingkan margin normal dengan margin promo (selisih margin ditampilkan di bawah).</p>
 
                                 <div>
                                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Ads & Batch Quantity</label>
@@ -85,6 +128,15 @@
                 </div>
 
                 <div class="lg:col-span-8">
+                    <div class="mb-10 bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-black text-gray-900">Business Checker</h3>
+                            <a href="{{ route('hpp.index') }}" class="text-xs font-black uppercase tracking-widest text-yellow-600 hover:text-yellow-400">Lihat Daftar HPP</a>
+                        </div>
+
+                        <p class="text-sm text-gray-500">Gunakan panel di samping untuk menganalisis kelayakan bisnis. Jika ingin pakai HPP yang sudah dibuat, pilih dari daftar HPP di halaman khusus.</p>
+                    </div>
+
                     @if($calculations->count() > 0)
                         @php $latest = $calculations->first(); @endphp
                         
@@ -94,18 +146,26 @@
                                     <span class="bg-yellow-100 text-yellow-600 w-6 h-6 rounded-full flex items-center justify-center mr-3 text-xs">B</span>
                                     Financial Breakdown
                                 </h3>
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                                <div class="grid grid-cols-2 md:grid-cols-6 gap-6 text-center">
                                     <div class="p-4 bg-gray-50 rounded-2xl">
                                         <div class="text-[10px] font-black text-gray-400 uppercase mb-2">Margin/Unit</div>
                                         <div class="text-lg font-bold text-gray-900">Rp{{ number_format($latest->selling_price - $latest->hpp, 0, ',', '.') }}</div>
                                     </div>
                                     <div class="p-4 bg-gray-50 rounded-2xl">
-                                        <div class="text-[10px] font-black text-gray-400 uppercase mb-2">Total Ads Cost</div>
-                                        <div class="text-lg font-bold text-gray-900">Rp{{ number_format($latest->ads_per_unit * $latest->est_batch_quantity, 0, ',', '.') }}</div>
+                                        <div class="text-[10px] font-black text-gray-400 uppercase mb-2">Margin Normal (%)</div>
+                                        <div class="text-lg font-bold text-gray-900">{{ number_format($latest->net_margin_percent, 1) }}%</div>
                                     </div>
                                     <div class="p-4 bg-gray-50 rounded-2xl">
-                                        <div class="text-[10px] font-black text-gray-400 uppercase mb-2">Batch Revenue</div>
-                                        <div class="text-lg font-bold text-gray-900">Rp{{ number_format($latest->selling_price * $latest->est_batch_quantity, 0, ',', '.') }}</div>
+                                        <div class="text-[10px] font-black text-gray-400 uppercase mb-2">Margin Promo (%)</div>
+                                        <div class="text-lg font-bold text-gray-900">{{ number_format($latest->promo_margin_percent ?? 0, 1) }}%</div>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 rounded-2xl">
+                                        <div class="text-[10px] font-black text-gray-400 uppercase mb-2">Selisih Margin</div>
+                                        <div class="text-lg font-bold text-gray-900">{{ number_format($latest->margin_diff_percent ?? 0, 1) }}%</div>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 rounded-2xl">
+                                        <div class="text-[10px] font-black text-gray-400 uppercase mb-2">Total Ads Cost</div>
+                                        <div class="text-lg font-bold text-gray-900">Rp{{ number_format($latest->ads_per_unit * $latest->est_batch_quantity, 0, ',', '.') }}</div>
                                     </div>
                                     <div class="p-4 bg-yellow-50 border border-yellow-100 rounded-2xl">
                                         <div class="text-[10px] font-black text-yellow-600 uppercase mb-2">Net Profit/Unit</div>
@@ -128,8 +188,20 @@
                                         <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-10 pb-10 border-b border-gray-100">
                                             <div>
                                                 <div class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">Health Status</div>
-                                                <div class="text-5xl font-black text-gray-900 tracking-tighter">{{ $latest->status_label }}</div>
-                                            </div>
+                                        @php
+                                            $statusClass = 'bg-gray-200 text-gray-800';
+                                            if (strtoupper($latest->status_label) === 'HEALTHY') {
+                                                $statusClass = 'bg-green-100 text-green-800';
+                                            } elseif (strtoupper($latest->status_label) === 'RISKY') {
+                                                $statusClass = 'bg-yellow-100 text-yellow-800';
+                                            } elseif (strtoupper($latest->status_label) === 'DANGER') {
+                                                $statusClass = 'bg-red-100 text-red-800';
+                                            }
+                                        @endphp
+                                        <div class="text-5xl font-black tracking-tighter">
+                                            <span class="inline-flex items-center px-4 py-2 rounded-full font-black {{ $statusClass }}">{{ $latest->status_label }}</span>
+                                        </div>
+                                    </div>
                                             <div class="flex space-x-4">
                                                 <div class="text-right">
                                                     <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Net Margin</div>
@@ -150,8 +222,22 @@
                                             </div>
                                             <div class="space-y-3">
                                                 <div class="text-xs font-black text-gray-400 uppercase tracking-[0.1em]">Action Required</div>
-                                                <div class="bg-gray-900 text-white p-6 rounded-3xl shadow-lg relative overflow-hidden group">
-                                                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-yellow-400 rounded-full opacity-10 group-hover:scale-150 transition-all duration-700"></div>
+                                                @php
+                                                    $actionClass = 'bg-gray-900 text-white';
+                                                    $actionDot = 'bg-yellow-400';
+                                                    if (strtoupper($latest->status_label) === 'HEALTHY') {
+                                                        $actionClass = 'bg-green-900 text-white';
+                                                        $actionDot = 'bg-green-400';
+                                                    } elseif (strtoupper($latest->status_label) === 'RISKY') {
+                                                        $actionClass = 'bg-yellow-900 text-white';
+                                                        $actionDot = 'bg-yellow-400';
+                                                    } elseif (strtoupper($latest->status_label) === 'DANGER') {
+                                                        $actionClass = 'bg-red-900 text-white';
+                                                        $actionDot = 'bg-red-400';
+                                                    }
+                                                @endphp
+                                                <div class="{{ $actionClass }} p-6 rounded-3xl shadow-lg relative overflow-hidden group">
+                                                    <div class="absolute -right-4 -top-4 w-16 h-16 {{ $actionDot }} rounded-full opacity-10 group-hover:scale-150 transition-all duration-700"></div>
                                                     <p class="text-sm font-semibold leading-relaxed relative z-10">{{ $latest->action_required }}</p>
                                                 </div>
                                             </div>
@@ -189,4 +275,25 @@
             <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">© 2026 Developed by Muhammad Ziyad • ITENAS Bandung</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hppSelect = document.getElementById('hppSelect');
+            const hppInput = document.querySelector('input[name="hpp"]');
+
+            if (!hppSelect || !hppInput) return;
+
+            hppSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+
+                // Jika memilih placeholder (manual), kosongkan nilai agar pengguna bisa mengisi sendiri
+                if (!selectedValue) {
+                    hppInput.value = '';
+                    return;
+                }
+
+                hppInput.value = selectedValue;
+            });
+        });
+    </script>
 </x-app-layout>

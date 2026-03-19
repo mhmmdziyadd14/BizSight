@@ -15,5 +15,8 @@ class Material extends Model
         'price',
         'purchase_volume',
         'unit',
+        'stock_initial',
+        'stock_in',
+        'stock_out',
     ];
 }
