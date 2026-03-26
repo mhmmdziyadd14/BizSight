@@ -8,30 +8,48 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    // Method untuk menampilkan daftar user
-    public function users()
+    /**
+     * Menampilkan Dashboard Utama Admin.
+     */
+    public function index()
     {
-        // Ambil user dengan role 'user'
-        $users = \App\Models\User::where('role', 'user')->get();
-        // Ambil semua kalkulasi produk
-        $allCalculations = \App\Models\BusinessCalculation::with('user')->latest()->get();
+        // Mengambil semua user (untuk statistik dan tabel otorisasi)
+        // Kita urutkan agar yang belum di-approve muncul di atas
+        $users = User::orderBy('is_approved', 'asc')->get();
+
+        // Mengambil semua perhitungan bisnis dari seluruh pengguna (global monitoring)
+        $allCalculations = BusinessCalculation::with('user')->orderBy('created_at', 'desc')->get();
+
         return view('admin.dashboard', compact('users', 'allCalculations'));
     }
 
-    // Method untuk menyetujui user
+    /**
+     * Menyetujui akses pengguna (Otorisasi).
+     */
     public function approve($id)
     {
         $user = User::findOrFail($id);
-        $user->update(['is_approved' => 1]);
+        $user->is_approved = true;
+        $user->save();
 
-        return back()->with('success', 'User berhasil disetujui!');
+        return redirect()->back()->with('success', 'User access granted successfully.');
     }
 
-    // Method untuk melihat semua produk yang dicoba user
-    public function allProducts()
+    /**
+     * Halaman manajemen user (opsional jika dipisah).
+     */
+    public function users()
     {
-        // Ambil data produk/kalkulasi dari project AVS Store
-        $calculations = \App\Models\BusinessCalculation::with('user')->latest()->get();
-        return view('admin.product', compact('calculations'));
+        $users = User::all();
+        return view('admin.users', compact('users'));
+    }
+
+    /**
+     * Halaman monitoring produk (opsional jika dipisah).
+     */
+    public function product()
+    {
+        $allCalculations = BusinessCalculation::with('user')->get();
+        return view('admin.product', compact('allCalculations'));
     }
 }

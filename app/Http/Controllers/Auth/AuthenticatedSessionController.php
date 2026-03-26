@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Menampilkan halaman login.
      */
     public function create(): View
     {
@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Menangani permintaan autentikasi.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,11 +28,24 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        /**
+         * LOGIKA REDIRECT BERDASARKAN ROLE
+         * Kita pastikan pengecekan role dilakukan secara ketat.
+         */
+        $user = Auth::user();
+
+        // Redirect admin users to the admin dashboard (case-insensitive role matching)
+        if (isset($user->role) && strcasecmp($user->role, 'admin') === 0) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Untuk user biasa, gunakan intended agar jika mereka klik HPP/Checker
+        // sebelum login, mereka langsung balik ke fitur tersebut.
+        return redirect()->intended(route('welcome', absolute: false));
     }
 
     /**
-     * Destroy an authenticated session.
+     * Menghancurkan sesi autentikasi (Logout).
      */
     public function destroy(Request $request): RedirectResponse
     {

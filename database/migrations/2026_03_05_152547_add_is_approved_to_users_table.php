@@ -11,17 +11,21 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Default 0 artinya belum di-approve
+        // Tambahkan kolom hanya jika belum ada
+        if (!Schema::hasColumn('users', 'is_approved')) {
             $table->boolean('is_approved')->default(false)->after('password');
-        });
+        }
+    });
     }
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+       Schema::table('users', function (Blueprint $table) {
+        if (Schema::hasColumn('users', 'is_approved')) {
+            $table->dropColumn('is_approved');
+        }
+    });
     }
 };

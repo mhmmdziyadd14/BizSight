@@ -16,13 +16,13 @@ class CheckAppApproved
     {
         if (auth()->check()) {
             // Izinkan Admin lewat tanpa cek approval
-            if (auth()->user()->role === 'admin') {
+if (auth()->user()->isAdmin()) {
                 return $next($request);
             }
 
             // Cek approval untuk user biasa
             if (!auth()->user()->is_approved) {
-                return response()->view('errors.waiting_approval');
+                return response()->view('waiting_approval');
             }
         }
 
@@ -31,7 +31,7 @@ class CheckAppApproved
     public function index()
     {
         // Proteksi tambahan: Jika bukan admin, tendang balik
-        if (auth()->user()->role !== 'admin') {
+        if (! auth()->user()->isAdmin()) {
             return redirect('/dashboard');
         }
 

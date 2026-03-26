@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
         'is_approved',
     ];
 
@@ -45,5 +46,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Helper to quickly check if the user has admin privileges.
+     */
+    public function isAdmin(): bool
+    {
+        return isset($this->role) && strcasecmp($this->role, 'admin') === 0;
     }
 }
