@@ -186,14 +186,26 @@
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                                     </svg>
-                                    Cetak Ulang
+                                    Cetak HPP
+                                </a>
+                                <a href="{{ route('hpp.bom.print', $hpp->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-600 transition-all shadow-md">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                    </svg>
+                                    Cetak BOM
                                 </a>
                             @else
                                 <a href="{{ route('hpp.print', $hpp->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-orange text-white rounded-xl font-black text-xs uppercase tracking-wider hover:shadow-lg transition-all">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                                     </svg>
-                                    Cetak PDF
+                                    Cetak HPP
+                                </a>
+                                <a href="{{ route('hpp.bom.print', $hpp->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-600 transition-all">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                    </svg>
+                                    Cetak BOM
                                 </a>
                             @endif
                         </div>
@@ -288,27 +300,41 @@
                     <!-- Materials Table -->
                     <div class="mt-10 bg-white rounded-2xl overflow-hidden border border-orange-100">
                         <div class="bg-gradient-navy px-6 py-4">
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 mb-4">
                                 <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
                                 <div class="text-xs font-black text-white uppercase tracking-wider">Detail Komponen Bahan</div>
                             </div>
+                            
+                            <!-- Quantity Multiplier Input -->
+                            <div class="bg-orange-500/20 border border-orange-400/30 rounded-xl p-4">
+                                <label class="text-[10px] font-black text-orange-200 uppercase tracking-wider block mb-2">Jumlah Produk yang Ingin Dibuat</label>
+                                <div class="flex items-center gap-3">
+                                    <input type="number" id="quantityMultiplier" class="w-32 bg-white border border-orange-300 rounded-lg px-4 py-2.5 text-sm font-bold text-navy-800 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all" value="1" min="1" step="1">
+                                    <span class="text-orange-100 font-black text-sm">pcs</span>
+                                    <div class="ml-auto text-right">
+                                        <div class="text-[10px] font-bold text-orange-200 uppercase tracking-wider">Total Bahan (Rp)</div>
+                                        <div id="totalBahanRp" class="text-lg font-black text-white">Rp{{ number_format($hpp->total_raw_material_cost, 0, ',', '.') }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left">
+                            <table class="w-full text-left" id="materialsTable">
                                 <thead class="bg-orange-50/70 border-b border-orange-100">
                                     <tr class="text-[10px] font-black text-navy-600 uppercase tracking-wider">
                                         <th class="px-6 py-4">Bahan</th>
                                         <th class="px-6 py-4">Satuan</th>
                                         <th class="px-6 py-4 text-right">Harga / Unit</th>
-                                        <th class="px-6 py-4 text-right">Qty</th>
+                                        <th class="px-6 py-4 text-right">Qty per Unit</th>
+                                        <th class="px-6 py-4 text-right">Total Qty</th>
                                         <th class="px-6 py-4 text-right">Subtotal</th>
                                      </tr>
                                 </thead>
                                 <tbody class="divide-y divide-orange-50">
                                     @foreach($hpp->items as $item)
-                                        <tr class="table-row-hover transition-colors">
+                                        <tr class="table-row-hover transition-colors bom-item-row" data-base-qty="{{ $item->usage_amount }}" data-base-subtotal="{{ $item->subtotal_cost }}" data-item-id="{{ $item->id }}">
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center gap-2">
                                                     <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -324,14 +350,15 @@
                                              </td>
                                             <td class="px-6 py-4 text-right font-mono font-bold text-navy-700">Rp {{ number_format($item->material->price, 0, ',', '.') }}</td>
                                             <td class="px-6 py-4 text-right font-mono font-bold text-navy-700">{{ number_format($item->usage_amount, 2, ',', '.') }}</td>
-                                            <td class="px-6 py-4 text-right font-mono font-bold text-orange-600">Rp {{ number_format($item->subtotal_cost, 0, ',', '.') }}</td>
+                                            <td class="px-6 py-4 text-right font-mono font-bold text-amber-600 item-total-qty">{{ number_format($item->usage_amount, 2, ',', '.') }}</td>
+                                            <td class="px-6 py-4 text-right font-mono font-bold text-orange-600 item-subtotal">Rp {{ number_format($item->subtotal_cost, 0, ',', '.') }}</td>
                                          </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot class="bg-orange-50/30 border-t border-orange-100">
                                     <tr>
-                                        <td colspan="4" class="px-6 py-4 text-right font-black text-navy-700 uppercase tracking-wider text-xs">Total Bahan Baku:</td>
-                                        <td class="px-6 py-4 text-right font-black text-orange-600 text-base">Rp {{ number_format($hpp->total_raw_material_cost, 0, ',', '.') }}</td>
+                                        <td colspan="5" class="px-6 py-4 text-right font-black text-navy-700 uppercase tracking-wider text-xs">Total Bahan Baku:</td>
+                                        <td id="totalSubtotalFooter" class="px-6 py-4 text-right font-black text-orange-600 text-base">Rp {{ number_format($hpp->total_raw_material_cost, 0, ',', '.') }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -341,4 +368,83 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Quantity Calculator for Materials
+        document.addEventListener('DOMContentLoaded', function() {
+            const quantityInput = document.getElementById('quantityMultiplier');
+            const materialsTable = document.getElementById('materialsTable');
+            const bomRows = document.querySelectorAll('.bom-item-row');
+            
+            if (!quantityInput) return;
+
+            // Store base values for calculation
+            const originalData = Array.from(bomRows).map(row => ({
+                qty: parseFloat(row.dataset.baseQty),
+                subtotal: parseFloat(row.dataset.baseSubtotal)
+            }));
+
+            // Handle quantity input changes
+            quantityInput.addEventListener('input', updateCalculations);
+            quantityInput.addEventListener('change', updateCalculations);
+
+            function updateCalculations() {
+                const multiplier = parseInt(quantityInput.value) || 1;
+                let totalBahanRp = 0;
+
+                bomRows.forEach((row, index) => {
+                    const baseQty = originalData[index].qty;
+                    const baseSubtotal = originalData[index].subtotal;
+
+                    // Calculate new values
+                    const newTotalQty = baseQty * multiplier;
+                    const newSubtotal = baseSubtotal * multiplier;
+
+                    // Update Total Qty cell
+                    const qtyCell = row.querySelector('.item-total-qty');
+                    if (qtyCell) {
+                        qtyCell.textContent = formatNumber(newTotalQty, 2);
+                    }
+
+                    // Update Subtotal cell
+                    const subtotalCell = row.querySelector('.item-subtotal');
+                    if (subtotalCell) {
+                        subtotalCell.textContent = 'Rp' + formatCurrency(newSubtotal);
+                    }
+
+                    totalBahanRp += newSubtotal;
+                });
+
+                // Update footer total
+                const footerTotal = document.getElementById('totalSubtotalFooter');
+                if (footerTotal) {
+                    footerTotal.textContent = 'Rp' + formatCurrency(totalBahanRp);
+                }
+
+                // Update header total
+                const headerTotal = document.getElementById('totalBahanRp');
+                if (headerTotal) {
+                    headerTotal.textContent = 'Rp' + formatCurrency(totalBahanRp);
+                }
+            }
+
+            // Format number with decimal
+            function formatNumber(num, decimals = 2) {
+                const multiplier = Math.pow(10, decimals);
+                const rounded = Math.round(num * multiplier) / multiplier;
+                return new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals
+                }).format(rounded);
+            }
+
+            // Format currency
+            function formatCurrency(num) {
+                return new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(Math.round(num));
+            }
+        });
+    </script>
 </x-app-layout>

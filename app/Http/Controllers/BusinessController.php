@@ -373,6 +373,14 @@ class BusinessController extends Controller
         return $pdf->download("hpp-{$id}.pdf");
     }
 
+    public function printBomPdf($id)
+    {
+        $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
+
+        $pdf = Pdf::loadView('business.bom_pdf', compact('hpp'));
+        return $pdf->download("bom-{$hpp->hpp_id}.pdf");
+    }
+
     public function destroy($id)
     {
         $calc = BusinessCalculation::where('user_id', Auth::id())->findOrFail($id);

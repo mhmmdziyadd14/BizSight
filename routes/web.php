@@ -45,6 +45,8 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
     Route::get('/hpp/bom', [BusinessController::class, 'bom'])->name('hpp.bom');
     // Cetak PDF HPP
     Route::get('/hpp/{id}/print', [BusinessController::class, 'printPdf'])->name('hpp.print');
+    // Cetak PDF BOM
+    Route::get('/hpp/{id}/bom/print', [BusinessController::class, 'printBomPdf'])->name('hpp.bom.print');
     // Lihat detail hasil HPP
     Route::get('/hpp/{id}', [BusinessController::class, 'show'])->name('hpp.show');
 
