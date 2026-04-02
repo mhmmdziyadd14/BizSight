@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BizSight | SME Intelligence Platform</title>
+    <title>ClarityLabs | SME Intelligence Platform</title>
     
     <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -127,8 +127,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
             <!-- Brand Logo -->
             <a href="{{ url('/') }}" class="text-3xl font-black tracking-tight transition-all hover:scale-105 flex items-center gap-1">
-                <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Biz</span>
-                <span class="text-white">Sight</span>
+                <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Clarity</span>
+                <span class="text-white">Labs</span>
             </a>
 
             <!-- Menu Kanan -->
@@ -195,7 +195,7 @@
                 <span class="text-white">.</span>
             </h1>
             <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
-                Kuasai Harga Pokok Penjualan dan Analisis kelayakan bisnis UMKM Anda bersama BizSight.
+                Kuasai Harga Pokok Penjualan dan Analisis kelayakan bisnis UMKM Anda bersama ClarityLabs.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="#features" class="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-wider text-white shadow-xl transition-all">
@@ -233,12 +233,12 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
-                <!-- Feature 1: HPP Calculator -->
+                <!-- Feature 1: Clarity Profit -->
                 <div @click="openModal = true; activeFeature = { 
-                        title: 'Kalkulator HPP Detail', 
-                        desc: 'Input bahan baku dari gudang Anda, tambahkan jasa sablon, bordir, hingga jahit. Dapatkan hasil HPP per unit yang sangat presisi.',
+                        title: 'Clarity Profit', 
+                        desc: 'Hitung HPP real, bukan perkiraan. Ketahui margin sebenarnya dan profit per produk dengan akurat. Berhenti rugi dalam hitungan.',
                         url: '{{ route('hpp.bahan') }}',
-                        icon: 'HPP',
+                        icon: 'PROFIT',
                         theme: 'orange'
                     }" 
                     class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-pointer group hover:border-orange-500/50 transition-all">
@@ -248,8 +248,8 @@
                         </svg>
                     </div>
                     <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">01</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Hitung <span class="text-gradient-orange">HPP</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Mendetailkan biaya variabel produksi dengan presisi tinggi.</p>
+                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Profit</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Hitung HPP real dengan margin sebenarnya per unit produk.</p>
                     <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
                         Buka Informasi
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,12 +258,12 @@
                     </span>
                 </div>
 
-                <!-- Feature 2: Business Checker -->
+                <!-- Feature 2: Clarity Decision -->
                 <div @click="openModal = true; activeFeature = { 
-                        title: 'Viability Checker', 
-                        desc: 'Analisis kesehatan bisnis Anda secara visual. Masukkan harga jual dan biaya operasional untuk melihat BEP dan Net Margin.',
+                        title: 'Clarity Decision', 
+                        desc: 'Jelas mana yang perlu dilanjutkan atau dihentikan. PO atau ready stock, growth atau efisiensi. Buat keputusan bisnis dengan data real.',
                         url: '{{ route('business.index') }}',
-                        icon: 'CHECKER',
+                        icon: 'DECISION',
                         theme: 'orange'
                     }"
                     class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-pointer group hover:border-orange-500/50 transition-all">
@@ -273,8 +273,8 @@
                         </svg>
                     </div>
                     <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">02</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Business <span class="text-gradient-orange">Checker</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Uji kesehatan finansial project secara instan.</p>
+                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Decision</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Framework keputusan bisnis berbasis data real untuk strategi cepat.</p>
                     <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
                         Buka Informasi
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,12 +283,12 @@
                     </span>
                 </div>
 
-                <!-- Feature 3: Starter Kit -->
+                <!-- Feature 3: Clarity Visual -->
                 <div @click="openModal = true; activeFeature = { 
-                        title: 'Starter Kit Bundle', 
-                        desc: 'Unduh aset pendukung operasional berupa template manajemen, format laporan, dan panduan keuangan UMKM.',
+                        title: 'Clarity Visual', 
+                        desc: 'Sederhanakan ide bisnis kompleks menjadi visual yang jelas. Lihat masalah lebih jernih dan komunikasikan strategy ke tim dengan mudah.',
                         url: '{{ route('download.template') }}',
-                        icon: 'KIT',
+                        icon: 'VISUAL',
                         theme: 'orange'
                     }"
                     class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-pointer group hover:border-orange-500/50 transition-all">
@@ -298,10 +298,52 @@
                         </svg>
                     </div>
                     <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">03</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Starter <span class="text-gradient-orange">Kit</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Aset pendukung operasional untuk UMKM.</p>
+                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Visual</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Template visual untuk mapping ide bisnis dan analisis masalah strategis.</p>
                     <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
                         Unduh Resource
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </span>
+                </div>
+
+                <!-- Feature 4: Clarity Control (Coming Soon) -->
+                <div class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-default opacity-60 group hover:border-orange-500/50 transition-all relative">
+                    <div class="absolute top-4 right-4 inline-flex items-center px-3 py-1.5 bg-orange-500/20 border border-orange-500/30 rounded-full">
+                        <span class="text-[9px] font-bold text-orange-400 uppercase tracking-wider">Coming Soon</span>
+                    </div>
+                    <div class="w-14 h-14 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">04</div>
+                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Control</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Inventory control system. Tahu kapan restock, hindari dead stock, jaga cashflow tetap sehat.</p>
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
+                        Segera Hadir
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </span>
+                </div>
+
+                <!-- Feature 5: Clarity Studio (Coming Soon) -->
+                <div class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-default opacity-60 group hover:border-orange-500/50 transition-all relative">
+                    <div class="absolute top-4 right-4 inline-flex items-center px-3 py-1.5 bg-orange-500/20 border border-orange-500/30 rounded-full">
+                        <span class="text-[9px] font-bold text-orange-400 uppercase tracking-wider">Coming Soon</span>
+                    </div>
+                    <div class="w-14 h-14 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2"></path>
+                        </svg>
+                    </div>
+                    <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">05</div>
+                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Studio</span></h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Mockup design system. Visual produk profesional, tingkatkan perceived value, percepat konten.</p>
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
+                        Segera Hadir
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -372,8 +414,8 @@
                     </svg>
                 </div>
                 <div class="text-2xl font-black tracking-tight">
-                    <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Biz</span>
-                    <span class="text-white">Sight</span>
+                    <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Clarity</span>
+                    <span class="text-white">Labs</span>
                 </div>
             </div>
             <div class="text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-6">

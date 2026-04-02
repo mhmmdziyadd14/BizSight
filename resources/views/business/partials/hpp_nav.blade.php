@@ -50,12 +50,12 @@
 <nav class="mb-8 flex flex-wrap gap-1 nav-container">
     @php
         $items = [
-            ['label' => 'HPP', 'route' => 'hpp.index'],
-            ['label' => 'Bahan', 'route' => 'hpp.bahan'],
-            ['label' => 'Hitung HPP', 'route' => 'hpp.create'],
-            ['label' => 'Data Produk', 'route' => 'hpp.products'],
-            ['label' => 'Persediaan Bahan', 'route' => 'hpp.inventory'],
-            ['label' => 'Bill of Material', 'route' => 'hpp.bom'],
+            ['label' => 'Material', 'route' => 'hpp.bahan'],
+            ['label' => 'Profit Count', 'route' => 'hpp.create'],
+            ['label' => 'Data HPP', 'route' => 'hpp.index'],
+            ['label' => 'Data Product', 'route' => 'hpp.products'],
+            ['label' => 'Inventory', 'route' => 'hpp.inventory'],
+            ['label' => 'Bill Of Material', 'route' => 'hpp.bom'],
         ];
     @endphp
 

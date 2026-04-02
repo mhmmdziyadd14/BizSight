@@ -74,8 +74,8 @@
                         </svg>
                     </div>
                     <div>
-                        <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent text-2xl font-black italic group-hover:from-orange-300 group-hover:to-orange-400 transition-all duration-300">Biz</span>
-                        <span class="text-white text-xl font-black group-hover:text-orange-100 transition-colors duration-300">Sight</span>
+                        <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent text-2xl font-black italic group-hover:from-orange-300 group-hover:to-orange-400 transition-all duration-300">Clarity</span>
+                        <span class="text-white text-xl font-black group-hover:text-orange-100 transition-colors duration-300">Labs</span>
                     </div>
                 </a>
             </div>
@@ -86,13 +86,13 @@
                     Dashboard
                 </a>
                 <a href="{{ route('hpp.index') }}" class="text-sm font-semibold text-gray-300 hover:text-orange-400 transition-colors nav-link">
-                    HPP
+                    Clarity Profit
                 </a>
                 <a href="{{ route('materials.index') }}" class="text-sm font-semibold text-gray-300 hover:text-orange-400 transition-colors nav-link">
-                    Bahan
+                    Inventory
                 </a>
                 <a href="{{ route('business.index') }}" class="text-sm font-semibold text-gray-300 hover:text-orange-400 transition-colors nav-link">
-                    Analisis
+                    Clarity Decision
                 </a>
                 
                 <!-- Search Bar -->
@@ -194,7 +194,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                     </svg>
-                    HPP
+                    Clarity Profit
                 </a>
                 <a href="{{ route('materials.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-300 hover:text-orange-400 hover:bg-orange-500/10 transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -206,7 +206,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                     </svg>
-                    Analisis
+                    Clarity Decision
                 </a>
                 <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl text-gray-300 hover:text-orange-400 hover:bg-orange-500/10 transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'BizSight') }}</title>
+        <title>{{ config('app.name', 'ClarityLabs') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -112,8 +112,8 @@
                             </svg>
                         </div>
                         <div>
-                            <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent text-2xl font-black italic">Biz</span>
-                            <span class="text-white text-xl font-black">Sight</span>
+                            <span class="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent text-2xl font-black italic">Clarity</span>
+                            <span class="text-white text-xl font-black">Labs</span>
                         </div>
                     </a>
 
@@ -134,7 +134,7 @@
 
             <footer class="py-8 text-center">
                 <p class="text-[10px] text-orange-300/50 font-medium uppercase tracking-wider">
-                    &copy; {{ date('Y') }} BizSight • Business Intelligence Platform
+                    &copy; {{ date('Y') }} ClarityLabs • Business Intelligence Platform
                 </p>
             </footer>
         </div>

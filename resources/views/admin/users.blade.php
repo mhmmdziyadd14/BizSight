@@ -369,7 +369,7 @@
                     <div>
                         <p class="text-xs font-bold text-orange-600 uppercase tracking-wider">Informasi Persetujuan</p>
                         <p class="text-xs text-navy-600 mt-1">
-                            User yang telah disetujui akan mendapatkan akses penuh ke aplikasi BizSight, termasuk kalkulator HPP, manajemen bahan baku, dan fitur analisis bisnis lainnya.
+                            User yang telah disetujui akan mendapatkan akses penuh ke aplikasi ClarityLabs, termasuk kalkulator HPP, manajemen bahan baku, dan fitur analisis bisnis lainnya.
                         </p>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 // Middleware Auth
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'approved'])->group(function () {
     
     Route::get('/dashboard', function () {
         return view('dashboard');

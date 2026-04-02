@@ -153,7 +153,7 @@
                 </div>
                 <h1 class="text-3xl font-extrabold tracking-tight text-white">
                     <span class="bg-gradient-to-r from-orange-200 to-yellow-200 bg-clip-text text-transparent">Masuk ke</span>
-                    <span class="text-white">BizSight</span>
+                    <span class="text-white">ClarityLabs</span>
                 </h1>
                 <p class="mt-2 text-sm text-orange-100 font-medium">
                     Kelola HPP &amp; analisis usaha Anda dengan mudah.

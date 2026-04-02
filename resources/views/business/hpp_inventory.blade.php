@@ -144,8 +144,8 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
-                                <span class="text-gradient-orange">Biz</span>
-                                <span class="text-navy-900">Sight</span>
+                                <span class="text-gradient-orange">Clarity</span>
+                                <span class="text-navy-800">Profit</span>
                             </h1>
                             <p class="mt-2 text-sm text-navy-600 max-w-2xl">
                                 Data persediaan bahan. Lihat stok awal, masuk, keluar, dan stok akhir secara otomatis.

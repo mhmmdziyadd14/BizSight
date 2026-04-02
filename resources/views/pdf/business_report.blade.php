@@ -396,8 +396,8 @@
         <div class="header">
             <div class="logo-section">
                 <div class="brand">
-                    <span class="brand-highlight">Biz</span>
-                    <span class="brand-main">Sight</span>
+                    <span class="brand-highlight">Clarity</span>
+                    <span class="brand-main">Labs</span>
                 </div>
                 <div class="doc-title">HPP Production Report</div>
             </div>
@@ -517,7 +517,7 @@
         <!-- Footer -->
         <div class="footer-note">
             <div class="footer-text">
-                Analyzed by <strong>BizSight System</strong> • HPP Precision Engine v2.0
+                Analyzed by <strong>ClarityLabs System</strong> • HPP Precision Engine v2.0
             </div>
             <div class="footer-text" style="margin-top: 8px; letter-spacing: 1px;">
                 Developed by Muhammad Ziyad • Institut Teknologi Nasional Bandung

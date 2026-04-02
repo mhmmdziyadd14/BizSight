@@ -110,13 +110,13 @@
             border: 1px solid #10B98130;
         }
         
-        .status-risky {
+        .status-fragile {
             background: linear-gradient(135deg, #F59E0B10 0%, #F9731620 100%);
             color: #F59E0B;
             border: 1px solid #F9731630;
         }
         
-        .status-danger {
+        .status-critical {
             background: linear-gradient(135deg, #EF444410 0%, #DC262620 100%);
             color: #EF4444;
             border: 1px solid #EF444430;
@@ -137,8 +137,8 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
-                                <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Biz</span>
-                                <span class="text-navy-800">ADMIN COMMAND CENTER</span>
+                                <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent\">Clarity</span>
+                                <span class="text-navy-800\">Labs Admin Center</span>
                             </h1>
                             <p class="mt-2 text-sm text-navy-600 font-medium">
                                 Otorisasi akses pengguna dan monitoring performa bisnis global secara real-time.
@@ -208,7 +208,7 @@
                             <div class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Registered</div>
                         </div>
                         <div class="text-4xl font-black text-navy-800">{{ $users->count() }}</div>
-                        <div class="mt-2 text-xs font-semibold text-navy-500 uppercase tracking-wider">Global BizSight Users</div>
+                        <div class="mt-2 text-xs font-semibold text-navy-500 uppercase tracking-wider">Global ClarityLabs Users</div>
                     </div>
                 </div>
             </div>
@@ -371,14 +371,14 @@
                                             $statusClass = '';
                                             if (strtoupper($calc->status_label) === 'HEALTHY') {
                                                 $statusClass = 'status-healthy';
-                                            } elseif (strtoupper($calc->status_label) === 'RISKY') {
-                                                $statusClass = 'status-risky';
+                                            } elseif (strtoupper($calc->status_label) === 'FRAGILE') {
+                                                $statusClass = 'status-fragile';
                                             } else {
-                                                $statusClass = 'status-danger';
+                                                $statusClass = 'status-critical';
                                             }
                                         @endphp
                                         <span class="status-badge {{ $statusClass }}">
-                                            <span class="w-1.5 h-1.5 rounded-full {{ strtoupper($calc->status_label) === 'HEALTHY' ? 'bg-green-500' : (strtoupper($calc->status_label) === 'RISKY' ? 'bg-orange-500' : 'bg-red-500') }}"></span>
+                                            <span class="w-1.5 h-1.5 rounded-full {{ strtoupper($calc->status_label) === 'HEALTHY' ? 'bg-green-500' : (strtoupper($calc->status_label) === 'FRAGILE' ? 'bg-orange-500' : 'bg-red-500') }}"></span>
                                             {{ $calc->status_label }}
                                         </span>
                                     </td>
@@ -413,8 +413,8 @@
                     </svg>
                 </div>
                 <div class="text-2xl font-black tracking-tight">
-                    <span class="text-gradient-orange">Biz</span>
-                    <span class="text-white">Sight Command</span>
+                    <span class="text-gradient-orange\">Clarity</span>
+                    <span class=\"text-white\">Labs Admin</span>
                 </div>
             </div>
             <p class="text-[9px] text-orange-400/60 font-black uppercase tracking-wider mb-4">Core Analytics Engine v2.0</p>

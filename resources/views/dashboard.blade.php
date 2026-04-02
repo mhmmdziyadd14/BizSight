@@ -224,7 +224,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h1>Welcome to <span class="text-gradient-orange">BizSight</span></h1>
+                            <h1>Welcome to <span class="text-gradient-orange">ClarityLabs</span></h1>
                             <p>Your Business Intelligence Dashboard</p>
                         </div>
                     </div>
@@ -317,7 +317,7 @@
                             <div>
                                 <p class="text-xs font-bold text-orange-600 uppercase tracking-wider">Getting Started</p>
                                 <p class="text-xs text-navy-500 mt-1">
-                                    New to BizSight? Start by adding your materials inventory, then create your first HPP calculation. 
+                                    New to ClarityLabs? Start by adding your materials inventory, then create your first HPP calculation. 
                                     Use the Business Analyzer to evaluate product viability and make data-driven decisions.
                                 </p>
                             </div>

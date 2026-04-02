@@ -130,8 +130,8 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
-                                <span class="text-gradient-orange">Biz</span>
-                                <span class="text-navy-900">Sight</span>
+                                <span class="text-gradient-orange">Clarity</span>
+                                <span class="text-navy-800">Profit</span>
                             </h1>
                             <p class="mt-2 text-sm text-navy-600 max-w-2xl">
                                 Pilih menu di bawah untuk mengelola HPP, data produk, persediaan, dan bill of material.
@@ -350,6 +350,16 @@
                                                         Cetak
                                                     </a>
                                                 @endif
+                                                <form action="{{ route('hpp.destroy', $hpp->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus HPP ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="inline-flex items-center gap-1 text-xs font-black uppercase tracking-wider text-red-500 hover:text-red-600 transition-colors group">
+                                                        <svg class="w-3.5 h-3.5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                        </svg>
+                                                        Hapus
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

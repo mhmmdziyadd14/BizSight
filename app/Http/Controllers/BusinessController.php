@@ -98,8 +98,24 @@ class BusinessController extends Controller
     {
         // Muat bahan baku milik user untuk dropdown
         $materials = Material::where('user_id', Auth::id())->get();
+        
+        // Kelompokkan bahan berdasarkan nama untuk menampilkan warna sebagai dropdown
+        $materialsByName = $materials->groupBy('name')->map(function($group) {
+            return [
+                'name' => $group->first()->name,
+                'type' => $group->first()->type,
+                'unit' => $group->first()->unit,
+                'colors' => $group->map(function($material) {
+                    return [
+                        'id' => $material->id,
+                        'color' => $material->color,
+                        'price' => $material->price
+                    ];
+                })->toArray()
+            ];
+        })->values();
 
-        return view('business.hpp_create', compact('materials'));
+        return view('business.hpp_create', compact('materials', 'materialsByName'));
     }
 
     /**
@@ -111,62 +127,128 @@ class BusinessController extends Controller
             'product_name' => 'required|string|max:255',
             'hpp' => 'required|numeric',
             'selling_price' => 'required|numeric',
-            'ads_per_unit' => 'nullable|numeric|min:0',
+            'ads_percent' => 'nullable|numeric|min:0|max:100',
+            'affiliate_percent' => 'nullable|numeric|min:0|max:100',
             'admin_fee_percent' => 'nullable|numeric|min:0|max:100',
             'overhead_percent' => 'nullable|numeric|min:0|max:100',
             'tax_percent' => 'nullable|numeric|min:0|max:100',
             'promo_percent' => 'nullable|numeric|min:0|max:100',
-            'est_batch_quantity' => 'required|integer',
+            'est_batch_quantity' => 'required|integer|min:1',
         ]);
 
-        $hpp = $request->hpp;
-        $sellingPrice = $request->selling_price;
-        $ads = $request->ads_per_unit ?? 0;
-        $adminFeePct = $request->admin_fee_percent ?? 0;
-        $overheadPct = $request->overhead_percent ?? 0;
-        $taxPct = $request->tax_percent ?? 0;
-        $promoPct = $request->promo_percent ?? 0;
-        $qty = $request->est_batch_quantity;
+        $hpp = (float) $request->hpp;
+        $sellingPrice = (float) $request->selling_price;
+        $adsPct = (float) ($request->ads_percent ?? 0);
+        $affiliatePct = (float) ($request->affiliate_percent ?? 0);
+        $adminFeePct = (float) ($request->admin_fee_percent ?? 0);
+        $overheadPct = (float) ($request->overhead_percent ?? 0);
+        $taxPct = (float) ($request->tax_percent ?? 0);
+        $promoPct = (float) ($request->promo_percent ?? 0);
+        $qty = (int) $request->est_batch_quantity;
 
-        // Total biaya (menambahkan biaya admin, overhead, dan pajak sebagai persen di atas HPP)
-        $costMultiplier = 1 + ($adminFeePct + $overheadPct + $taxPct) / 100;
+        // Biaya langsung per unit termasuk biaya proportional
+        $costMultiplier = 1 + ($adminFeePct + $overheadPct + $taxPct + $affiliatePct) / 100;
         $totalCostPerUnit = $hpp * $costMultiplier;
 
+        // Ads disesuaikan dalam persen terhadap harga jual
+        $adsPerUnit = ($sellingPrice * $adsPct) / 100;
+
         // Margin normal (tanpa promo)
-        $netProfitPerUnit = $sellingPrice - $totalCostPerUnit - $ads;
+        $netProfitPerUnit = $sellingPrice - $totalCostPerUnit - $adsPerUnit;
         $totalNetProfit = $netProfitPerUnit * $qty;
         $marginPercent = ($sellingPrice > 0) ? ($netProfitPerUnit / $sellingPrice) * 100 : 0;
 
         // Margin setelah promo
         $sellingPricePromo = $sellingPrice * (1 - ($promoPct / 100));
-        $netProfitPromoPerUnit = $sellingPricePromo - $totalCostPerUnit - $ads;
+        $netProfitPromoPerUnit = $sellingPricePromo - $totalCostPerUnit - $adsPerUnit;
         $promoMarginPercent = ($sellingPricePromo > 0) ? ($netProfitPromoPerUnit / $sellingPricePromo) * 100 : 0;
 
         // Perbandingan margin normal vs promo
         $marginDiffPercent = $marginPercent - $promoMarginPercent;
 
-        // Logic Verdict (berdasarkan margin promo)
-        $status = $promoMarginPercent >= 20 ? 'HEALTHY' : ($promoMarginPercent > 0 ? 'RISKY' : 'DANGER');
-        
-        $reason = "Margin keuntungan " . number_format($promoMarginPercent, 1) . "%.";
-        $action = $status == 'HEALTHY' ? 'Bisnis sehat, silakan lanjut.' : 'Evaluasi harga atau biaya produksi.';
+        // Logika status (CRITICAL/FRAGILE/HEALTHY) sesuai batas baru 20-34-40
+        if ($marginPercent < 20) {
+            $status = 'CRITICAL';
+        } elseif ($marginPercent < 40) {
+            $status = 'FRAGILE';
+        } else {
+            $status = 'HEALTHY';
+        }
+
+        if ($status === 'CRITICAL') {
+            $reason = "CRITICAL ZONE: Margin di bawah 20% menunjukkan bahwa bisnis hampir tidak punya ruang bernapas.\n\n" .
+                "What it means:\n" .
+                "- bisnis berjalan namun hampir tanpa buffer\n" .
+                "- sangat sensitif pada biaya marketing, operational, overhead, dan waste\n\n" .
+                "Logic reasoning:\n" .
+                "- Contribution margin terlalu kecil untuk menyerap biaya lain\n" .
+                "- Sedikit kenaikan biaya (ads, bahan, produksi) langsung bikin rugi\n" .
+                "- Tidak ada buffer untuk scaling\n" .
+                "- Tidak sustainable dalam jangka menengah";
+
+            $action = "Decision implication:\n" .
+                "- Jangan scale\n" .
+                "- Jangan tambah stock\n" .
+                "- Jangan tambah SKU\n\n" .
+                "Evaluate ulang:\n" .
+                "- optimize cost\n" .
+                "- improve pricing\n" .
+                "- improve efficiency\n" .
+                "- pertimbangkan stop product atau redesign model bisnis\n\n" .
+                "Alasan: margin terlalu rendah; tanpa tindakan, risiko kerugian agravasi dan cashflow buruk meningkat.";
+        } elseif ($status === 'FRAGILE') {
+            $reason = "FRAGILE ZONE: Margin 20-39% menunjukkan bisnis masih berjalan namun rentan.\n\n" .
+                "What it means:\n" .
+                "- masih profit tetapi tidak kuat menghadapi tekanan\n" .
+                "- sensitif terhadap diskon, kenaikan biaya, dan inefficiency kecil\n\n" .
+                "Logic reasoning:\n" .
+                "- cukup untuk survive, tetapi belum siap untuk aggressive growth\n" .
+                "- profit terjaga tapi mudah terganggu\n" .
+                "- scaling terasa berat; perlu sering promo untuk maintain sales\n" .
+                "- sedikit salah keputusan langsung terasa";
+
+            $action = "Decision implication:\n" .
+                "- jalan tapi hati-hati\n" .
+                "- jangan terlalu cepat scale\n" .
+                "- jangan over-expand SKU\n\n" .
+                "Fokus utama:\n" .
+                "- optimize cost\n" .
+                "- improve pricing\n" .
+                "- improve efficiency";
+        } else {
+            $reason = "HEALTHY ZONE: Margin >=40% menunjukkan ruang pertumbuhan yang baik.\n\n" .
+                "What it means:\n" .
+                "- ada buffer dan fleksibilitas\n" .
+                "- siap absorb marketing cost, operational inefficiency, dan eksperimen\n" .
+                "- bisa handle diskon tanpa langsung collapse\n\n" .
+                "Logic reasoning:\n" .
+                "- sampai saat ini cashflow lebih sehat\n" .
+                "- bisa test channel baru dan invest ke growth\n" .
+                "- keputusan bisa lebih tenang, tidak panik";
+
+            $action = "Decision implication:\n" .
+                "- bisa mulai scale\n" .
+                "- bisa tambah channel\n" .
+                "- bisa test produk baru\n\n" .
+                "Catatan: jangan reckless, jangan buang margin demi volume";
+        }
 
         $marginMatch = $sellingPrice - $totalCostPerUnit;
-        $bepUnit = ($marginMatch > 0) ? ceil(($ads * $qty) / $marginMatch) : 0;
+        $bepUnit = ($marginMatch > 0) ? ceil(($adsPerUnit * $qty) / $marginMatch) : 0;
 
         BusinessCalculation::create([
             'user_id' => Auth::id(),
             'product_name' => $request->product_name,
             'hpp' => $hpp,
             'selling_price' => $sellingPrice,
-            'ads_per_unit' => $ads,
+            'ads_per_unit' => $adsPct,
             'admin_fee_percent' => $adminFeePct,
             'overhead_percent' => $overheadPct,
             'tax_percent' => $taxPct,
             'promo_percent' => $promoPct,
-            'operational_fee' => 0, // default karena Business Checker tidak meminta input ini
+            'operational_fee' => 0,
             'est_batch_quantity' => $qty,
-            'net_profit' => $totalNetProfit,
+            'net_profit' => $netProfitPerUnit,
             'net_margin_percent' => $marginPercent,
             'promo_margin_percent' => $promoMarginPercent,
             'margin_diff_percent' => $marginDiffPercent,
@@ -203,6 +285,7 @@ class BusinessController extends Controller
 
         $totalRaw = 0;
         $items = [];
+        $inventoryUpdates = []; // Track inventory changes
 
         foreach ($materialIds as $idx => $matId) {
             $material = Material::where('user_id', Auth::id())->find($matId);
@@ -223,6 +306,9 @@ class BusinessController extends Controller
                 'usage_amount' => $usage,
                 'subtotal_cost' => $subtotal,
             ];
+
+            // Track inventory deduction
+            $inventoryUpdates[$matId] = ($inventoryUpdates[$matId] ?? 0) + $usage;
         }
 
         $screenPrinting = floatval($request->input('screen_printing_fee', 0));
@@ -248,6 +334,14 @@ class BusinessController extends Controller
             HppMaterialItem::create(array_merge($item, ['hpp_calculation_id' => $calculation->id]));
         }
 
+        // Update inventory - reduce stock_out from each material used
+        foreach ($inventoryUpdates as $materialId => $usageAmount) {
+            $material = Material::find($materialId);
+            if ($material) {
+                $material->increment('stock_out', $usageAmount);
+            }
+        }
+
         return redirect()->route('hpp.index')->with('success', 'HPP calculation saved.');
     }
 
@@ -259,6 +353,15 @@ class BusinessController extends Controller
 
     public function printPdf($id)
     {
+        // Attempt decision-engine BusinessCalculation first
+        $calc = BusinessCalculation::where('user_id', Auth::id())->find($id);
+
+        if ($calc) {
+            $pdf = Pdf::loadView('business.pdf', compact('calc'));
+            return $pdf->download("business-report-{$id}.pdf");
+        }
+
+        // Fallback to HPP report for backward compatibility
         $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
 
         if (! $hpp->printed_at) {
@@ -275,5 +378,21 @@ class BusinessController extends Controller
         $calc = BusinessCalculation::where('user_id', Auth::id())->findOrFail($id);
         $calc->delete();
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
+
+    /**
+     * Hapus HPP Calculation
+     */
+    public function destroyHpp($id)
+    {
+        $hpp = HppCalculation::where('user_id', Auth::id())->findOrFail($id);
+        
+        // Delete related items (cascade)
+        HppMaterialItem::where('hpp_calculation_id', $id)->delete();
+        
+        // Delete the HPP calculation itself
+        $hpp->delete();
+        
+        return redirect()->route('hpp.index')->with('success', 'HPP berhasil dihapus beserta data materialnya.');
     }
 }

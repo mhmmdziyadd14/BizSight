@@ -116,8 +116,8 @@
                         </div>
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
-                                <span class="text-gradient-orange">Biz</span>
-                                <span class="text-navy-900">Sight</span>
+                                <span class="text-gradient-orange">Clarity</span>
+                                <span class="text-navy-800">Profit</span>
                             </h1>
                             <p class="mt-2 text-sm text-navy-600 max-w-2xl">
                                 Bill of Material (BOM) menampilkan bahan yang digunakan pada setiap produk HPP.
@@ -177,12 +177,24 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="{{ route('hpp.show', $hpp->id) }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-orange-300 hover:text-orange-200 border border-orange-500/30 hover:border-orange-400 transition-all group">
-                                        <span>Lihat Detail</span>
-                                        <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                    </a>
+                                    <div class="flex items-center gap-3">
+                                        <a href="{{ route('hpp.show', $hpp->id) }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-orange-300 hover:text-orange-200 border border-orange-500/30 hover:border-orange-400 transition-all group">
+                                            <span>Lihat Detail</span>
+                                            <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </a>
+                                        <form action="{{ route('hpp.destroy', $hpp->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus produk ini beserta material list-nya?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-red-300 hover:text-red-200 border border-red-500/30 hover:border-red-400 transition-all group">
+                                                <svg class="w-3.5 h-3.5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                                <span>Hapus</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                                 
                                 <!-- Table -->

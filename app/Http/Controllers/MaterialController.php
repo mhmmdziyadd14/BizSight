@@ -34,16 +34,36 @@ class MaterialController extends Controller
             'color' => 'nullable|string|max:100',
         ]);
 
-        Material::create([
-            'user_id' => Auth::id(),
-            'purchase_date' => $data['purchase_date'],
-            'type' => $data['type'],
-            'name' => $data['name'],
-            'color' => $data['color'] ?? null,
-            'price' => $data['price'],
-            'purchase_volume' => $data['purchase_volume'],
-            'unit' => $data['unit'],
-        ]);
+        // Check if material with same name already exists
+        $existingMaterial = Material::where('user_id', Auth::id())
+                                    ->where('name', $data['name'])
+                                    ->where('color', $data['color'] ?? null)
+                                    ->first();
+
+        if ($existingMaterial) {
+            // Update existing material - only add to stock_in, keep stock_initial fixed
+            $existingMaterial->update([
+                'stock_in' => $existingMaterial->stock_in + $data['purchase_volume'],
+                'purchase_date' => $data['purchase_date'],
+                'price' => $data['price'],
+                'purchase_volume' => $data['purchase_volume'],
+            ]);
+        } else {
+            // Create new material - set stock_initial to 0, only stock_in increments
+            Material::create([
+                'user_id' => Auth::id(),
+                'purchase_date' => $data['purchase_date'],
+                'type' => $data['type'],
+                'name' => $data['name'],
+                'color' => $data['color'] ?? null,
+                'price' => $data['price'],
+                'purchase_volume' => $data['purchase_volume'],
+                'unit' => $data['unit'],
+                'stock_initial' => 0,
+                'stock_in' => $data['purchase_volume'],
+                'stock_out' => 0,
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Bahan baku berhasil ditambahkan.');
     }
