@@ -30,6 +30,10 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
     // --- FITUR BUSINESS & HPP ---
     // Halaman List HPP (Index)
     Route::get('/business', [BusinessController::class, 'index'])->name('business.index');
+    // Daftar Hasil Decision Engine
+    Route::get('/decisions', [BusinessController::class, 'decisionsList'])->name('decisions.list');
+    // Detail Hasil Decision Engine
+    Route::get('/decisions/{id}', [BusinessController::class, 'showDecision'])->name('decisions.show');
     // Halaman Form HPP (Sesuai nama file Anda: hpp_create)
     Route::get('/hpp/create', [BusinessController::class, 'create'])->name('hpp.create');
     Route::get('/hpp/bahan', [BusinessController::class, 'bahan'])->name('hpp.bahan');
@@ -44,9 +48,11 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
     // Bill of Material (BOM)
     Route::get('/hpp/bom', [BusinessController::class, 'bom'])->name('hpp.bom');
     // Cetak PDF HPP
-    Route::get('/hpp/{id}/print', [BusinessController::class, 'printPdf'])->name('hpp.print');
+    Route::get('/hpp/{id}/print', [BusinessController::class, 'printHppPdf'])->name('hpp.print');
     // Cetak PDF BOM
     Route::get('/hpp/{id}/bom/print', [BusinessController::class, 'printBomPdf'])->name('hpp.bom.print');
+    // Cetak PDF Decision Engine
+    Route::get('/business/{id}/print', [BusinessController::class, 'printDecisionEnginePdf'])->name('business.print');
     // Lihat detail hasil HPP
     Route::get('/hpp/{id}', [BusinessController::class, 'show'])->name('hpp.show');
 
@@ -68,9 +74,18 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
     // Utility
     Route::get('/print-pdf/{id}', [BusinessController::class, 'printPdf'])->name('print.pdf');
     Route::delete('/business/{id}', [BusinessController::class, 'destroy'])->name('business.destroy');
+    Route::middleware(['auth', 'verified'])->group(function () {
+    // Halaman Utama Clarity Visual
+    Route::get('/clarity-visual', function() {
+        return view('clarity-visual.index');
+    })->name('clarity.visual');
+
+    // Route Download (Jika nantinya ingin mengunduh PDF/Resource)
     Route::get('/download-template', function() {
+        // Logika download bisa diletakkan di sini
         return response()->json(['status' => 'success', 'message' => 'Resource siap']);
     })->name('download.template');
+});
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -242,7 +242,6 @@
                                     <th class="py-4 px-6">Satuan</th>
                                     <th class="py-4 px-6 text-right">Harga</th>
                                     <th class="py-4 px-6 text-right">Volume</th>
-                                    <th class="py-4 px-6 text-right">Total</th>
                                     <th class="py-4 px-6 text-center">Aksi</th>
                                  </tr>
                             </thead>
@@ -265,7 +264,6 @@
                                         </td>
                                         <td class="py-4 px-6 text-right font-mono font-bold text-orange-600">Rp{{ number_format($material->price, 0, ',', '.') }}</td>
                                         <td class="py-4 px-6 text-right font-mono font-bold text-navy-700">{{ number_format($material->purchase_volume, 2, ',', '.') }}</td>
-                                        <td class="py-4 px-6 text-right font-mono font-bold text-navy-800">Rp{{ number_format($material->price * $material->purchase_volume, 0, ',', '.') }}</td>
                                         <td class="py-4 px-6 text-center">
                                             <div class="flex items-center justify-center gap-3">
                                                 <a href="{{ route('materials.edit', $material->id) }}" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-black uppercase tracking-wider text-orange-500 hover:text-white hover:bg-orange-500 rounded-lg transition-all">

@@ -13,20 +13,43 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class BusinessController extends Controller
 {
     /**
-     * Menampilkan riwayat perhitungan (Business Checker).
+     * Menampilkan form Decision Engine.
      */
     public function index()
+    {
+        // HPP list untuk mengisi pilihan ID Produk dari HPP yang sudah dibuat
+        $hppOptions = HppCalculation::where('user_id', Auth::id())
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
+        // Clarity Visual list untuk mengisi pilihan ID Produk dari Decision Engine yang sudah dibuat
+        $clarityVisuals = BusinessCalculation::where('user_id', Auth::id())
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
+        return view('business.index', compact('hppOptions', 'clarityVisuals'));
+    }
+
+    /**
+     * Menampilkan daftar hasil Decision Engine.
+     */
+    public function decisionsList()
     {
         $calculations = BusinessCalculation::where('user_id', Auth::id())
                         ->orderBy('created_at', 'desc')
                         ->get();
 
-        // HPP list hanya digunakan untuk mengisi pilihan HPP yang sudah dibuat (bukan untuk ditampilkan di halaman Business)
-        $hppOptions = HppCalculation::where('user_id', Auth::id())
-                            ->orderBy('created_at', 'desc')
-                            ->get();
+        return view('business.decisions_list', compact('calculations'));
+    }
 
-        return view('business.index', compact('calculations', 'hppOptions'));
+    /**
+     * Menampilkan detail hasil Decision Engine.
+     */
+    public function showDecision($id)
+    {
+        $calc = BusinessCalculation::where('user_id', Auth::id())->findOrFail($id);
+
+        return view('business.decisions_show', compact('calc'));
     }
 
     /**
@@ -105,11 +128,13 @@ class BusinessController extends Controller
                 'name' => $group->first()->name,
                 'type' => $group->first()->type,
                 'unit' => $group->first()->unit,
+                'purchase_volume' => $group->first()->purchase_volume,
                 'colors' => $group->map(function($material) {
                     return [
                         'id' => $material->id,
                         'color' => $material->color,
-                        'price' => $material->price
+                        'price' => $material->price,
+                        'purchase_volume' => $material->purchase_volume
                     ];
                 })->toArray()
             ];
@@ -125,6 +150,10 @@ class BusinessController extends Controller
     {
         $request->validate([
             'product_name' => 'required|string|max:255',
+            'product_id' => 'required|string|max:255',
+            'product_id_source' => 'required|in:manual,existing',
+            'product_id_manual' => 'nullable|string|max:255',
+            'product_id_existing' => 'nullable|string|max:255',
             'hpp' => 'required|numeric',
             'selling_price' => 'required|numeric',
             'ads_percent' => 'nullable|numeric|min:0|max:100',
@@ -349,6 +378,27 @@ class BusinessController extends Controller
     {
         $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
         return view('business.hpp_show', compact('hpp'));
+    }
+
+    public function printHppPdf($id)
+    {
+        $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
+
+        if (! $hpp->printed_at) {
+            $hpp->printed_at = now();
+            $hpp->save();
+        }
+
+        $pdf = Pdf::loadView('business.hpp_pdf', compact('hpp'));
+        return $pdf->download("hpp-{$hpp->hpp_id}.pdf");
+    }
+
+    public function printDecisionEnginePdf($id)
+    {
+        $calc = BusinessCalculation::where('user_id', Auth::id())->findOrFail($id);
+
+        $pdf = Pdf::loadView('business.pdf', compact('calc'));
+        return $pdf->download("business-report-{$id}.pdf");
     }
 
     public function printPdf($id)

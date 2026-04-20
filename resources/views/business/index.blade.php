@@ -293,7 +293,7 @@
                                         + New Product
                                     </button>
                                 </div>
-                                <input type="hidden" name="product_type" id="productType" value="existing">
+                                <input type="hidden" name="product_type" id="productType" value="new">
                             </div>
 
                             <!-- SECTION B: Business Variables -->
@@ -303,6 +303,63 @@
                                         <span class="text-orange-500 text-xs font-black">B</span>
                                     </div>
                                     <h4 class="font-bold text-sm text-navy-800">Business Variables</h4>
+                                </div>
+
+                                <!-- Product ID (New/Existing) -->
+                                <div>
+                                    <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-3">ID Produk</label>
+                                    
+                                    <!-- Toggle: Manual vs Existing -->
+                                    <div class="flex gap-2 mb-3">
+                                        <button type="button" class="product-id-toggle active flex-1 py-2 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-white bg-gradient-orange transition-all" data-id-type="manual">
+                                            + Buat Baru
+                                        </button>
+                                        <button type="button" class="product-id-toggle flex-1 py-2 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-orange-600 bg-orange-100 hover:bg-orange-200 transition-all" data-id-type="existing">
+                                            📋 Pilih Existing
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="product_id_source" id="productIdSource" value="manual">
+
+                                    <!-- Manual Input -->
+                                    <div id="manual-id-input" class="id-toggle-section">
+                                        <input type="text" name="product_id_manual" id="productIdManual"
+                                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            placeholder="Contoh: BZS-001">
+                                    </div>
+
+                                    <!-- Existing IDs (HPP + Clarity Visual) -->
+                                    <div id="existing-id-select" class="id-toggle-section hidden">
+                                        <label class="text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2 block">Pilih ID Existing</label>
+                                        <select id="existingIdSelect" name="product_id_existing"
+                                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                            <option value="">-- Pilih ID --</option>
+                                            
+                                            <!-- HPP IDs -->
+                                            <optgroup label="📊 HPP">
+                                                @foreach($hppOptions as $hpp)
+                                                    <option value="{{ $hpp->hpp_id }}" data-id="{{ $hpp->hpp_id }}" data-type="hpp">
+                                                        {{ $hpp->hpp_id }} • {{ $hpp->name }}
+                                                    </option>
+                                                @endforeach
+                                            </optgroup>
+
+                                            <!-- Clarity Visual IDs -->
+                                            <optgroup label="📈 Clarity Visual">
+                                                @foreach($clarityVisuals as $clarity)
+                                                    <option value="{{ $clarity->id }}" data-id="{{ $clarity->id }}" data-type="clarity">
+                                                        {{ $clarity->product_name }} 
+                                                        @if($clarity->is_viable) ✓ @else ✗ @endif
+                                                    </option>
+                                                @endforeach
+                                            </optgroup>
+                                        </select>
+
+                                        <!-- Display Selected ID -->
+                                        <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 mt-3">
+                                            <p class="text-[9px] text-gray-600 uppercase font-bold tracking-wider mb-1">ID Terpilih</p>
+                                            <p class="text-sm font-bold text-orange-600" id="selectedIdDisplay">-</p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Product Name (Always Visible) -->
@@ -563,9 +620,9 @@
                                         kelayakan bisnis.</p>
                                 </div>
                             </div>
-                            <a href="{{ route('hpp.index') }}"
+                            <a href="{{ route('decisions.list') }}"
                                 class="inline-flex items-center gap-1 text-xs font-black uppercase tracking-widest text-orange-500 hover:text-orange-600 transition-colors">
-                                Lihat Daftar HPP
+                                Daftar Product Sudah Dianalisis
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5l7 7-7 7"></path>
@@ -866,7 +923,7 @@
 
             // Initialize visibility based on default product type
             const initializeVisibility = (type) => {
-                if (type === 'existing') {
+                if (type === 'new') {
                     sectionC?.classList.add('hidden');
                     sectionD?.classList.add('hidden');
                     existingProductSelect?.classList.remove('hidden');
@@ -895,7 +952,7 @@
                     productTypeInput.value = type;
 
                     // Always show/hide sections based on product type
-                    if (type === 'existing') {
+                    if (type === 'new') {
                         sectionC?.classList.add('hidden');
                         sectionD?.classList.add('hidden');
                         existingProductSelect?.classList.remove('hidden');
@@ -906,6 +963,58 @@
                     }
                 });
             });
+
+            // Product ID Toggle functionality
+            const productIdToggles = document.querySelectorAll('.product-id-toggle');
+            const productIdSource = document.getElementById('productIdSource');
+            const manualIdInput = document.getElementById('manual-id-input');
+            const existingIdSelect = document.getElementById('existing-id-select');
+            const existingIdSelectField = document.getElementById('existingIdSelect');
+            const selectedIdDisplay = document.getElementById('selectedIdDisplay');
+
+            productIdToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const idType = this.dataset.idType;
+
+                    // Update button styling
+                    productIdToggles.forEach(t => {
+                        t.classList.remove('active', 'bg-gradient-orange', 'text-white');
+                        t.classList.add('bg-orange-100', 'text-orange-600');
+                    });
+                    
+                    this.classList.add('active', 'bg-gradient-orange', 'text-white');
+                    this.classList.remove('bg-orange-100', 'text-orange-600');
+
+                    // Update source
+                    productIdSource.value = idType;
+
+                    // Toggle sections
+                    if (idType === 'manual') {
+                        manualIdInput.classList.remove('hidden');
+                        existingIdSelect.classList.add('hidden');
+                        selectedIdDisplay.innerText = '-';
+                    } else {
+                        manualIdInput.classList.add('hidden');
+                        existingIdSelect.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // Existing ID Select handler
+            if (existingIdSelectField) {
+                existingIdSelectField.addEventListener('change', function() {
+                    selectedIdDisplay.innerText = this.value || '-';
+                });
+            }
+
+            // Manual ID Input handler
+            const manualIdInputField = document.getElementById('productIdManual');
+            if (manualIdInputField) {
+                manualIdInputField.addEventListener('input', function() {
+                    productIdSource.value = 'manual';
+                });
+            }
 
             // HPP auto-fill (without triggering calculation)
             const hppSelect = document.getElementById('hppSelect');
