@@ -1,11 +1,5 @@
-{{-- File: business-viability-calculator.blade.php --}}
 <x-app-layout>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
-
-        * {
-            font-family: 'Inter', sans-serif;
-        }
 
         .bg-gradient-orange {
             background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
@@ -221,7 +215,7 @@
         }
     </style>
 
-    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-navy-50/30 min-h-screen">
+    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-navy-50/30 dark:from-navy-900 dark:via-navy-950 dark:to-navy-900 min-h-screen transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <!-- Header Section -->
@@ -239,9 +233,9 @@
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
                                 <span class=\"text-gradient-orange\">Clarity</span>
-                                <span class="text-navy-900">Decision</span>
+                                <span class="text-navy-900 dark:text-white">Decision</span>
                             </h1>
-                            <p class="mt-2 text-sm text-navy-600 max-w-2xl">
+                            <p class="mt-2 text-sm text-navy-600 dark:text-slate-300 max-w-2xl">
                                 Ubah data mentah menjadi keputusan bisnis yang matang. Masukkan angka penting Anda dan
                                 biarkan mesin ClarityLabs menganalisis kelayakannya.
                             </p>
@@ -265,7 +259,7 @@
 
                 <!-- Left Panel - Input Form -->
                 <div class="lg:col-span-4">
-                    <div class="bg-white rounded-3xl shadow-xl border border-orange-100 overflow-hidden sticky top-8 card-hover">
+                    <div class="bg-white dark:bg-navy-900 rounded-3xl shadow-xl border border-orange-100 dark:border-orange-500/20 overflow-hidden sticky top-8 card-hover transition-colors duration-300">
                         <form action="{{ route('calculate') }}" method="POST" class="space-y-0" id="decisionEngineForm">
                             @csrf
 
@@ -284,7 +278,7 @@
                                 </svg>
                             </div>
 
-                            <div class="p-6 border-b border-orange-100">
+                            <div class="p-6 border-b border-orange-100 dark:border-navy-700">
                                 <div class="flex gap-3 mb-1">
                                     <button type="button" class="product-toggle active flex-1 py-2.5 px-4 rounded-lg font-bold text-xs uppercase tracking-wider text-white bg-gradient-orange transition-all" data-type="existing">
                                         ✓ Existing
@@ -297,12 +291,12 @@
                             </div>
 
                             <!-- SECTION B: Business Variables -->
-                            <div class="p-6 border-b border-orange-100 space-y-5">
-                                <div class="flex items-center gap-2 pb-3 border-b border-orange-100">
+                            <div class="p-6 border-b border-orange-100 dark:border-navy-700 space-y-5">
+                                <div class="flex items-center gap-2 pb-3 border-b border-orange-100 dark:border-navy-700">
                                     <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
                                         <span class="text-orange-500 text-xs font-black">B</span>
                                     </div>
-                                    <h4 class="font-bold text-sm text-navy-800">Business Variables</h4>
+                                    <h4 class="font-bold text-sm text-navy-800 dark:text-white">Business Variables</h4>
                                 </div>
 
                                 <!-- Product ID (New/Existing) -->
@@ -323,7 +317,7 @@
                                     <!-- Manual Input -->
                                     <div id="manual-id-input" class="id-toggle-section">
                                         <input type="text" name="product_id_manual" id="productIdManual"
-                                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                             placeholder="Contoh: BZS-001">
                                     </div>
 
@@ -331,7 +325,7 @@
                                     <div id="existing-id-select" class="id-toggle-section hidden">
                                         <label class="text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2 block">Pilih ID Existing</label>
                                         <select id="existingIdSelect" name="product_id_existing"
-                                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                            class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                             <option value="">-- Pilih ID --</option>
                                             
                                             <!-- HPP IDs -->
@@ -367,7 +361,7 @@
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Product
                                         Name</label>
                                     <input type="text" name="product_name"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                         placeholder="Contoh: Kemeja Premium V2" required>
                                 </div>
 
@@ -376,7 +370,7 @@
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Pilih
                                         HPP yang sudah dibuat</label>
                                     <select name="hpp_id" id="hppSelect"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                         <option value="">HPP Manual</option>
                                         @foreach($hppOptions as $option)
                                             <option value="{{ $option->total_hpp_per_unit }}"
@@ -394,14 +388,14 @@
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">HPP (Rp)</label>
                                         <span class="absolute inset-y-7 left-0 pl-3 flex items-center text-gray-400 text-xs font-bold">Rp</span>
                                         <input type="number" name="hpp" required
-                                            class="w-full pl-9 border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                             value="85000" placeholder="HPP">
                                     </div>
                                     <div class="relative">
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Selling (Rp)</label>
                                         <span class="absolute inset-y-7 left-0 pl-3 flex items-center text-gray-400 text-xs font-bold">Rp</span>
                                         <input type="number" name="selling_price" required
-                                            class="w-full pl-9 border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                             value="175000" placeholder="Jual">
                                     </div>
                                 </div>
@@ -413,7 +407,7 @@
                                             (%)</label>
                                         <div class="relative">
                                             <input type="number" step="0.01" name="admin_fee_percent"
-                                                class="w-full border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
@@ -423,7 +417,7 @@
                                             (%)</label>
                                         <div class="relative">
                                             <input type="number" step="0.01" name="overhead_percent"
-                                                class="w-full border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
@@ -433,7 +427,7 @@
                                             (%)</label>
                                         <div class="relative">
                                             <input type="number" step="0.01" name="tax_percent"
-                                                class="w-full border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
@@ -443,7 +437,7 @@
                                             (%)</label>
                                         <div class="relative">
                                             <input type="number" step="0.01" name="promo_percent"
-                                                class="w-full border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
@@ -458,7 +452,7 @@
                                             (%)</label>
                                         <div class="relative">
                                             <input type="number" step="0.01" name="ads_percent"
-                                                class="w-full border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
@@ -468,7 +462,7 @@
                                             (%)</label>
                                         <div class="relative">
                                             <input type="number" step="0.01" name="affiliate_percent"
-                                                class="w-full border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
@@ -481,7 +475,7 @@
                                         Quantity</label>
                                     <div class="relative">
                                         <input type="number" name="est_batch_quantity" required
-                                            class="w-full pr-10 border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            class="w-full pr-10 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                             value="100">
                                         <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-[9px] font-bold">PCS</span>
                                     </div>
@@ -489,12 +483,12 @@
                             </div>
 
                             <!-- SECTION C: Performance (New Products Only) -->
-                            <div id="section-c" class="section-toggle hidden p-6 border-b border-orange-100 space-y-4">
-                                <div class="flex items-center gap-2 pb-3 border-b border-orange-100">
+                            <div id="section-c" class="section-toggle hidden p-6 border-b border-orange-100 dark:border-navy-700 space-y-4">
+                                <div class="flex items-center gap-2 pb-3 border-b border-orange-100 dark:border-navy-700">
                                     <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
                                         <span class="text-orange-500 text-xs font-black">C</span>
                                     </div>
-                                    <h4 class="font-bold text-sm text-navy-800">Performance</h4>
+                                    <h4 class="font-bold text-sm text-navy-800 dark:text-white">Performance</h4>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-3">
@@ -503,14 +497,14 @@
                                         <div class="relative">
                                             <span class="absolute inset-y-7 left-0 pl-3 flex items-center text-gray-400 text-xs font-bold">Rp</span>
                                             <input type="number" name="monthly_revenue" step="10000" min="0"
-                                                class="w-full pl-9 border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                                 value="0" placeholder="0">
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Monthly Order</label>
                                         <input type="number" name="monthly_order" step="1" min="0"
-                                            class="w-full border border-gray-200 bg-gray-50 rounded-xl py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                             value="0" placeholder="0">
                                     </div>
                                 </div>
@@ -518,7 +512,7 @@
                                 <div>
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Demand Trend</label>
                                     <select name="demand_trend"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                         <option value="increasing">Increasing</option>
                                         <option value="stable" selected>Stable</option>
                                         <option value="decreasing">Decreasing</option>
@@ -528,7 +522,7 @@
                                 <div>
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Sales Consistency</label>
                                     <select name="sales_consistency"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                         <option value="high" selected>High</option>
                                         <option value="medium">Medium</option>
                                         <option value="low">Low</option>
@@ -537,18 +531,18 @@
                             </div>
 
                             <!-- SECTION D: Business Condition (New Products Only) -->
-                            <div id="section-d" class="section-toggle hidden p-6 border-b border-orange-100 space-y-4">
-                                <div class="flex items-center gap-2 pb-3 border-b border-orange-100">
+                            <div id="section-d" class="section-toggle hidden p-6 border-b border-orange-100 dark:border-navy-700 space-y-4">
+                                <div class="flex items-center gap-2 pb-3 border-b border-orange-100 dark:border-navy-700">
                                     <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
                                         <span class="text-orange-500 text-xs font-black">D</span>
                                     </div>
-                                    <h4 class="font-bold text-sm text-navy-800">Business Condition</h4>
+                                    <h4 class="font-bold text-sm text-navy-800 dark:text-white">Business Condition</h4>
                                 </div>
 
                                 <div>
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Inventory</label>
                                     <select name="inventory_condition"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                         <option value="low">Low</option>
                                         <option value="normal" selected>Normal</option>
                                         <option value="overstock">Overstock</option>
@@ -558,7 +552,7 @@
                                 <div>
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Cashflow</label>
                                     <select name="cashflow_condition"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                         <option value="healthy" selected>Healthy</option>
                                         <option value="tight">Tight</option>
                                         <option value="critical">Critical</option>
@@ -568,7 +562,7 @@
                                 <div>
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Marketing Dependency</label>
                                     <select name="marketing_dependency"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                         <option value="mostly_organic">Mostly Organic</option>
                                         <option value="balanced" selected>Balanced</option>
                                         <option value="mostly_ads">Mostly Ads</option>
@@ -578,7 +572,7 @@
                                 <div>
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Product Lifecycle</label>
                                     <select name="product_lifecycle"
-                                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
+                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-navy-700 rounded-xl px-4 py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring">
                                         <option value="new">New</option>
                                         <option value="growing" selected>Growing</option>
                                         <option value="mature">Mature</option>
@@ -604,7 +598,7 @@
 
                 <!-- Right Panel - Results -->
                 <div class="lg:col-span-8">
-                    <div class="mb-8 bg-white rounded-3xl p-6 shadow-sm border border-orange-100 fade-in-up">
+                    <div class="mb-8 bg-white dark:bg-navy-900 rounded-3xl p-6 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors fade-in-up">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 bg-gradient-orange rounded-xl flex items-center justify-center">
@@ -615,8 +609,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-black text-navy-800">Decision Engine</h3>
-                                    <p class="text-xs text-navy-500">Gunakan panel di samping untuk menganalisis
+                                    <h3 class="text-lg font-black text-navy-800 dark:text-white">Decision Engine</h3>
+                                    <p class="text-xs text-navy-500 dark:text-slate-400">Gunakan panel di samping untuk menganalisis
                                         kelayakan bisnis.</p>
                                 </div>
                             </div>
@@ -632,16 +626,16 @@
                     </div>
 
                     <!-- Decision Engine Results Container -->
-                    <div id="resultsContainer" class="h-full flex flex-col items-center justify-center bg-white rounded-3xl border-2 border-dashed border-orange-200 p-12 text-center empty-state">
-                        <div class="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mb-6">
+                    <div id="resultsContainer" class="h-full flex flex-col items-center justify-center bg-white dark:bg-navy-900 rounded-3xl border-2 border-dashed border-orange-200 dark:border-orange-500/30 transition-colors p-12 text-center empty-state">
+                        <div class="w-24 h-24 bg-orange-50 dark:bg-navy-950 rounded-full flex items-center justify-center mb-6">
                             <svg class="w-10 h-10 text-orange-400 animate-spin" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         </div>
-                        <h4 class="text-2xl font-black text-navy-800 mb-2">Siap Menganalisis Bisnis Anda?</h4>
-                        <p class="text-gray-400 max-w-sm">Masukkan variabel harga dan biaya di sisi kiri. ClarityLabs akan
+                        <h4 class="text-2xl font-black text-navy-800 dark:text-white mb-2">Siap Menganalisis Bisnis Anda?</h4>
+                        <p class="text-gray-400 dark:text-slate-400 max-w-sm">Masukkan variabel harga dan biaya di sisi kiri. ClarityLabs akan
                             menghitung profitabilitas batch Anda secara instan.</p>
                     </div>
                 </div>
@@ -649,9 +643,9 @@
         </div>
     </div>
 
-    <footer class="bg-white border-t border-orange-100 py-10 mt-auto">
+    <footer class="bg-white dark:bg-navy-950 border-t border-orange-100 dark:border-navy-800 transition-colors py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="text-xl font-extrabold text-navy-800 mb-4 italic">
+            <div class="text-xl font-extrabold text-navy-800 dark:text-white mb-4 italic">
                 <span class="text-gradient-orange\">Clarity</span>Labs
             </div>
             <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">© 2026 Developed by Muhammad Ziyad
@@ -829,89 +823,48 @@
             return Math.max(50, Math.min(95, score));
         }
 
-        // 12. FINAL ENGINE
-        function runDecisionEngine(data) {
-            const totalCost = getTotalCost(data.cost);
-            const netMargin = getNetMargin(totalCost);
-            const status = getStatus(netMargin);
-
-            return {
-                hero: getHeroDecision(status),
-                netMargin,
-                totalCost,
-                status,
-                strategy: getStrategy(status, data.business),
-                production: getProductionDecision(status, data.business),
-                ads: getAdsInsight(data.cost, netMargin),
-                topCosts: getTopCosts(data.cost),
-                risks: getRisk(status, data.cost, data.business),
-                actions: getActionPlan(status),
-                confidence: getConfidence(netMargin, data.business, data.cost),
-                cost: data.cost,
-                costBreakdown: {
-                    hpp: (data.cost.hpp * 100).toFixed(1),
-                    admin: (data.cost.admin * 100).toFixed(1),
-                    ads: (data.cost.ads * 100).toFixed(1),
-                    affiliate: (data.cost.affiliate * 100).toFixed(1),
-                    promo: (data.cost.promo * 100).toFixed(1),
-                    overhead: (data.cost.overhead * 100).toFixed(1),
-                    tax: (data.cost.tax * 100).toFixed(1),
-                    total: (totalCost * 100).toFixed(1),
-                    netProfit: (netMargin * 100).toFixed(1)
-                }
-            };
-        }
-
         // Real-time calculation
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('decisionEngineForm');
-            const sellPriceInput = document.querySelector('input[name="selling_price"]');
-            const hppInput = document.querySelector('input[name="hpp"]');
-            const adminFeeInput = document.querySelector('input[name="admin_fee_percent"]');
-            const overheadInput = document.querySelector('input[name="overhead_percent"]');
-            const taxInput = document.querySelector('input[name="tax_percent"]');
-            const promoInput = document.querySelector('input[name="promo_percent"]');
-            const adsInput = document.querySelector('input[name="ads_percent"]');
-            const affiliateInput = document.querySelector('input[name="affiliate_percent"]');
 
-            const updateResults = () => {
-                const sellPrice = parseFloat(sellPriceInput.value) || 0;
-                const hpp = parseFloat(hppInput.value) || 0;
-                const adminFee = (parseFloat(adminFeeInput.value) || 0) / 100;
-                const overhead = (parseFloat(overheadInput.value) || 0) / 100;
-                const tax = (parseFloat(taxInput.value) || 0) / 100;
-                const promo = (parseFloat(promoInput.value) || 0) / 100;
-                const ads = (parseFloat(adsInput.value) || 0) / 100;
-                const affiliate = (parseFloat(affiliateInput.value) || 0) / 100;
-
-                if (sellPrice <= 0) return;
-
-                const data = {
-                    selling_price: sellPrice,
-                    cost: {
-                        hpp: hpp / sellPrice,
-                        admin: adminFee,
-                        ads: ads,
-                        affiliate: affiliate,
-                        promo: promo,
-                        overhead: overhead,
-                        tax: tax
-                    },
-                    business: {
-                        demand: "medium",
-                        cashflow: "healthy",
-                        stock: "normal"
-                    }
-                };
-
-                const result = runDecisionEngine(data);
-                displayResults(result);
-            };
-
-            // Form submission handler - only calculate on button click
-            form.addEventListener('submit', function(e) {
+            // Form submission handler
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                updateResults();
+                
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Analyzing...';
+                submitBtn.disabled = true;
+                
+                try {
+                    const formData = new FormData(form);
+                    
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    const res = await response.json();
+                    if (res.success) {
+                        displayResults(res.data);
+                        // Show a temporary success message
+                        const resultsContainer = document.getElementById('resultsContainer');
+                        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        alert('Error: ' + (res.message || 'Gagal menyimpan analisis'));
+                    }
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    alert('Terjadi kesalahan saat menghubungi server.');
+                } finally {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
             });
 
             // Toggle functionality
@@ -1029,14 +982,14 @@
         });
 
         function displayResults(result) {
-            const statusColor = result.status === 'CRITICAL' ? 'text-red-600' : result.status === 'FRAGILE' ? 'text-amber-600' : 'text-green-600';
-            const statusBg = result.status === 'CRITICAL' ? 'bg-red-50' : result.status === 'FRAGILE' ? 'bg-amber-50' : 'bg-green-50';
-            const statusBadgeBg = result.status === 'CRITICAL' ? 'bg-red-100' : result.status === 'FRAGILE' ? 'bg-amber-100' : 'bg-green-100';
+            const statusColor = result.status === 'CRITICAL' ? 'text-red-600 dark:text-red-500' : result.status === 'FRAGILE' ? 'text-amber-600 dark:text-amber-500' : 'text-green-600 dark:text-green-500';
+            const statusBg = result.status === 'CRITICAL' ? 'bg-red-50 dark:bg-red-900/20' : result.status === 'FRAGILE' ? 'bg-amber-50 dark:bg-amber-900/20' : 'bg-green-50 dark:bg-green-900/20';
+            const statusBadgeBg = result.status === 'CRITICAL' ? 'bg-red-100 dark:bg-red-900/40' : result.status === 'FRAGILE' ? 'bg-amber-100 dark:bg-amber-900/40' : 'bg-green-100 dark:bg-green-900/40';
 
             const html = `
                 <div class="space-y-6 result-card">
                     <!-- 1. HERO SECTION -->
-                    <div class="result-section bg-gradient-orange rounded-3xl p-8 shadow-md border border-orange-200">
+                    <div class="result-section bg-gradient-orange rounded-3xl p-8 shadow-md border border-orange-200 dark:border-orange-500/30">
                         <div class="text-white">
                             <div class="flex items-center gap-3 mb-2">
                                 <span class="section-number">1</span>
@@ -1048,164 +1001,164 @@
                     </div>
 
                     <!-- 2. PROFIT REALITY -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">2</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Profit Reality</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Profit Reality</h3>
                         </div>
-                        <div class="mb-6 pb-6 border-b border-gray-200">
-                            <div class="text-sm font-semibold text-gray-600 mb-2">Net Margin</div>
+                        <div class="mb-6 pb-6 border-b border-gray-200 dark:border-white/5 transition-colors">
+                            <div class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">Net Margin</div>
                             <div class="flex items-baseline gap-3">
                                 <div class="text-5xl font-black ${statusColor}">${(result.netMargin * 100).toFixed(1)}%</div>
-                                <div class="inline-block px-4 py-2 rounded-full ${statusBadgeBg} text-sm font-bold ${statusColor}">${result.status}</div>
+                                <div class="inline-block px-4 py-2 rounded-full ${statusBadgeBg} text-sm font-bold ${statusColor} transition-colors">${result.status}</div>
                             </div>
                         </div>
                         
-                        <div class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-4">Cost Breakdown:</div>
+                        <div class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-4">Cost Breakdown:</div>
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div class="space-y-3">
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">Revenue</span><span class="font-bold">100%</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">HPP</span><span class="font-bold">${result.costBreakdown.hpp}%</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">Admin Fee</span><span class="font-bold">${result.costBreakdown.admin}%</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">Ads</span><span class="font-bold">${result.costBreakdown.ads}%</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">Affiliate</span><span class="font-bold">${result.costBreakdown.affiliate}%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">Revenue</span><span class="font-bold dark:text-white">100%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">HPP</span><span class="font-bold dark:text-white">${result.costBreakdown.hpp}%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">Admin Fee</span><span class="font-bold dark:text-white">${result.costBreakdown.admin}%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">Ads</span><span class="font-bold dark:text-white">${result.costBreakdown.ads}%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">Affiliate</span><span class="font-bold dark:text-white">${result.costBreakdown.affiliate}%</span></div>
                             </div>
                             <div class="space-y-3">
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">Promo</span><span class="font-bold">${result.costBreakdown.promo}%</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">Overhead</span><span class="font-bold">${result.costBreakdown.overhead}%</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-700">Tax</span><span class="font-bold">${result.costBreakdown.tax}%</span></div>
-                                <div class="border-t border-gray-300 pt-2">
-                                    <div class="flex justify-between text-sm font-bold"><span>Total Cost</span><span>${result.costBreakdown.total}%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">Promo</span><span class="font-bold dark:text-white">${result.costBreakdown.promo}%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">Overhead</span><span class="font-bold dark:text-white">${result.costBreakdown.overhead}%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-400">Tax</span><span class="font-bold dark:text-white">${result.costBreakdown.tax}%</span></div>
+                                <div class="border-t border-gray-300 dark:border-white/10 pt-2 transition-colors">
+                                    <div class="flex justify-between text-sm font-bold dark:text-white"><span>Total Cost</span><span>${result.costBreakdown.total}%</span></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                        <div class="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-500/30 rounded-xl p-4 transition-colors">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm font-bold text-gray-700">Net Profit</span>
+                                <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Net Profit</span>
                                 <span class="text-2xl font-black ${statusColor}">${result.costBreakdown.netProfit}%</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- 3. COST PRESSURE DETECTOR -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">3</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Cost Pressure Detector</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Cost Pressure Detector</h3>
                         </div>
                         <div class="mb-6">
-                            <div class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-4">Biggest Cost Drivers:</div>
+                            <div class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-4">Biggest Cost Drivers:</div>
                             <div class="space-y-3">
                                 ${result.topCosts.map((cost, idx) => `
-                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-navy-950 rounded-lg transition-colors">
                                         <div class="flex items-center gap-3">
-                                            <span class="w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 font-bold rounded-full text-sm">${idx + 1}</span>
-                                            <span class="text-gray-700 font-semibold capitalize">${cost[0]}</span>
+                                            <span class="w-8 h-8 flex items-center justify-center bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-400 font-bold rounded-full text-sm">${idx + 1}</span>
+                                            <span class="text-gray-700 dark:text-gray-300 font-semibold capitalize">${cost[0]}</span>
                                         </div>
-                                        <span class="font-bold text-lg">${(parseFloat(cost[1]) * 100).toFixed(1)}%</span>
+                                        <span class="font-bold text-lg dark:text-white">${(parseFloat(cost[1]) * 100).toFixed(1)}%</span>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
-                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                            <div class="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">Insight:</div>
-                            <p class="text-sm text-blue-900">${result.status === 'CRITICAL' ? 'Cost structure terlalu berat bahkan sebelum scaling dimulai.' : result.status === 'FRAGILE' ? 'Margin tertekan oleh kombinasi ads + platform fee.' : 'Cost structure masih dalam batas sehat dan scalable.'}</p>
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-900/30 rounded-xl p-4 transition-colors">
+                            <div class="text-xs font-bold text-blue-900 dark:text-blue-400 uppercase tracking-wider mb-2">Insight:</div>
+                            <p class="text-sm text-blue-900 dark:text-blue-200">${result.status === 'CRITICAL' ? 'Cost structure terlalu berat bahkan sebelum scaling dimulai.' : result.status === 'FRAGILE' ? 'Margin tertekan oleh kombinasi ads + platform fee.' : 'Cost structure masih dalam batas sehat dan scalable.'}</p>
                         </div>
                     </div>
 
                     <!-- 4. RISK ANALYSIS -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">4</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Risk Analysis</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Risk Analysis</h3>
                         </div>
                         <div class="space-y-2">
                             ${result.risks.length > 0 ? result.risks.map(risk => `
-                                <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                                    <span class="text-red-600 font-bold text-lg mt-0.5">•</span>
-                                    <span class="text-red-900 text-sm">${risk}</span>
+                                <div class="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-900/30 transition-colors">
+                                    <span class="text-red-600 dark:text-red-400 font-bold text-lg mt-0.5">•</span>
+                                    <span class="text-red-900 dark:text-red-200 text-sm">${risk}</span>
                                 </div>
-                            `).join('') : '<p class="text-gray-700">No significant risks identified.</p>'}
+                            `).join('') : '<p class="text-gray-700 dark:text-gray-400">No significant risks identified.</p>'}
                         </div>
                     </div>
 
                     <!-- 5. STRATEGY DIRECTION -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">5</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Strategy Direction</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Strategy Direction</h3>
                         </div>
-                        <div class="bg-orange-50 border border-orange-200 rounded-xl p-6">
-                            <div class="text-sm font-bold text-orange-700 uppercase tracking-wider mb-2">Operating Mode</div>
-                            <div class="text-3xl font-black text-orange-600 mb-4">${result.strategy}</div>
-                            <p class="text-gray-700 font-semibold">Focus: ${result.status === 'CRITICAL' ? 'memperbaiki unit economics, bukan jualan' : result.status === 'FRAGILE' ? 'jaga margin & cashflow' : 'scale & expansion'}</p>
+                        <div class="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-500/30 rounded-xl p-6 transition-colors">
+                            <div class="text-sm font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider mb-2">Operating Mode</div>
+                            <div class="text-3xl font-black text-orange-600 dark:text-orange-500 mb-4">${result.strategy}</div>
+                            <p class="text-gray-700 dark:text-gray-300 font-semibold">Focus: ${result.status === 'CRITICAL' ? 'memperbaiki unit economics, bukan jualan' : result.status === 'FRAGILE' ? 'jaga margin & cashflow' : 'scale & expansion'}</p>
                         </div>
                     </div>
 
                     <!-- 6. PRODUCTION DECISION -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">6</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Production Decision</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Production Decision</h3>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                                <div class="text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Production Model</div>
-                                <div class="text-lg font-bold text-navy-800">${result.production.model}</div>
+                            <div class="bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-xl p-4 transition-colors">
+                                <div class="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-2">Production Model</div>
+                                <div class="text-lg font-bold text-navy-800 dark:text-white">${result.production.model}</div>
                             </div>
-                            <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
-                                <div class="text-xs font-bold text-orange-700 uppercase tracking-wider mb-2">Recommended Batch</div>
-                                <div class="text-2xl font-black text-orange-600">${result.production.batch} <span class="text-sm">pcs</span></div>
+                            <div class="bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-500/30 rounded-xl p-4 transition-colors">
+                                <div class="text-xs font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider mb-2">Recommended Batch</div>
+                                <div class="text-2xl font-black text-orange-600 dark:text-orange-500">${result.production.batch} <span class="text-sm">pcs</span></div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 7. ADS INSIGHT -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">7</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Ads Insight</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Ads Insight</h3>
                         </div>
                         <div class="space-y-4">
-                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
-                                <span class="text-gray-700 font-semibold">Ads Cost</span>
-                                <span class="text-2xl font-black text-orange-600">${(result.cost.ads * 100).toFixed(1)}%</span>
+                            <div class="flex justify-between items-center p-4 bg-gray-50 dark:bg-navy-950 rounded-xl transition-colors">
+                                <span class="text-gray-700 dark:text-gray-300 font-semibold">Ads Cost</span>
+                                <span class="text-2xl font-black text-orange-600 dark:text-orange-500">${(result.costBreakdown.ads)}%</span>
                             </div>
-                            <div class="p-4 rounded-xl ${result.ads.status === 'DANGEROUS' ? 'bg-red-50 border border-red-200' : result.ads.status === 'PRESSURING' ? 'bg-amber-50 border border-amber-200' : 'bg-green-50 border border-green-200'}">
-                                <div class="text-xs font-bold uppercase tracking-wider mb-2 ${result.ads.status === 'DANGEROUS' ? 'text-red-700' : result.ads.status === 'PRESSURING' ? 'text-amber-700' : 'text-green-700'}">Status: ${result.ads.status}</div>
-                                <p class="text-sm ${result.ads.status === 'DANGEROUS' ? 'text-red-900' : result.ads.status === 'PRESSURING' ? 'text-amber-900' : 'text-green-900'}">${result.ads.message}</p>
+                            <div class="p-4 rounded-xl transition-colors ${result.ads.status === 'DANGEROUS' ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30' : result.ads.status === 'PRESSURING' ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/30' : 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/30'}">
+                                <div class="text-xs font-bold uppercase tracking-wider mb-2 ${result.ads.status === 'DANGEROUS' ? 'text-red-700 dark:text-red-400' : result.ads.status === 'PRESSURING' ? 'text-amber-700 dark:text-amber-400' : 'text-green-700 dark:text-green-400'}">Status: ${result.ads.status}</div>
+                                <p class="text-sm ${result.ads.status === 'DANGEROUS' ? 'text-red-900 dark:text-red-200' : result.ads.status === 'PRESSURING' ? 'text-amber-900 dark:text-amber-200' : 'text-green-900 dark:text-green-200'}">${result.ads.message}</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- 8. ACTION PLAN -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">8</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Action Plan</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Action Plan</h3>
                         </div>
                         <div class="space-y-2">
                             ${result.actions.map((action, idx) => `
-                                <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                                    <span class="text-green-600 font-bold">✓</span>
-                                    <span class="text-green-900 text-sm">${action}</span>
+                                <div class="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-900/30 transition-colors">
+                                    <span class="text-green-600 dark:text-green-400 font-bold">✓</span>
+                                    <span class="text-green-900 dark:text-green-200 text-sm">${action}</span>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
 
                     <!-- 9. DECISION CONFIDENCE -->
-                    <div class="result-section bg-white rounded-3xl p-8 shadow-sm border border-orange-100">
+                    <div class="result-section bg-white dark:bg-navy-900 rounded-3xl p-8 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors">
                         <div class="flex items-center gap-3 mb-6">
                             <span class="section-number">9</span>
-                            <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Decision Confidence</h3>
+                            <h3 class="section-title dark:text-white" style="margin: 0; border: none; padding: 0;">Decision Confidence</h3>
                         </div>
                         <div class="space-y-4">
-                            <div class="text-5xl font-black text-orange-600">${result.confidence}%</div>
-                            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden border border-gray-300">
+                            <div class="text-5xl font-black text-orange-600 dark:text-orange-400">${result.confidence}%</div>
+                            <div class="w-full bg-gray-200 dark:bg-navy-950 rounded-full h-3 overflow-hidden border border-gray-300 dark:border-white/10 transition-colors">
                                 <div class="bg-gradient-orange h-3 rounded-full" style="width: ${result.confidence}%"></div>
                             </div>
-                            <p class="text-sm text-gray-700">Confidence level untuk keputusan ini berdasarkan data yang tersedia dan kondisi pasar saat ini.</p>
+                            <p class="text-sm text-gray-700 dark:text-gray-400">Confidence level untuk keputusan ini berdasarkan data yang tersedia dan kondisi pasar saat ini.</p>
                         </div>
                     </div>
 
@@ -1240,8 +1193,8 @@
                     </div>
 
                     <!-- Print Button -->
-                    <div class="result-section flex gap-4 sticky bottom-0 bg-white rounded-3xl p-6 shadow-lg border border-orange-100">
-                        <button onclick="window.print()" class="flex-1 btn-pdf flex items-center justify-center gap-2 text-white py-3 rounded-xl text-sm font-bold uppercase tracking-wider">
+                    <div class="result-section flex gap-4 sticky bottom-0 bg-white dark:bg-navy-900 rounded-3xl p-6 shadow-lg border border-orange-100 dark:border-orange-500/20 transition-colors">
+                        <button onclick="window.print()" class="flex-1 bg-gradient-orange flex items-center justify-center gap-2 text-white py-3 rounded-xl text-sm font-bold uppercase tracking-wider hover:shadow-lg transition-all">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                             </svg>

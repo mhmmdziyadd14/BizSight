@@ -55,4 +55,14 @@ class User extends Authenticatable
     {
         return isset($this->role) && strcasecmp($this->role, 'admin') === 0;
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function accesses()
+    {
+        return $this->hasMany(UserAccess::class);
+    }
 }

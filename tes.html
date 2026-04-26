@@ -1,1525 +1,1866 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual Clarity Pack — ClarityLab</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ora:#f05423;--ora-lt:#fde8e0;--ora-dk:#c03a14;
-  --blk:#010101;--bg:#fff;--bg2:#f8f7f4;--bg3:#f0efeb;
-  --bd:#e0dfdb;--bd2:#cccbc7;
-  --t1:#1a1a1a;--t2:#555550;--t3:#999994;
-  --grn:#3B6D11;--grn-lt:#EAF3DE;--grn-bd:#97C459;
-  --red:#E24B4A;--red-lt:#FCEBEB;--red-bd:#F09595;
-  --rad:6px;--radlg:10px;
-}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;background:var(--bg2);color:var(--t1);font-size:13px;line-height:1.4}
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+  }
 
-/* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;background:var(--bg);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
-.lm{width:26px;height:26px;background:var(--blk);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.lt{font-size:14px;font-weight:700;color:var(--t1)}
-.top-r{display:flex;align-items:center;gap:10px}
-.ai-pill{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 11px;border-radius:20px;background:var(--ora-lt);color:#7a2510;font-weight:600;border:1px solid rgba(240,84,35,.2)}
-.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--ora);transition:.3s}
-.ai-dot.pulse{animation:pulse 1.2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.btn-pdf{display:flex;align-items:center;gap:6px;padding:8px 18px;border:none;border-radius:var(--rad);background:var(--blk);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;white-space:nowrap}
-.btn-pdf:hover{background:#222}
-.btn-pdf:disabled{opacity:.5;cursor:not-allowed}
+  :root {
+    --cl-black: #010101;
+    --cl-orange: #f05423;
+    --cl-orange-light: #fde8e0;
+    --cl-orange-mid: #f7a080
+  }
 
-/* LAYOUT */
-.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 52px)}
-.sidebar{background:var(--bg);border-right:1px solid var(--bd);display:flex;flex-direction:column;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto}
-.sb-top{padding:14px 16px 10px;border-bottom:1px solid var(--bd)}
-.pbar-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:5px;font-weight:600;letter-spacing:.03em}
-.pbar{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.pbar-fill{height:3px;background:var(--ora);border-radius:2px;transition:.4s;width:0%}
-.sb-nav{padding:8px 0;flex:1}
-.sb-sec{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:8px 16px 4px}
-.nv{display:flex;align-items:center;gap:9px;padding:8px 16px;font-size:12px;color:var(--t2);cursor:pointer;border-left:2.5px solid transparent;transition:.1s;user-select:none}
-.nv:hover{background:var(--bg2);color:var(--t1)}
-.nv.on{background:var(--ora-lt);color:#7a2510;border-left-color:var(--ora);font-weight:700}
-.nv.ai-done .nb{background:var(--grn-lt);border-color:var(--grn-bd);color:var(--grn)}
-.nb{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--t3);transition:.2s}
-.nv.on .nb{background:var(--ora);border-color:var(--ora);color:#fff}
-.ai-tag{font-size:9px;padding:1px 6px;border-radius:10px;background:var(--grn-lt);color:var(--grn);margin-left:auto;font-weight:700;border:1px solid var(--grn-bd)}
-.sb-foot{padding:12px 16px;border-top:1px solid var(--bd);margin-top:auto}
+  .site {
+    font-family: var(--font-sans);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary)
+  }
 
-/* MAIN */
-.main-content{padding:24px 28px;max-width:880px}
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 0.5px solid var(--color-border-tertiary)
+  }
 
-/* PAGE */
-.pg{display:none}.pg.on{display:block}
-.eyebrow{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px;letter-spacing:.04em}
-.ey-ora{background:var(--ora-lt);color:#7a2510;border:1px solid rgba(240,84,35,.2)}
-.ey-ai{background:var(--grn-lt);color:var(--grn);border:1px solid var(--grn-bd)}
-.ph1{font-size:20px;font-weight:800;margin-bottom:4px;color:var(--t1)}
-.psub{font-size:12px;color:var(--t2);margin-bottom:18px;line-height:1.6}
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer
+  }
 
-/* CARD */
-.card{background:var(--bg);border:1px solid var(--bd);border-radius:var(--radlg);padding:18px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.ct{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:7px}
-.cd{width:7px;height:7px;border-radius:2px;background:var(--ora);flex-shrink:0}
-.ai-note{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--grn);font-weight:700;margin-left:4px}
+  .nav-logo-mark {
+    width: 28px;
+    height: 28px;
+    background: var(--cl-black);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+  }
 
-/* FORM */
-.fg{margin-bottom:12px}.fg:last-child{margin-bottom:0}
-.fl{display:block;font-size:10px;font-weight:700;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
-.fi,.fs,.fta{width:100%;padding:8px 11px;border:1px solid var(--bd);border-radius:var(--rad);background:var(--bg);color:var(--t1);font-size:13px;font-family:inherit;transition:.15s}
-.fi:focus,.fs:focus,.fta:focus{outline:none;border-color:var(--ora);box-shadow:0 0 0 3px rgba(240,84,35,.1);background:var(--bg)}
-.fta{resize:vertical;min-height:64px;line-height:1.5}
-.fi.af,.fta.af,.fs.af{border-color:var(--grn-bd);background:var(--grn-lt)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+  .nav-logo-text {
+    font-size: 15px;
+    font-weight: 500
+  }
 
-/* TAG SELECT */
-.tg-grp{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
-.tg{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--bd);cursor:pointer;background:var(--bg);color:var(--t2);transition:.1s;user-select:none;font-family:inherit}
-.tg:hover{border-color:var(--ora);color:var(--ora)}
-.tg.on{background:var(--ora-lt);color:#7a2510;border-color:rgba(240,84,35,.4);font-weight:700}
-.tg.ai-on{background:var(--grn-lt);color:var(--grn);border-color:var(--grn-bd);font-weight:700}
+  .nav-links {
+    display: flex;
+    gap: 28px
+  }
 
-/* IMAGE UPLOAD — KEY FIX */
-.img-upload-wrap{position:relative;cursor:pointer}
-.img-upload-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2}
-.img-upload-box{border:2px dashed var(--bd2);border-radius:var(--radlg);padding:20px;text-align:center;background:var(--bg2);transition:.15s;pointer-events:none}
-.img-upload-wrap:hover .img-upload-box{border-color:var(--ora);background:var(--ora-lt)}
-.img-upload-box.has-img{border-style:solid;border-color:var(--grn-bd);background:var(--grn-lt)}
-.img-preview-inner{width:100%;max-height:180px;object-fit:contain;border-radius:6px;display:block;margin:0 auto}
-.img-placeholder{display:flex;flex-direction:column;align-items:center;gap:6px}
-.img-ph-icon{width:36px;height:36px;border-radius:var(--rad);background:var(--bg);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center}
-.img-ph-title{font-size:13px;font-weight:600;color:var(--t1)}
-.img-ph-sub{font-size:11px;color:var(--t3)}
+  .nav-links a {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    text-decoration: none
+  }
 
-/* CARE */
-.care-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.ci{padding:10px 6px;border:1px solid var(--bd);border-radius:var(--rad);text-align:center;cursor:pointer;background:var(--bg);transition:.1s;user-select:none}
-.ci:hover{border-color:var(--ora)}
-.ci.on{border-color:var(--ora);background:var(--ora-lt)}
-.ci.ai-on{border-color:var(--grn-bd);background:var(--grn-lt)}
-.ci-ic{width:26px;height:26px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;margin:0 auto 5px}
-.ci.on .ci-ic,.ci:hover .ci-ic{color:var(--ora)}
-.ci.ai-on .ci-ic{color:var(--grn)}
-.ci-nm{font-size:10px;font-weight:700;color:var(--t1)}
-.ci-sb{font-size:9px;color:var(--t3);margin-top:1px}
-.ci-ai{font-size:9px;color:var(--grn);font-weight:700;margin-top:2px}
+  .nav-cta {
+    display: flex;
+    gap: 8px
+  }
 
-/* CHECKLIST */
-.cl-item{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--bg3)}
-.cl-item:last-child{border-bottom:none}
-.cb{width:18px;height:18px;border:2px solid var(--bd2);border-radius:4px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:.1s}
-.cb:hover{border-color:var(--ora)}
-.cb.on{background:var(--ora);border-color:var(--ora)}
-.cl-res{display:flex;gap:5px;margin-left:auto;flex-shrink:0;padding-top:1px}
-.rc{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--bd);cursor:pointer;background:var(--bg);color:var(--t3);font-weight:700;transition:.1s}
-.rc.ok{background:var(--grn-lt);color:var(--grn);border-color:var(--grn-bd)}
-.rc.nok{background:var(--red-lt);color:var(--red);border-color:var(--red-bd)}
+  .btn-ghost {
+    font-size: 13px;
+    padding: 7px 16px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: transparent;
+    color: var(--color-text-primary);
+    cursor: pointer
+  }
 
-/* TABLE */
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
-.tbl th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);padding:7px 8px;border-bottom:2px solid var(--bd);text-align:left;background:var(--bg3)}
-.tbl td{padding:6px 7px;border-bottom:1px solid var(--bg3)}
-.tbl tr:hover td{background:var(--bg2)}
-.tbl td input,.tbl td select{width:100%;padding:4px 7px;border:1px solid var(--bd);border-radius:5px;background:var(--bg);color:var(--t1);font-size:11px;font-family:inherit}
-.tbl td input.af{border-color:var(--grn-bd);background:var(--grn-lt)}
-.btn-add{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ora);background:none;border:none;cursor:pointer;padding:5px 0;margin-top:6px;font-family:inherit;font-weight:700}
+  .btn-solid {
+    font-size: 13px;
+    padding: 7px 16px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    background: var(--cl-orange);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 500
+  }
 
-/* TIMELINE */
-.tl-wrap{overflow-x:auto;padding:16px 4px 8px}
-.tl-row{display:flex;min-width:700px}
-.tl-slot{flex:1;text-align:center;position:relative;padding-bottom:12px}
-.tl-line{position:absolute;top:10px;left:50%;right:-50%;height:2px;background:var(--bg3);z-index:0}
-.tl-slot:last-child .tl-line{display:none}
-.tl-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;position:relative;z-index:1;font-size:9px;font-weight:800;border:2px solid}
-.tl-dot.done{background:var(--grn-lt);border-color:var(--grn-bd);color:var(--grn)}
-.tl-dot.cur{background:var(--ora);border-color:var(--ora);color:#fff}
-.tl-dot.wait{background:var(--bg);border-color:var(--bd2);color:var(--t3)}
-.tl-lbl{font-size:10px;font-weight:700;margin-bottom:4px;color:var(--t1)}
-.tl-di{width:calc(100% - 8px);margin:0 auto;padding:3px 5px;border:1px solid var(--bd);border-radius:4px;font-size:10px;font-family:inherit;text-align:center;background:var(--bg);color:var(--t1)}
+  .hero {
+    padding: 80px 40px 72px;
+    max-width: 700px
+  }
 
-/* COVER PREVIEW */
-.cp-body{padding:40px 32px;text-align:center;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;transition:.3s;border-radius:var(--radlg) var(--radlg) 0 0}
-.cp-tl{position:absolute;top:14px;left:14px;background:rgba(0,0,0,.25);padding:5px 9px;border-radius:4px}
-.cp-brand{font-size:60px;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;text-transform:uppercase;text-shadow:0 2px 8px rgba(0,0,0,.2)}
-.cp-logo-area{width:60px;height:60px;border-radius:8px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin:8px auto}
-.cp-logo-img{width:100%;height:100%;object-fit:contain;border-radius:6px}
-.cp-for{font-size:12px;color:rgba(255,255,255,.8);font-weight:600;margin-top:16px}
-.cp-rec{font-size:11px;color:rgba(255,255,255,.65);margin-top:3px}
-.cp-foot{background:var(--blk);padding:9px 20px;display:flex;justify-content:space-between;border-radius:0 0 var(--radlg) var(--radlg)}
-.cp-foot span{font-size:10px;color:rgba(255,255,255,.5)}
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    border: 0.5px solid var(--color-border-tertiary);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 24px
+  }
 
-/* NAV BUTTONS */
-.sn{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--bd)}
-.bp{font-size:12px;padding:9px 18px;border:1px solid var(--bd);border-radius:var(--rad);background:transparent;color:var(--t1);cursor:pointer;font-family:inherit;font-weight:600}
-.bn{font-size:12px;padding:9px 18px;border:none;border-radius:var(--rad);background:var(--ora);color:#fff;cursor:pointer;font-family:inherit;font-weight:700}
-.bn:hover{background:var(--ora-dk)}
-.bn.blk{background:var(--blk)}.bn.blk:hover{background:#333}
+  .hero-eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cl-orange)
+  }
 
-/* INFO / STATUS */
-.ib{padding:10px 13px;background:var(--bg2);border-radius:var(--rad);border-left:3px solid var(--ora);margin-bottom:14px;font-size:12px;color:var(--t2);line-height:1.6}
-.ib.g{border-color:var(--grn-bd);background:var(--grn-lt);color:#274a0a}
-.ib.r{border-color:var(--red-bd);background:var(--red-lt);color:#5a1313}
-.analyzing{padding:18px;background:var(--bg2);border-radius:var(--radlg);border:1px solid var(--bd);text-align:center;margin-top:14px}
-.spin{width:28px;height:28px;border:2.5px solid var(--bd2);border-top-color:var(--ora);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ai-result-box{background:var(--grn-lt);border:1px solid var(--grn-bd);border-radius:var(--radlg);padding:16px;margin-top:14px}
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em
+  }
 
-/* UPLOAD ZONE for main image */
-.main-upz{position:relative;cursor:pointer;display:block}
-.main-upz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:5}
-.main-upz-inner{border:2px dashed var(--bd2);border-radius:var(--radlg);padding:28px 20px;text-align:center;background:var(--bg2);transition:.15s}
-.main-upz:hover .main-upz-inner{border-color:var(--ora);background:var(--ora-lt)}
+  .hero h1 em {
+    font-style: normal;
+    color: var(--cl-orange)
+  }
 
-@media(max-width:700px){
-  .layout{grid-template-columns:1fr}.sidebar{display:none}
-  .g2,.g3,.g4{grid-template-columns:1fr}
-  .care-grid{grid-template-columns:repeat(3,1fr)}
-  .main-content{padding:16px}
-}
+  .hero-sub {
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 560px;
+    margin-bottom: 32px
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap
+  }
+
+  .btn-primary {
+    font-size: 14px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    background: var(--cl-orange);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 500
+  }
+
+  .btn-secondary {
+    font-size: 14px;
+    padding: 10px 24px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: transparent;
+    color: var(--color-text-primary);
+    cursor: pointer
+  }
+
+  .hero-stat {
+    font-size: 13px;
+    color: var(--color-text-tertiary);
+    margin-top: 40px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap
+  }
+
+  .hero-stat-item strong {
+    font-weight: 500;
+    color: var(--color-text-primary);
+    display: block;
+    font-size: 22px
+  }
+
+  .divider-full {
+    border: none;
+    border-top: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .section {
+    padding: 64px 40px
+  }
+
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cl-orange);
+    margin-bottom: 8px
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em
+  }
+
+  .section-sub {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 520px;
+    margin-bottom: 40px
+  }
+
+  .accent-line {
+    width: 32px;
+    height: 3px;
+    background: var(--cl-orange);
+    border-radius: 2px;
+    margin-bottom: 16px
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px
+  }
+
+  .pcard {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px
+  }
+
+  .pcard.featured {
+    border: 2px solid var(--cl-orange)
+  }
+
+  .pcard.coming {
+    border: 0.5px dashed var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    opacity: 0.85
+  }
+
+  .pcard-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cl-orange-light)
+  }
+
+  .pcard-icon.dim {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500
+  }
+
+  .tag-active {
+    background: var(--cl-orange-light);
+    color: #7a2510
+  }
+
+  .tag-popular {
+    background: var(--cl-orange);
+    color: #fff
+  }
+
+  .tag-soon {
+    background: var(--color-background-primary);
+    color: var(--color-text-tertiary);
+    border: 0.5px solid var(--color-border-secondary)
+  }
+
+  .pcard h3 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.3
+  }
+
+  .pcard.coming h3 {
+    color: var(--color-text-secondary)
+  }
+
+  .pcard p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    flex: 1
+  }
+
+  .pcard-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .pcard-price {
+    font-size: 20px;
+    font-weight: 500
+  }
+
+  .btn-co {
+    font-size: 13px;
+    padding: 7px 16px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: transparent;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    font-weight: 500
+  }
+
+  .btn-cf {
+    font-size: 13px;
+    padding: 7px 16px;
+    border-radius: var(--border-radius-md);
+    border: none;
+    background: var(--cl-orange);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 500
+  }
+
+  .btn-notify {
+    font-size: 13px;
+    padding: 7px 16px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer
+  }
+
+  .coming-bar-track {
+    height: 3px;
+    background: var(--color-border-tertiary);
+    border-radius: 2px;
+    margin-top: 6px
+  }
+
+  .coming-bar-fill {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--cl-orange)
+  }
+
+  /* BUNDLE SECTION */
+  .bundle-section {
+    margin-top: 24px
+  }
+
+  .bundle-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 12px
+  }
+
+  .bundle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px
+  }
+
+  .bundle-card {
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0
+  }
+
+  .bundle-card.tier1 {
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-secondary)
+  }
+
+  .bundle-card.tier2 {
+    border: 2px solid var(--cl-orange);
+    background: var(--color-background-primary)
+  }
+
+  .bundle-top-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px
+  }
+
+  .bundle-name {
+    font-size: 17px;
+    font-weight: 500
+  }
+
+  .bundle-desc {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px
+  }
+
+  .bundle-includes {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 20px
+  }
+
+  .bundle-include {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--color-text-secondary)
+  }
+
+  .bcheck {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--cl-orange-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0
+  }
+
+  .bcheck.full {
+    background: var(--cl-orange)
+  }
+
+  .bundle-pricing {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px
+  }
+
+  .bundle-price-new {
+    font-size: 26px;
+    font-weight: 500
+  }
+
+  .bundle-price-old {
+    font-size: 13px;
+    color: var(--color-text-tertiary);
+    text-decoration: line-through
+  }
+
+  .bundle-saving {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cl-orange);
+    margin-bottom: 16px
+  }
+
+  .bundle-cta {
+    width: 100%;
+    padding: 11px;
+    border-radius: var(--border-radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer
+  }
+
+  .bundle-cta.outline {
+    border: 0.5px solid var(--color-border-secondary);
+    background: transparent;
+    color: var(--color-text-primary)
+  }
+
+  .bundle-cta.fill {
+    border: none;
+    background: var(--cl-orange);
+    color: #fff
+  }
+
+  .best-badge {
+    font-size: 11px;
+    background: var(--cl-orange);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    flex-shrink: 0
+  }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px
+  }
+
+  .how-card {
+    padding: 24px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-primary)
+  }
+
+  .how-num {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--cl-orange);
+    margin-bottom: 12px;
+    font-family: var(--font-mono)
+  }
+
+  .how-card h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 8px
+  }
+
+  .how-card p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6
+  }
+
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px
+  }
+
+  .testi-card {
+    padding: 24px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-secondary)
+  }
+
+  .testi-text {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-style: italic
+  }
+
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 10px
+  }
+
+  .testi-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--cl-orange-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #7a2510;
+    flex-shrink: 0
+  }
+
+  .testi-name {
+    font-size: 13px;
+    font-weight: 500
+  }
+
+  .testi-role {
+    font-size: 12px;
+    color: var(--color-text-tertiary)
+  }
+
+  .login-strip {
+    background: var(--color-background-secondary);
+    border-top: 0.5px solid var(--color-border-tertiary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px
+  }
+
+  .login-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap
+  }
+
+  .login-form input {
+    font-size: 13px;
+    padding: 7px 12px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    width: 180px
+  }
+
+  .cta-section {
+    padding: 72px 40px;
+    text-align: center;
+    border-top: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .cta-section h2 {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px
+  }
+
+  .cta-section p {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    margin-bottom: 32px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6
+  }
+
+  .cta-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap
+  }
+
+  .footer {
+    padding: 40px;
+    border-top: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 40px
+  }
+
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-top: 10px;
+    max-width: 240px
+  }
+
+  .footer-col h4 {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-tertiary);
+    margin-bottom: 12px
+  }
+
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    margin-bottom: 8px
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 0.5px solid var(--color-border-tertiary);
+    flex-wrap: wrap;
+    gap: 8px
+  }
+
+  .footer-bottom p {
+    font-size: 12px;
+    color: var(--color-text-tertiary)
+  }
+
+  .footer-bottom-links {
+    display: flex;
+    gap: 16px
+  }
+
+  .footer-bottom-links a {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    text-decoration: none
+  }
+
+  /* DETAIL PAGES */
+  .page {
+    display: none
+  }
+
+  .page.active {
+    display: block
+  }
+
+  .detail-hero {
+    padding: 48px 40px 40px;
+    border-bottom: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .detail-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 24px
+  }
+
+  .detail-breadcrumb span {
+    color: var(--color-text-secondary)
+  }
+
+  .detail-breadcrumb button {
+    font-size: 12px;
+    color: var(--cl-orange);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0
+  }
+
+  .detail-hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 48px;
+    align-items: start
+  }
+
+  .detail-tag {
+    display: inline-flex;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    background: var(--cl-orange-light);
+    color: #7a2510;
+    margin-bottom: 16px
+  }
+
+  .detail-hero h1 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px
+  }
+
+  .detail-hero-sub {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 24px
+  }
+
+  .detail-includes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px
+  }
+
+  .detail-include-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-text-secondary)
+  }
+
+  .detail-include-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cl-orange);
+    flex-shrink: 0
+  }
+
+  .detail-buy-card {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 24px
+  }
+
+  .detail-buy-price {
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 4px
+  }
+
+  .detail-buy-note {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 20px
+  }
+
+  .detail-buy-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    background: var(--cl-orange);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 10px
+  }
+
+  .detail-buy-divider {
+    font-size: 11px;
+    text-align: center;
+    color: var(--color-text-tertiary);
+    margin: 8px 0
+  }
+
+  .detail-bundle-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px
+  }
+
+  .detail-bundle-opt {
+    padding: 10px 14px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    background: transparent;
+    text-align: left;
+    width: 100%
+  }
+
+  .detail-bundle-opt:hover {
+    border-color: var(--cl-orange)
+  }
+
+  .detail-bundle-opt-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary)
+  }
+
+  .detail-bundle-opt-price {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-top: 1px
+  }
+
+  .detail-bundle-opt-save {
+    font-size: 11px;
+    color: var(--cl-orange);
+    font-weight: 500
+  }
+
+  .detail-buy-features {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .detail-buy-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-text-secondary)
+  }
+
+  .detail-check {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--cl-orange-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0
+  }
+
+  .detail-section {
+    padding: 40px
+  }
+
+  .detail-section-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px
+  }
+
+  .detail-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px
+  }
+
+  .detail-feature-card {
+    padding: 20px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-primary)
+  }
+
+  .detail-feature-card h4 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px
+  }
+
+  .detail-feature-card p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6
+  }
+
+  .detail-for-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px
+  }
+
+  .detail-for-card {
+    padding: 16px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-secondary)
+  }
+
+  .detail-for-card strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px
+  }
+
+  .detail-for-card p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.5
+  }
+
+  .faq-item {
+    padding: 16px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .faq-q {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px
+  }
+
+  .faq-a {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6
+  }
+
+  .detail-cta {
+    padding: 48px 40px;
+    text-align: center;
+    background: var(--color-background-secondary);
+    border-top: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .detail-cta h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 8px
+  }
+
+  .detail-cta p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.6
+  }
+
+  .detail-cta-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap
+  }
+
+  @media(max-width:640px) {
+    .nav {
+      padding: 16px 20px
+    }
+
+    .nav-links {
+      display: none
+    }
+
+    .hero {
+      padding: 48px 20px
+    }
+
+    .hero h1 {
+      font-size: 28px
+    }
+
+    .section {
+      padding: 48px 20px
+    }
+
+    .product-grid,
+    .how-grid,
+    .testi-grid,
+    .bundle-grid {
+      grid-template-columns: 1fr
+    }
+
+    .footer-top {
+      grid-template-columns: 1fr 1fr
+    }
+
+    .login-strip,
+    .cta-section,
+    .footer {
+      padding-left: 20px;
+      padding-right: 20px
+    }
+
+    .detail-hero {
+      padding: 32px 20px
+    }
+
+    .detail-hero-inner {
+      grid-template-columns: 1fr
+    }
+
+    .detail-section {
+      padding: 32px 20px
+    }
+
+    .detail-grid-2,
+    .detail-for-grid {
+      grid-template-columns: 1fr
+    }
+
+    .detail-cta {
+      padding: 40px 20px
+    }
+  }
 </style>
-</head>
-<body>
 
-<div class="topbar">
-  <div class="logo">
-    <div class="lm"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><rect x="2" y="2" width="5" height="5" rx="1" fill="white" opacity=".9"/><rect x="9" y="9" width="5" height="5" rx="1" fill="#f05423"/><rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity=".4"/><rect x="2" y="9" width="5" height="5" rx="1" fill="white" opacity=".4"/></svg></div>
-    <span class="lt">Visual Clarity Pack</span>
-  </div>
-  <div class="top-r">
-    <div class="ai-pill"><span class="ai-dot" id="ai-dot"></span><span id="ai-txt">AI ready</span></div>
-    <button class="btn-pdf" id="btn-pdf" onclick="generatePDF()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v8M4 7.5l3 3 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11h10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Download PDF — A3
-    </button>
-  </div>
-</div>
+<div class="site" id="app">
+  <h2 class="sr-only">ClarityLab.id — homepage dengan 2 tier bundle dan harga 149k</h2>
 
-<div class="layout">
-  <div class="sidebar">
-    <div class="sb-top">
-      <div class="pbar-lbl"><span>Progress</span><span id="ppct">0%</span></div>
-      <div class="pbar"><div class="pbar-fill" id="pfill"></div></div>
-    </div>
-    <div class="sb-nav">
-      <p class="sb-sec">AI</p>
-      <div class="nv on" id="nav-0" onclick="gp(0,this)"><div class="nb">✦</div>AI Analisa</div>
-      <p class="sb-sec">Halaman</p>
-      <div class="nv" id="nav-1" onclick="gp(1,this)"><div class="nb">1</div>Cover Page</div>
-      <div class="nv" id="nav-2" onclick="gp(2,this)"><div class="nb">2</div>Technical Sheet<span class="ai-tag" id="chip-2" style="display:none">AI✓</span></div>
-      <div class="nv" id="nav-3" onclick="gp(3,this)"><div class="nb">3</div>Revision Log</div>
-      <div class="nv" id="nav-4" onclick="gp(4,this)"><div class="nb">4</div>Bill of Materials<span class="ai-tag" id="chip-4" style="display:none">AI✓</span></div>
-      <div class="nv" id="nav-5" onclick="gp(5,this)"><div class="nb">5</div>Packaging Spec<span class="ai-tag" id="chip-5" style="display:none">AI✓</span></div>
-      <div class="nv" id="nav-6" onclick="gp(6,this)"><div class="nb">6</div>Care Instruction<span class="ai-tag" id="chip-6" style="display:none">AI✓</span></div>
-      <div class="nv" id="nav-7" onclick="gp(7,this)"><div class="nb">7</div>Sample Checklist</div>
-      <div class="nv" id="nav-8" onclick="gp(8,this)"><div class="nb">8</div>Production Timeline</div>
-    </div>
-    <div class="sb-foot">
-      <button class="btn-pdf" style="width:100%;justify-content:center" onclick="generatePDF()">Download PDF A3</button>
-    </div>
-  </div>
-
-  <div class="main-content">
-
-    <!-- ═══ PAGE 0: AI ═══ -->
-    <div class="pg on" id="pg-0">
-      <span class="eyebrow ey-ai">✦ AI-Powered</span>
-      <p class="ph1">AI Upload & Analisa</p>
-      <p class="psub">Upload foto produk → AI analisa → semua field terisi otomatis di Technical Sheet, BOM, Packaging, dan Care Instruction.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Upload gambar produk / desain</div>
-        <label class="main-upz" id="main-upz-lbl">
-          <input type="file" accept="image/*" onchange="handleMainUpload(event)">
-          <div class="main-upz-inner" id="main-upz-inner">
-            <div style="width:40px;height:40px;border-radius:8px;background:var(--bg);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;margin:0 auto 10px">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4v9M7 8l3-4 3 4" stroke="var(--ora)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15v1a1.5 1.5 0 001.5 1.5h9A1.5 1.5 0 0016 16v-1" stroke="var(--t3)" stroke-width="1.4" stroke-linecap="round"/></svg>
-            </div>
-            <p style="font-size:14px;font-weight:700;margin-bottom:4px">Drag & drop atau klik upload</p>
-            <p style="font-size:12px;color:var(--t3)">PNG, JPG, WEBP — foto produk, flatlay, atau desain teknikal</p>
-          </div>
-        </label>
+  <nav class="nav">
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
+          <rect x="2" y="2" width="5" height="5" rx="1" fill="white" opacity="0.9" />
+          <rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity="0.4" />
+          <rect x="2" y="9" width="5" height="5" rx="1" fill="white" opacity="0.4" />
+          <rect x="9" y="9" width="5" height="5" rx="1" fill="#f05423" />
+        </svg>
       </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Konteks opsional</div>
-        <div class="g3">
-          <div class="fg"><label class="fl">Jenis produk</label><select class="fs" id="ctx-type"><option value="">AI deteksi otomatis</option><option>T-Shirt / Kaos</option><option>Kemeja</option><option>Jaket</option><option>Celana</option><option>Dress</option><option>Hoodie</option><option>Polo Shirt</option><option>Outer / Coat</option></select></div>
-          <div class="fg"><label class="fl">Target market</label><select class="fs" id="ctx-mkt"><option value="">AI tentukan</option><option>Mass market (Rp 50-150rb)</option><option>Mid-range (Rp 150-400rb)</option><option>Premium (Rp 400-800rb)</option><option>Luxury (Rp 800rb+)</option></select></div>
-          <div class="fg"><label class="fl">Catatan</label><input type="text" class="fi" id="ctx-note" placeholder="cth: outdoor, butuh breathable"></div>
+      <span class="nav-logo-text">ClarityLab</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Products</a>
+      <a href="#">How it works</a>
+      <a href="#">Pricing</a>
+      <a href="#">About</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-solid">Get started</button>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Tools untuk fashion brand owner</div>
+      <h1>Jalanin bisnis fashion<br>dengan <em>clarity</em>, bukan<br>tebak-tebakan.</h1>
+      <p class="hero-sub">ClarityLab menyediakan tools digital untuk bantu lo hitung HPP, susun brief yang jelas, dan
+        ambil keputusan bisnis berdasarkan data — bukan feeling.</p>
+      <div class="hero-actions">
+        <button class="btn-primary">Lihat semua tools</button>
+        <button class="btn-secondary">Pelajari lebih lanjut</button>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-item"><strong>5</strong>tools dalam ekosistem</div>
+        <div class="hero-stat-item"><strong>3</strong>tersedia sekarang</div>
+        <div class="hero-stat-item"><strong>2</strong>segera hadir</div>
+      </div>
+    </div>
+
+    <hr class="divider-full">
+
+    <div class="section">
+      <p class="section-eyebrow">Products</p>
+      <div class="accent-line"></div>
+      <h2 class="section-title">Satu ekosistem, lima tools.</h2>
+      <p class="section-sub">Dari ngitung HPP, bikin brief, evaluasi produk, kontrol inventory, sampai visual
+        profesional — semua ada di satu tempat.</p>
+
+      <div class="product-grid">
+        <div class="pcard">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div class="pcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="3" y="3" width="6" height="6" rx="1" fill="#f05423" />
+                <rect x="11" y="3" width="6" height="3" rx="1" fill="#f7a080" />
+                <rect x="11" y="8" width="6" height="1.5" rx="0.75" fill="#f7a080" />
+                <rect x="3" y="11" width="14" height="1.5" rx="0.75" fill="#f7a080" />
+                <rect x="3" y="14" width="10" height="1.5" rx="0.75" fill="#f7a080" />
+              </svg></div>
+            <span class="tag tag-active">Brief & Visual</span>
+          </div>
+          <div>
+            <h3>Visual Clarity Pack</h3>
+            <p>Template briefing dan dokumen kerja yang bikin tim, vendor, dan klien lo ngerti dari awal — tanpa perlu
+              diulang.</p>
+          </div>
+          <div class="pcard-footer"><span class="pcard-price">Rp 149k</span><button class="btn-co"
+              onclick="showPage('detail-vcp')">Lihat detail</button></div>
+        </div>
+
+        <div class="pcard featured">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div class="pcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="3" y="11" width="3" height="6" rx="1" fill="#f05423" />
+                <rect x="8.5" y="7" width="3" height="10" rx="1" fill="#f05423" />
+                <rect x="14" y="3" width="3" height="14" rx="1" fill="#c03a14" />
+                <path d="M3 10L8.5 6.5L14 3" stroke="#f7a080" stroke-width="1.5" stroke-linecap="round" />
+              </svg></div>
+            <span class="tag tag-popular">Paling populer</span>
+          </div>
+          <div>
+            <h3>Profit Clarity Calculator</h3>
+            <p>Hitung HPP produk fashion lo dengan benar — bahan, CMT, packaging, reject rate, sampai margin yang
+              realistis.</p>
+          </div>
+          <div class="pcard-footer"><span class="pcard-price">Rp 149k</span><button class="btn-cf"
+              onclick="showPage('detail-pcc')">Lihat detail</button></div>
+        </div>
+
+        <div class="pcard">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div class="pcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="6" stroke="#f05423" stroke-width="1.5" fill="none" />
+                <path d="M10 7v3l2 2" stroke="#c03a14" stroke-width="1.5" stroke-linecap="round" />
+                <circle cx="10" cy="10" r="1.5" fill="#f05423" />
+              </svg></div>
+            <span class="tag tag-active">Decision</span>
+          </div>
+          <div>
+            <h3>Decision Engine</h3>
+            <p>Evaluasi apakah produk layak dijual — berdasarkan angka, bukan feeling. Sebelum produksi, lo udah tau
+              jawabannya.</p>
+          </div>
+          <div class="pcard-footer"><span class="pcard-price">Rp 249k</span><button class="btn-co"
+              onclick="showPage('detail-de')">Lihat detail</button></div>
+        </div>
+
+        <div class="pcard coming">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div class="pcard-icon dim"><svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="3" y="5" width="14" height="10" rx="1.5" stroke="#888780" stroke-width="1.2" fill="none" />
+                <rect x="6" y="8" width="3" height="4" rx="0.5" fill="#888780" opacity="0.5" />
+                <rect x="11" y="8" width="3" height="2" rx="0.5" fill="#888780" opacity="0.5" />
+                <path d="M3 8h14" stroke="#888780" stroke-width="0.8" opacity="0.4" />
+              </svg></div>
+            <span class="tag tag-soon">Coming soon</span>
+          </div>
+          <div>
+            <h3>ClarityLabs Control</h3>
+            <p>Inventory control system — tau kapan restock, hindari dead stock, jaga cashflow tetap sehat.</p>
+          </div>
+          <div style="margin-top:4px">
+            <div style="display:flex;justify-content:space-between"><span
+                style="font-size:11px;color:var(--color-text-tertiary)">Dalam pengembangan</span><span
+                style="font-size:11px;color:var(--cl-orange);font-weight:500">65%</span></div>
+            <div class="coming-bar-track">
+              <div class="coming-bar-fill" style="width:65%"></div>
+            </div>
+          </div>
+          <div class="pcard-footer"><span style="font-size:13px;color:var(--color-text-tertiary)">Harga
+              menyusul</span><button class="btn-notify">Notify me</button></div>
+        </div>
+
+        <div class="pcard coming">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div class="pcard-icon dim"><svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="4" y="3" width="12" height="14" rx="1.5" stroke="#888780" stroke-width="1.2" fill="none" />
+                <rect x="6.5" y="6" width="7" height="5" rx="1" fill="#888780" opacity="0.3" />
+                <rect x="6.5" y="13" width="4" height="1" rx="0.5" fill="#888780" opacity="0.4" />
+                <circle cx="14" cy="6" r="2.5" fill="#f05423" opacity="0.25" stroke="#f05423" stroke-width="0.8" />
+              </svg></div>
+            <span class="tag tag-soon">Coming soon</span>
+          </div>
+          <div>
+            <h3>Mockup Design System</h3>
+            <p>Visual produk fashion yang profesional tanpa sesi foto mahal. Tingkatkan perceived value, percepat
+              konten.</p>
+          </div>
+          <div style="margin-top:4px">
+            <div style="display:flex;justify-content:space-between"><span
+                style="font-size:11px;color:var(--color-text-tertiary)">Dalam pengembangan</span><span
+                style="font-size:11px;color:var(--cl-orange);font-weight:500">40%</span></div>
+            <div class="coming-bar-track">
+              <div class="coming-bar-fill" style="width:40%"></div>
+            </div>
+          </div>
+          <div class="pcard-footer"><span style="font-size:13px;color:var(--color-text-tertiary)">Harga
+              menyusul</span><button class="btn-notify">Notify me</button></div>
         </div>
       </div>
-      <button id="ai-btn" onclick="doAI()" disabled style="width:100%;padding:13px;border:none;border-radius:var(--rad);background:var(--ora);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;opacity:.45;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="white" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Analisa dengan AI & isi semua field
-      </button>
-      <div id="ai-loading" style="display:none"><div class="analyzing"><div class="spin"></div><p style="font-size:13px;font-weight:700" id="ai-step-txt">Menganalisa...</p><p style="font-size:11px;color:var(--t3);margin-top:3px" id="ai-step-sub"></p></div></div>
-      <div id="ai-result-area"></div>
-      <div id="ai-error-area"></div>
-      <div class="sn"><div></div><button class="bn" onclick="gp(1,document.getElementById('nav-1'))">Cover Page →</button></div>
-    </div>
 
-    <!-- ═══ PAGE 1: COVER ═══ -->
-    <div class="pg" id="pg-1">
-      <span class="eyebrow ey-ora">Halaman 1 dari 8</span>
-      <p class="ph1">Cover Page</p>
-      <p class="psub">Halaman depan dokumen — nama brand, logo, dan penerima dokumen.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Identitas brand</div>
-        <div class="g2">
-          <div class="fg"><label class="fl">Nama brand</label><input type="text" class="fi" id="c-brand" placeholder="Nama brand lo" oninput="updateCoverPreview()"></div>
-          <div class="fg">
-            <label class="fl">Upload logo brand</label>
-            <div class="img-upload-wrap" id="logo-wrap">
-              <input type="file" accept="image/*" onchange="handleLogoUpload(event)">
-              <div class="img-upload-box" id="logo-box">
-                <div class="img-placeholder">
-                  <div class="img-ph-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="var(--t3)" stroke-width="1.2"/><path d="M5.5 9l2-2 2 2" stroke="var(--t3)" stroke-width="1.1" stroke-linecap="round"/><circle cx="6.5" cy="6" r="1" fill="var(--t3)"/></svg></div>
-                  <p class="img-ph-title">Upload logo</p>
-                  <p class="img-ph-sub">PNG / SVG · maks 2MB</p>
-                </div>
+      <!-- BUNDLE SECTION -->
+      <div class="bundle-section">
+        <p class="bundle-label">Bundle — pilih paket yang paling sesuai</p>
+        <div class="bundle-grid">
+
+          <!-- TIER 1 -->
+          <div class="bundle-card tier1">
+            <div class="bundle-top-row">
+              <div>
+                <p
+                  style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--color-text-tertiary);margin-bottom:4px">
+                  Tier 1</p>
+                <p class="bundle-name">Clarity Essentials</p>
               </div>
             </div>
+            <p class="bundle-desc">Dua tools inti untuk keputusan produk yang lebih tajam — hitung HPP dulu, lalu
+              evaluasi apakah produknya layak dijual.</p>
+            <div class="bundle-includes">
+              <div class="bundle-include">
+                <div class="bcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                  </svg></div>
+                Profit Clarity Calculator
+              </div>
+              <div class="bundle-include">
+                <div class="bcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                  </svg></div>
+                Decision Engine
+              </div>
+              <div class="bundle-include" style="opacity:0.4">
+                <div class="bcheck" style="background:var(--color-border-tertiary)"><svg width="8" height="8"
+                    viewBox="0 0 8 8" fill="none">
+                    <path d="M2 4h4" stroke="#888" stroke-width="1.2" stroke-linecap="round" />
+                  </svg></div>
+                <span style="text-decoration:line-through;font-size:12px">Visual Clarity Pack</span>
+              </div>
+            </div>
+            <div class="bundle-pricing">
+              <span class="bundle-price-new">Rp 279k</span>
+              <span class="bundle-price-old">Rp 398k</span>
+            </div>
+            <p class="bundle-saving">Hemat Rp 119k dari harga satuan</p>
+            <button class="bundle-cta outline">Beli Clarity Essentials</button>
           </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Penerima dokumen</div>
-        <div class="g3">
-          <div class="fg"><label class="fl">Ditujukan untuk</label>
-            <div class="tg-grp" id="c-recip"><div class="tg on" onclick="t1(this,'c-recip')">Client</div><div class="tg" onclick="t1(this,'c-recip')">Vendor</div><div class="tg" onclick="t1(this,'c-recip')">Supplier</div><div class="tg" onclick="t1(this,'c-recip')">Internal</div></div>
-          </div>
-          <div class="fg"><label class="fl">Nama penerima</label><input type="text" class="fi" id="c-recip-name" placeholder="cth: CV Maju Jaya" oninput="updateCoverPreview()"></div>
-          <div class="fg"><label class="fl">Tanggal dokumen</label><input type="date" class="fi" id="c-date"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Warna cover</div>
-        <div class="tg-grp" id="c-color">
-          <div class="tg on" onclick="t1(this,'c-color');setCoverColor('#f05423')" style="background:var(--ora-lt);color:#7a2510;border-color:rgba(240,84,35,.4)">● Orange</div>
-          <div class="tg" onclick="t1(this,'c-color');setCoverColor('#010101')">● Hitam</div>
-          <div class="tg" onclick="t1(this,'c-color');setCoverColor('#1D3557')">● Navy</div>
-          <div class="tg" onclick="t1(this,'c-color');setCoverColor('#2D4A22')">● Forest</div>
-          <div class="tg" onclick="t1(this,'c-color');setCoverColor('#2C2C2A')">● Charcoal</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Preview cover</div>
-        <div class="cp-body" id="cp-body" style="background:#f05423">
-          <div class="cp-tl"><p style="font-size:9px;color:rgba(255,255,255,.9);font-weight:800;letter-spacing:.06em">TECHNICAL PACKAGE</p><p style="font-size:7px;color:rgba(255,255,255,.5);margin-top:1px">CONFIDENTIAL</p></div>
-          <div class="cp-brand" id="prev-brand">BRAND</div>
-          <div class="cp-logo-area" id="prev-logo-area"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" opacity=".4"><rect x="3" y="3" width="8" height="8" rx="1" fill="white"/><rect x="13" y="3" width="8" height="8" rx="1" fill="white" opacity=".5"/><rect x="3" y="13" width="8" height="8" rx="1" fill="white" opacity=".5"/><rect x="13" y="13" width="8" height="8" rx="1" fill="white"/></svg></div>
-          <div class="cp-for">Document for :</div>
-          <div class="cp-rec" id="prev-rec">[Client, Vendors, Suppliers]</div>
-        </div>
-        <div class="cp-foot"><span>Visual Clarity Pack — Technical Package System</span><span>claritylab.id</span></div>
-      </div>
-      <div class="sn"><button class="bp" onclick="gp(0,document.getElementById('nav-0'))">← AI</button><button class="bn" onclick="gp(2,document.getElementById('nav-2'))">Technical Sheet →</button></div>
-    </div>
 
-    <!-- ═══ PAGE 2: TECHNICAL SHEET ═══ -->
-    <div class="pg" id="pg-2">
-      <span class="eyebrow ey-ora">Halaman 2 dari 8</span>
-      <p class="ph1">Technical Sheet</p>
-      <p class="psub">Identitas produk, material & trim, grade spec, warna, dan visual produk. Field <span style="color:var(--grn);font-weight:700">hijau</span> = diisi AI.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Identitas produk</div>
-        <div class="g4">
-          <div class="fg"><label class="fl">Product name</label><input type="text" class="fi" id="f-pname" placeholder="Oversized Tee Vol.1"></div>
-          <div class="fg"><label class="fl">Article number</label><input type="text" class="fi" id="f-art" placeholder="SS24-001"></div>
-          <div class="fg"><label class="fl">Class</label><select class="fs" id="f-class"><option>Tops</option><option>Bottoms</option><option>Outerwear</option><option>Accessories</option></select></div>
-          <div class="fg"><label class="fl">SRP</label><input type="text" class="fi" id="f-srp" placeholder="Rp 299.000"></div>
-        </div>
-        <div class="g3" style="margin-top:10px">
-          <div class="fg"><label class="fl">Vendor name</label><input type="text" class="fi" id="f-vendor" placeholder="cth: Kahatex"></div>
-          <div class="fg"><label class="fl">Launching target</label><input type="date" class="fi" id="f-launch"></div>
-          <div class="fg"><label class="fl">Status</label>
-            <div class="tg-grp" id="f-status"><div class="tg on" onclick="t1(this,'f-status')">Development</div><div class="tg" onclick="t1(this,'f-status')">Sampling</div><div class="tg" onclick="t1(this,'f-status')">Production</div><div class="tg" onclick="t1(this,'f-status')">Final</div></div>
+          <!-- TIER 2 -->
+          <div class="bundle-card tier2">
+            <div class="bundle-top-row">
+              <div>
+                <p
+                  style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--cl-orange);margin-bottom:4px">
+                  Tier 2 — Rekomendasi</p>
+                <p class="bundle-name">Clarity Full</p>
+              </div>
+              <span class="best-badge">Best value</span>
+            </div>
+            <p class="bundle-desc">Ekosistem lengkap — brief yang jelas, HPP yang akurat, dan keputusan produk yang
+              terukur. Plus akses prioritas ke 2 tools berikutnya.</p>
+            <div class="bundle-includes">
+              <div class="bundle-include">
+                <div class="bcheck full"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M1.5 4l2 2 3-3" stroke="white" stroke-width="1.2" stroke-linecap="round" />
+                  </svg></div>
+                Visual Clarity Pack
+              </div>
+              <div class="bundle-include">
+                <div class="bcheck full"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M1.5 4l2 2 3-3" stroke="white" stroke-width="1.2" stroke-linecap="round" />
+                  </svg></div>
+                Profit Clarity Calculator
+              </div>
+              <div class="bundle-include">
+                <div class="bcheck full"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                    <path d="M1.5 4l2 2 3-3" stroke="white" stroke-width="1.2" stroke-linecap="round" />
+                  </svg></div>
+                Decision Engine
+              </div>
+              <div class="bundle-include" style="color:var(--cl-orange);font-weight:500">
+                <div class="bcheck full" style="background:var(--cl-orange-light)"><svg width="8" height="8"
+                    viewBox="0 0 8 8" fill="none">
+                    <path d="M4 1.5v5M1.5 4h5" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                  </svg></div>
+                Akses prioritas tools baru
+              </div>
+            </div>
+            <div class="bundle-pricing">
+              <span class="bundle-price-new">Rp 389k</span>
+              <span class="bundle-price-old">Rp 547k</span>
+            </div>
+            <p class="bundle-saving">Hemat Rp 158k — bayar 2, dapet 3</p>
+            <button class="bundle-cta fill">Beli Clarity Full</button>
           </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Material & trim<span id="mat-badge" style="display:none" class="ai-note"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="var(--grn)" stroke-width="1.3" stroke-linecap="round"/></svg>AI</span></div>
-        <div class="g3">
-          <div class="fg"><label class="fl">Fabric type</label><input type="text" class="fi" id="f-fabric" placeholder="cth: Cotton 24s"></div>
-          <div class="fg"><label class="fl">Construction</label><input type="text" class="fi" id="f-construct" placeholder="cth: Single jersey"></div>
-          <div class="fg"><label class="fl">Weight (gsm)</label><input type="text" class="fi" id="f-gsm" placeholder="cth: 180-200 gsm"></div>
-        </div>
-        <div class="g3" style="margin-top:10px">
-          <div class="fg"><label class="fl">Supplier</label><input type="text" class="fi" id="f-supplier" placeholder="cth: Kahatex"></div>
-          <div class="fg"><label class="fl">Color (Pantone)</label><input type="text" class="fi" id="f-color" placeholder="cth: Pantone 1595C"></div>
-          <div class="fg"><label class="fl">Trim list</label><input type="text" class="fi" id="f-trim" placeholder="Label, Neck Tape, Hangtag"></div>
-        </div>
-        <div class="fg" style="margin-top:10px"><label class="fl">Alasan rekomendasi fabric</label><textarea class="fta" id="f-fabric-reason" placeholder="AI akan menjelaskan alasan pemilihan fabric..."></textarea></div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Grade spec<span id="spec-badge" style="display:none" class="ai-note"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="var(--grn)" stroke-width="1.3" stroke-linecap="round"/></svg>AI</span></div>
-        <div class="fg"><label class="fl">Ukuran aktif</label>
-          <div class="tg-grp" id="f-sizes"><div class="tg" onclick="tM(this)">XS</div><div class="tg on" onclick="tM(this)">S</div><div class="tg on" onclick="tM(this)">M</div><div class="tg on" onclick="tM(this)">L</div><div class="tg on" onclick="tM(this)">XL</div><div class="tg" onclick="tM(this)">XXL</div><div class="tg" onclick="tM(this)">XXXL</div></div>
-        </div>
-        <div class="g3" style="margin-top:10px">
-          <div class="fg"><label class="fl">Panjang range (cm)</label><input type="text" class="fi" id="f-len" placeholder="cth: 68-76 cm"></div>
-          <div class="fg"><label class="fl">Lebar range (cm)</label><input type="text" class="fi" id="f-wid" placeholder="cth: 48-58 cm"></div>
-          <div class="fg"><label class="fl">Toleransi</label><select class="fs" id="f-tol"><option>+/- 1 cm</option><option>+/- 0.5 cm</option><option>+/- 2 cm</option></select></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Color specification</div>
-        <div id="color-rows">
-          <div class="g3" style="margin-bottom:10px">
-            <div><label class="fl">Color name</label><input type="text" class="fi" id="col1-name" placeholder="cth: Burnt Orange"></div>
-            <div><label class="fl">Pantone</label><input type="text" class="fi" id="col1-pant" placeholder="cth: 1595C"></div>
-            <div><label class="fl">HEX</label><input type="text" class="fi" id="col1-hex" placeholder="cth: #f05423"></div>
-          </div>
-        </div>
-        <button class="btn-add" onclick="addColorRow()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="var(--ora)" stroke-width="1.5" stroke-linecap="round"/></svg>Tambah warna</button>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Visual produk — upload foto</div>
-        <div class="g4">
-          <div>
-            <label class="fl">Front view</label>
-            <div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event,'img-front')"><div class="img-upload-box" id="img-front"><div class="img-placeholder"><div class="img-ph-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5" stroke="var(--t3)" stroke-width="1.1"/><path d="M4 9l2-2 2 2M8 7V10" stroke="var(--t3)" stroke-width="1" stroke-linecap="round"/></svg></div><p class="img-ph-title" style="font-size:11px">Front view</p><p class="img-ph-sub">Tampak depan</p></div></div></div>
-          </div>
-          <div>
-            <label class="fl">Back view</label>
-            <div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event,'img-back')"><div class="img-upload-box" id="img-back"><div class="img-placeholder"><div class="img-ph-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5" stroke="var(--t3)" stroke-width="1.1"/><path d="M4 9l2-2 2 2M8 7V10" stroke="var(--t3)" stroke-width="1" stroke-linecap="round"/></svg></div><p class="img-ph-title" style="font-size:11px">Back view</p><p class="img-ph-sub">Tampak belakang</p></div></div></div>
-          </div>
-          <div>
-            <label class="fl">Detail 1</label>
-            <div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event,'img-d1')"><div class="img-upload-box" id="img-d1"><div class="img-placeholder"><div class="img-ph-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5" stroke="var(--t3)" stroke-width="1.1"/></svg></div><p class="img-ph-title" style="font-size:11px">Detail 1</p><p class="img-ph-sub">Upload foto</p></div></div></div>
-            <input type="text" class="fi" id="d1-label" placeholder="Keterangan detail 1" style="margin-top:5px;font-size:11px">
-          </div>
-          <div>
-            <label class="fl">Detail 2</label>
-            <div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event,'img-d2')"><div class="img-upload-box" id="img-d2"><div class="img-placeholder"><div class="img-ph-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5" stroke="var(--t3)" stroke-width="1.1"/></svg></div><p class="img-ph-title" style="font-size:11px">Detail 2</p><p class="img-ph-sub">Upload foto</p></div></div></div>
-            <input type="text" class="fi" id="d2-label" placeholder="Keterangan detail 2" style="margin-top:5px;font-size:11px">
-          </div>
-        </div>
-        <div class="g2" style="margin-top:12px">
-          <div>
-            <label class="fl">Fabric swatch 1</label>
-            <div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event,'img-swatch1')"><div class="img-upload-box" id="img-swatch1"><div class="img-placeholder"><div class="img-ph-icon"></div><p class="img-ph-title" style="font-size:11px">Fabric swatch 1</p></div></div></div>
-          </div>
-          <div>
-            <label class="fl">Fabric swatch 2</label>
-            <div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event,'img-swatch2')"><div class="img-upload-box" id="img-swatch2"><div class="img-placeholder"><div class="img-ph-icon"></div><p class="img-ph-title" style="font-size:11px">Fabric swatch 2</p></div></div></div>
-          </div>
-        </div>
-      </div>
-      <div class="sn"><button class="bp" onclick="gp(1,document.getElementById('nav-1'))">← Cover</button><button class="bn" onclick="gp(3,document.getElementById('nav-3'))">Revision Log →</button></div>
-    </div>
 
-    <!-- ═══ PAGE 3: REVISION LOG ═══ -->
-    <div class="pg" id="pg-3">
-      <span class="eyebrow ey-ora">Halaman 3 dari 8</span>
-      <p class="ph1">Revision Log</p>
-      <p class="psub">Dokumentasi semua perubahan — history yang bisa dipertanggungjawabkan dari awal sampai produksi.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Info dokumen</div>
-        <div class="g3">
-          <div class="fg"><label class="fl">Versi saat ini</label><input type="text" class="fi" id="r-ver" placeholder="cth: v1.3"></div>
-          <div class="fg"><label class="fl">Dibuat oleh</label><input type="text" class="fi" id="r-by" placeholder="Nama"></div>
-          <div class="fg"><label class="fl">Tanggal dibuat</label><input type="date" class="fi" id="r-date"></div>
         </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Log revisi</div>
-        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th style="width:110px">Tanggal</th><th style="width:60px">Versi</th><th>Catatan revisi</th><th style="width:110px">Oleh</th><th style="width:90px">Status</th></tr></thead>
-        <tbody id="rev-body">
-          <tr><td><input type="date"></td><td><input type="text" placeholder="v1.0" style="width:55px"></td><td><input type="text" placeholder="Dokumen pertama dibuat"></td><td><input type="text" placeholder="Nama"></td><td><select><option>Draft</option><option>Review</option><option>Approved</option><option>Final</option></select></td></tr>
-          <tr><td><input type="date"></td><td><input type="text" placeholder="v1.1" style="width:55px"></td><td><input type="text" placeholder="Revisi..."></td><td><input type="text" placeholder="Nama"></td><td><select><option>Draft</option><option>Review</option><option>Approved</option><option>Final</option></select></td></tr>
-        </tbody></table></div>
-        <button class="btn-add" onclick="addRevRow()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="var(--ora)" stroke-width="1.5" stroke-linecap="round"/></svg>Tambah baris</button>
-      </div>
-      <div class="sn"><button class="bp" onclick="gp(2,document.getElementById('nav-2'))">← Technical Sheet</button><button class="bn" onclick="gp(4,document.getElementById('nav-4'))">BOM →</button></div>
-    </div>
 
-    <!-- ═══ PAGE 4: BOM ═══ -->
-    <div class="pg" id="pg-4">
-      <span class="eyebrow ey-ora">Halaman 4 dari 8</span>
-      <p class="ph1">Bill of Materials (BOM)</p>
-      <p class="psub">Semua komponen — fabric, trim, label. Field hijau = diisi AI.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Fabric & material</div>
-        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Komponen</th><th>Spesifikasi</th><th style="width:65px">Qty</th><th style="width:65px">Satuan</th><th style="width:90px">Est. Harga</th><th style="width:100px">Supplier</th></tr></thead>
-        <tbody id="bom-f"><tr><td><input type="text" placeholder="Main fabric"></td><td><input type="text" placeholder="Cotton 24s, 180gsm"></td><td><input type="text" placeholder="0.8"></td><td><select><option>meter</option><option>yard</option><option>kg</option><option>pcs</option></select></td><td><input type="text" placeholder="Rp —"></td><td><input type="text" placeholder="Supplier"></td></tr></tbody>
-        </table></div>
-        <button class="btn-add" onclick="addBomRow('bom-f')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="var(--ora)" stroke-width="1.5" stroke-linecap="round"/></svg>Tambah</button>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Trim, label & aksesoris</div>
-        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Komponen</th><th>Spesifikasi</th><th style="width:65px">Qty</th><th style="width:65px">Satuan</th><th style="width:90px">Est. Harga</th><th style="width:100px">Supplier</th></tr></thead>
-        <tbody id="bom-t"></tbody>
-        </table></div>
-        <button class="btn-add" onclick="addBomRow('bom-t')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="var(--ora)" stroke-width="1.5" stroke-linecap="round"/></svg>Tambah</button>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Estimasi HPP per unit</div>
-        <div class="g4">
-          <div class="fg"><label class="fl">Total material</label><input type="text" class="fi" id="bom-mat" placeholder="Rp 0"></div>
-          <div class="fg"><label class="fl">Total trim</label><input type="text" class="fi" id="bom-trim" placeholder="Rp 0"></div>
-          <div class="fg"><label class="fl">CMT (jahit)</label><input type="text" class="fi" id="f-cmt" placeholder="Rp 0"></div>
-          <div class="fg"><label class="fl">Est. HPP / unit</label><input type="text" class="fi" id="bom-hpp" placeholder="Rp 0" style="font-weight:700;border-color:rgba(240,84,35,.4);background:var(--ora-lt)"></div>
+        <!-- COMPARISON NOTE -->
+        <div
+          style="margin-top:12px;padding:14px 20px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);display:flex;align-items:center;gap:12px">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--cl-orange);flex-shrink:0"></div>
+          <p style="font-size:13px;color:var(--color-text-secondary)">Dari Essentials ke Full, lo cuma nambah <strong
+              style="color:var(--color-text-primary)">Rp 110k</strong> — dan dapet Visual Clarity Pack (Rp 149k) plus
+            akses prioritas tools baru. Matematikanya jelas.</p>
         </div>
-      </div>
-      <div class="sn"><button class="bp" onclick="gp(3,document.getElementById('nav-3'))">← Revision Log</button><button class="bn" onclick="gp(5,document.getElementById('nav-5'))">Packaging →</button></div>
-    </div>
-
-    <!-- ═══ PAGE 5: PACKAGING ═══ -->
-    <div class="pg" id="pg-5">
-      <span class="eyebrow ey-ora">Halaman 5 dari 8</span>
-      <p class="ph1">Packaging Specification</p>
-      <p class="psub">Spesifikasi polybag, folding, sticker, dan master carton.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Polybag<span id="pkg-badge" style="display:none" class="ai-note"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="var(--grn)" stroke-width="1.3" stroke-linecap="round"/></svg>AI</span></div>
-        <div class="g3">
-          <div class="fg"><label class="fl">Jenis polybag</label><select class="fs" id="f-poly"><option>OPP biasa</option><option>OPP zip lock</option><option>PE clear</option><option>Biodegradable</option></select></div>
-          <div class="fg"><label class="fl">Ukuran (cm)</label><input type="text" class="fi" id="f-poly-sz" placeholder="cth: 30 x 40 cm"></div>
-          <div class="fg"><label class="fl">Ketebalan (micron)</label><input type="text" class="fi" id="f-poly-th" placeholder="cth: 40 micron"></div>
-        </div>
-        <div class="g2" style="margin-top:10px">
-          <div class="fg"><label class="fl">Cara folding</label><div class="tg-grp" id="f-fold"><div class="tg on" onclick="t1(this,'f-fold')">Flat fold</div><div class="tg" onclick="t1(this,'f-fold')">Rolled</div><div class="tg" onclick="t1(this,'f-fold')">Hanging</div></div></div>
-          <div class="fg"><label class="fl">Alasan AI</label><input type="text" class="fi" id="f-poly-why" placeholder="AI akan mengisi..."></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Sticker & label packaging</div>
-        <div class="g2">
-          <div class="fg"><label class="fl">Sticker SKU</label><select class="fs" id="f-sticker"><option>Ya — sertakan sticker</option><option>Tidak diperlukan</option></select></div>
-          <div class="fg"><label class="fl">Posisi sticker</label><input type="text" class="fi" id="f-sticker-pos" placeholder="cth: pojok kiri atas polybag"></div>
-          <div class="fg" style="grid-column:1/-1"><label class="fl">Informasi di sticker</label><textarea class="fta" id="f-sticker-info" style="min-height:44px" placeholder="Nama produk, ukuran, barcode, SKU, harga..."></textarea></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Master carton</div>
-        <div class="g4">
-          <div class="fg"><label class="fl">Qty per carton</label><input type="text" class="fi" id="f-ctn-qty" placeholder="cth: 12 pcs"></div>
-          <div class="fg"><label class="fl">Ukuran (cm)</label><input type="text" class="fi" id="f-ctn-sz" placeholder="60 x 40 x 40"></div>
-          <div class="fg"><label class="fl">Est. berat (kg)</label><input type="text" class="fi" id="f-ctn-wt" placeholder="cth: 5 kg"></div>
-          <div class="fg"><label class="fl">Tumpukan maks.</label><input type="text" class="fi" id="f-ctn-st" placeholder="max 3"></div>
-        </div>
-        <div class="fg" style="margin-top:10px"><label class="fl">Instruksi handling</label><div class="tg-grp"><div class="tg on" onclick="tM(this)">Keep dry</div><div class="tg" onclick="tM(this)">This side up</div><div class="tg" onclick="tM(this)">Fragile</div><div class="tg" onclick="tM(this)">Stack max 3</div></div></div>
-      </div>
-      <div class="sn"><button class="bp" onclick="gp(4,document.getElementById('nav-4'))">← BOM</button><button class="bn" onclick="gp(6,document.getElementById('nav-6'))">Care →</button></div>
-    </div>
-
-    <!-- ═══ PAGE 6: CARE ═══ -->
-    <div class="pg" id="pg-6">
-      <span class="eyebrow ey-ora">Halaman 6 dari 8</span>
-      <p class="ph1">Washing & Care Instruction</p>
-      <p class="psub">Simbol perawatan dan instruksi label. Simbol <span style="color:var(--grn);font-weight:700">hijau</span> = rekomendasi AI.</p>
-      <div id="care-ctx" class="ib"><strong>Fabric belum dianalisa.</strong> Upload gambar di halaman AI untuk rekomendasi care yang sesuai material.</div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Simbol perawatan<span id="care-badge" style="display:none" class="ai-note"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="var(--grn)" stroke-width="1.3" stroke-linecap="round"/></svg>AI</span></div>
-        <div class="care-grid" id="care-grid">
-          <div class="ci" data-c="handwash" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 4c0 3 2.5 6 5 7 2.5-1 5-4 5-7H2z" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M4 7h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="ci-nm">Cuci tangan</div><div class="ci-sb">Max 30°C</div></div>
-          <div class="ci" data-c="machine" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="2" y="4" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M4 4V3a3 3 0 016 0v1" stroke="currentColor" stroke-width="1.2" fill="none"/></svg></div><div class="ci-nm">Mesin cuci</div><div class="ci-sb">Max 30°C</div></div>
-          <div class="ci" data-c="no-bleach" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 4c0 3 2.5 6 5 7 2.5-1 5-4 5-7H2z" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5 6l4 2M5 8l4-2" stroke="currentColor" stroke-width="1.1"/></svg></div><div class="ci-nm">Jangan bleach</div><div class="ci-sb">No bleaching</div></div>
-          <div class="ci" data-c="no-dryer" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 10l8-6M3 4l8 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><rect x="2" y="2" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.2" fill="none"/></svg></div><div class="ci-nm">Jangan dryer</div><div class="ci-sb">No tumble dry</div></div>
-          <div class="ci" data-c="iron-low" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 12l4-8 4 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M5 9h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="ci-nm">Setrika rendah</div><div class="ci-sb">Max 110°C</div></div>
-          <div class="ci" data-c="no-dc" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.1"/></svg></div><div class="ci-nm">Jangan dry clean</div><div class="ci-sb">No dry cleaning</div></div>
-          <div class="ci" data-c="inside" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 4h8M3 7h6M3 10h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="ci-nm">Jemur terbalik</div><div class="ci-sb">Inside out</div></div>
-          <div class="ci" data-c="no-wring" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="ci-nm">Jangan diperas</div><div class="ci-sb">Do not wring</div></div>
-          <div class="ci" data-c="no-sun" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M7 1v1M7 12v1M1 7h1M12 7h1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="ci-nm">Hindari matahari</div><div class="ci-sb">Avoid sunlight</div></div>
-          <div class="ci" data-c="wash-sep" onclick="tglCi(this)"><div class="ci-ic"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.1"/></svg></div><div class="ci-nm">Cuci terpisah</div><div class="ci-sb">Wash separately</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Instruksi teks untuk label</div>
-        <div class="g2">
-          <div class="fg"><label class="fl">Bahasa Indonesia</label><textarea class="fta" id="f-care-id" placeholder="cth: Cuci dengan tangan atau mesin cuci maks 30 derajat..."></textarea></div>
-          <div class="fg"><label class="fl">English</label><textarea class="fta" id="f-care-en" placeholder="cth: Hand wash or machine wash max 30C..."></textarea></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Komposisi & origin</div>
-        <div class="g2">
-          <div class="fg"><label class="fl">Komposisi bahan</label><input type="text" class="fi" id="f-comp" placeholder="cth: 100% Cotton"></div>
-          <div class="fg"><label class="fl">Country of origin</label><input type="text" class="fi" id="f-origin" value="Made in Indonesia"></div>
-        </div>
-      </div>
-      <div class="sn"><button class="bp" onclick="gp(5,document.getElementById('nav-5'))">← Packaging</button><button class="bn" onclick="gp(7,document.getElementById('nav-7'))">Sample Checklist →</button></div>
-    </div>
-
-    <!-- ═══ PAGE 7: SAMPLE CHECKLIST ═══ -->
-    <div class="pg" id="pg-7">
-      <span class="eyebrow ey-ora">Halaman 7 dari 8</span>
-      <p class="ph1">Sample Approval Checklist</p>
-      <p class="psub">Diisi saat menerima sample dari vendor. Centang OK atau NOK untuk setiap poin.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Informasi sample</div>
-        <div class="g4">
-          <div class="fg"><label class="fl">Tanggal terima</label><input type="date" class="fi" id="s-date"></div>
-          <div class="fg"><label class="fl">Jenis sample</label><select class="fs" id="s-type"><option>Proto sample</option><option>Fit sample</option><option>Pre-production</option><option>TOP sample</option></select></div>
-          <div class="fg"><label class="fl">Diterima dari</label><input type="text" class="fi" id="s-from" placeholder="Nama vendor"></div>
-          <div class="fg"><label class="fl">Ukuran sample</label><select class="fs" id="s-size"><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Checklist pemeriksaan</div>
-        <div id="cl-list">
-          <div class="cl-item"><div class="cb on" onclick="tglCb(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Ukuran sesuai grade spec</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Cek semua dimensi sesuai toleransi +/- 1 cm</p></div><div class="cl-res"><span class="rc ok" onclick="tglRc(this,'ok')">OK</span><span class="rc" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb on" onclick="tglCb(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Warna sesuai Pantone referensi</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Bandingkan dengan color swatch yang disetujui</p></div><div class="cl-res"><span class="rc ok" onclick="tglRc(this,'ok')">OK</span><span class="rc" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb" onclick="tglCb(this)"></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Material / fabric sesuai BOM</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Jenis, weight, dan hand-feel sesuai spec</p></div><div class="cl-res"><span class="rc" onclick="tglRc(this,'ok')">OK</span><span class="rc nok" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb on" onclick="tglCb(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Jahitan rapi dan konsisten</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Stitch per inch sesuai, tidak ada loncat jahit</p></div><div class="cl-res"><span class="rc ok" onclick="tglRc(this,'ok')">OK</span><span class="rc" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb" onclick="tglCb(this)"></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Label terpasang sesuai posisi</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Main label, size label, care label</p></div><div class="cl-res"><span class="rc" onclick="tglRc(this,'ok')">OK</span><span class="rc nok" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb on" onclick="tglCb(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Finishing rapi — tidak ada cacat visual</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Tidak ada noda, lubang, fraying, atau kerusakan</p></div><div class="cl-res"><span class="rc ok" onclick="tglRc(this,'ok')">OK</span><span class="rc" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb" onclick="tglCb(this)"></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Hangtag terpasang dengan benar</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Posisi, informasi, dan kondisi hangtag</p></div><div class="cl-res"><span class="rc" onclick="tglRc(this,'ok')">OK</span><span class="rc nok" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb on" onclick="tglCb(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Packaging sesuai spesifikasi</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Polybag, folding, dan sticker sesuai packaging spec</p></div><div class="cl-res"><span class="rc ok" onclick="tglRc(this,'ok')">OK</span><span class="rc" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb" onclick="tglCb(this)"></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Trim dan aksesoris sesuai BOM</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Semua komponen BOM terpasang dengan benar</p></div><div class="cl-res"><span class="rc" onclick="tglRc(this,'ok')">OK</span><span class="rc nok" onclick="tglRc(this,'nok')">NOK</span></div></div>
-          <div class="cl-item"><div class="cb on" onclick="tglCb(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div><div style="flex:1"><p style="font-size:13px;font-weight:700">Konstruksi sesuai technical package</p><p style="font-size:11px;color:var(--t3);margin-top:2px">Detail jahitan dan finishing sesuai halaman 2</p></div><div class="cl-res"><span class="rc ok" onclick="tglRc(this,'ok')">OK</span><span class="rc" onclick="tglRc(this,'nok')">NOK</span></div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Keputusan approval</div>
-        <div class="tg-grp" id="f-approval" style="margin-bottom:14px">
-          <div class="tg" onclick="t1(this,'f-approval')" style="background:var(--grn-lt);color:var(--grn);border-color:var(--grn-bd);font-weight:700">Approved</div>
-          <div class="tg on" onclick="t1(this,'f-approval')">Approved with notes</div>
-          <div class="tg" onclick="t1(this,'f-approval')" style="color:var(--red)">Rejected</div>
-        </div>
-        <div class="g3">
-          <div class="fg" style="grid-column:1/3"><label class="fl">Catatan untuk vendor</label><textarea class="fta" id="s-notes" style="min-height:52px" placeholder="Detail poin yang perlu diperbaiki..."></textarea></div>
-          <div><div class="fg"><label class="fl">Diperiksa oleh</label><input type="text" class="fi" id="s-qc" placeholder="Nama QC"></div><div class="fg"><label class="fl">Tanggal</label><input type="date" class="fi" id="s-dec-date"></div></div>
-        </div>
-      </div>
-      <div class="sn"><button class="bp" onclick="gp(6,document.getElementById('nav-6'))">← Care</button><button class="bn" onclick="gp(8,document.getElementById('nav-8'))">Timeline →</button></div>
-    </div>
-
-    <!-- ═══ PAGE 8: TIMELINE ═══ -->
-    <div class="pg" id="pg-8">
-      <span class="eyebrow ey-ora">Halaman 8 dari 8</span>
-      <p class="ph1">Production Timeline</p>
-      <p class="psub">Milestone dari order fabric sampai delivery.</p>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Timeline visual</div>
-        <div class="tl-wrap">
-          <div class="tl-row">
-            <div class="tl-slot"><div class="tl-dot done">✓</div><div class="tl-line"></div><div class="tl-lbl">Order Fabric</div><input type="date" class="tl-di" id="tl1"></div>
-            <div class="tl-slot"><div class="tl-dot done">✓</div><div class="tl-line"></div><div class="tl-lbl">Fabric Arrive</div><input type="date" class="tl-di" id="tl2"></div>
-            <div class="tl-slot"><div class="tl-dot cur">3</div><div class="tl-line"></div><div class="tl-lbl">Cutting</div><input type="date" class="tl-di" id="tl3"></div>
-            <div class="tl-slot"><div class="tl-dot wait">4</div><div class="tl-line"></div><div class="tl-lbl">Sewing</div><input type="date" class="tl-di" id="tl4"></div>
-            <div class="tl-slot"><div class="tl-dot wait">5</div><div class="tl-line"></div><div class="tl-lbl">Finishing</div><input type="date" class="tl-di" id="tl5"></div>
-            <div class="tl-slot"><div class="tl-dot wait">6</div><div class="tl-line"></div><div class="tl-lbl">QC & Pack</div><input type="date" class="tl-di" id="tl6"></div>
-            <div class="tl-slot"><div class="tl-dot wait">7</div><div class="tl-line"></div><div class="tl-lbl">Shipment</div><input type="date" class="tl-di" id="tl7"></div>
-            <div class="tl-slot"><div class="tl-dot wait">8</div><div class="tl-lbl">Delivery</div><input type="date" class="tl-di" id="tl8"></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Detail milestone</div>
-        <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Milestone</th><th style="width:110px">Target</th><th style="width:110px">Actual</th><th style="width:90px">Status</th><th style="width:100px">PIC</th><th>Catatan</th></tr></thead>
-        <tbody id="tl-body">
-          <tr><td><input type="text" value="Order fabric & trim"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-          <tr><td><input type="text" value="Fabric arrive di vendor"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-          <tr><td><input type="text" value="Proto sample selesai"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-          <tr><td><input type="text" value="Sample approval"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-          <tr><td><input type="text" value="Bulk cutting"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-          <tr><td><input type="text" value="Bulk sewing selesai"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-          <tr><td><input type="text" value="QC & packing selesai"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-          <tr><td><input type="text" value="Shipment & delivery"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>—</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="—"></td></tr>
-        </tbody></table></div>
-        <button class="btn-add" onclick="addTlRow()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="var(--ora)" stroke-width="1.5" stroke-linecap="round"/></svg>Tambah milestone</button>
-      </div>
-      <div class="card">
-        <div class="ct"><span class="cd"></span>Catatan produksi</div>
-        <textarea class="fta" id="tl-notes" style="min-height:72px" placeholder="Instruksi khusus, catatan penting, atau hal yang perlu diperhatikan selama produksi..."></textarea>
-      </div>
-      <div class="sn">
-        <button class="bp" onclick="gp(7,document.getElementById('nav-7'))">← Sample Checklist</button>
-        <button class="bn blk" style="display:flex;align-items:center;gap:7px" onclick="generatePDF()">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v8M4 7.5l3 3 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11h10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Download PDF — A3 Landscape
-        </button>
       </div>
     </div>
 
+    <hr class="divider-full">
+    <div class="section" style="background:var(--color-background-secondary)">
+      <p class="section-eyebrow">How it works</p>
+      <div class="accent-line"></div>
+      <h2 class="section-title">Dari confusion ke clarity<br>dalam tiga langkah.</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <p class="how-num">01</p>
+          <h3>Pilih tools yang lo butuhkan</h3>
+          <p>Beli satuan atau pilih bundle yang sesuai. Semakin lengkap, semakin nyambung satu sama lain.</p>
+        </div>
+        <div class="how-card">
+          <p class="how-num">02</p>
+          <h3>Akses langsung, pakai sekarang</h3>
+          <p>Semua produk digital — tersedia setelah pembelian. Nggak perlu instalasi, nggak perlu setup panjang.</p>
+        </div>
+        <div class="how-card">
+          <p class="how-num">03</p>
+          <h3>Keputusan berdasarkan data</h3>
+          <p>HPP akurat, brief jelas, evaluasi produk — lo jalanin bisnis dengan angka, bukan asumsi.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider-full">
+    <div class="section">
+      <p class="section-eyebrow">Testimonials</p>
+      <div class="accent-line"></div>
+      <h2 class="section-title">Yang bilang tools ini ngebantu.</h2>
+      <p class="section-sub" style="margin-bottom:32px">Early users yang udah coba — dan nggak mau balik ke cara lama.
+      </p>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <p class="testi-text">"Profit Clarity Calculator beneran ngubah cara gue nentuin harga. Sebelumnya gue selalu
+            ngerasa untung, ternyata margin gue tipis banget."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">AR</div>
+            <div>
+              <p class="testi-name">Andra R.</p>
+              <p class="testi-role">Owner, clothing brand — Bandung</p>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <p class="testi-text">"Visual Clarity Pack bikin proses produksi gue jauh lebih lancar. Vendor langsung ngerti
+            tanpa gue harus jelasin berulang kali."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">DS</div>
+            <div>
+              <p class="testi-name">Dinda S.</p>
+              <p class="testi-role">Fashion designer & brand owner — Jakarta</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider-full">
+    <div class="login-strip">
+      <div>
+        <p style="font-weight:500;font-size:14px">Sudah punya akun?</p>
+        <p style="font-size:13px;color:var(--color-text-secondary)">Masuk untuk akses semua tools lo.</p>
+      </div>
+      <div class="login-form">
+        <input type="email" placeholder="Email lo">
+        <input type="password" placeholder="Password" style="width:140px">
+        <button class="btn-solid" style="font-size:13px;padding:7px 16px">Masuk</button>
+        <span style="font-size:12px;color:var(--color-text-tertiary)">atau</span>
+        <button class="btn-ghost" style="font-size:13px">Daftar gratis</button>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <p class="section-eyebrow" style="margin-bottom:8px">Mulai sekarang</p>
+      <div class="accent-line" style="margin:0 auto 20px"></div>
+      <h2>Berhenti nebak-tebak.<br>Mulai dengan clarity.</h2>
+      <p>Pilih satu tools, atau ambil bundle yang paling sesuai. Lo udah cukup kerja keras — sekarang waktunya kerja
+        dengan arah yang jelas.</p>
+      <div class="cta-btns">
+        <button class="btn-primary" style="font-size:14px;padding:11px 28px">Lihat semua products</button>
+        <button class="btn-secondary" style="font-size:14px;padding:11px 28px">Beli Clarity Full</button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <div class="nav-logo-mark"><svg viewBox="0 0 16 16" fill="none" width="16" height="16">
+                <rect x="2" y="2" width="5" height="5" rx="1" fill="white" opacity="0.9" />
+                <rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity="0.4" />
+                <rect x="2" y="9" width="5" height="5" rx="1" fill="white" opacity="0.4" />
+                <rect x="9" y="9" width="5" height="5" rx="1" fill="#f05423" />
+              </svg></div><span class="nav-logo-text">ClarityLab</span>
+          </div>
+          <p>Tools digital untuk fashion brand owner yang mau jalanin bisnis dengan data, bukan feeling.</p>
+          <p style="margin-top:8px;font-size:12px;color:var(--color-text-tertiary)">claritylab.id</p>
+        </div>
+        <div class="footer-col">
+          <h4>Products</h4><a href="#">Visual Clarity Pack</a><a href="#">Profit Clarity Calculator</a><a
+            href="#">Decision Engine</a><a href="#">ClarityLabs Control</a><a href="#">Mockup Design System</a>
+        </div>
+        <div class="footer-col">
+          <h4>Bundles</h4><a href="#">Clarity Essentials</a><a href="#">Clarity Full</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4><a href="#">FAQ</a><a href="#">Syarat & ketentuan</a><a href="#">Kebijakan privasi</a><a
+            href="#">Instagram</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 ClarityLab. All rights reserved.</p>
+        <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Instagram</a></div>
+      </div>
+    </footer>
   </div>
+
+  <!-- DETAIL VCP -->
+  <div class="page" id="page-detail-vcp">
+    <div class="detail-hero">
+      <div class="detail-breadcrumb"><button onclick="showPage('home')">Home</button><span>/</span><span>Visual Clarity
+          Pack</span></div>
+      <div class="detail-hero-inner">
+        <div>
+          <span class="detail-tag">Brief & Visual</span>
+          <h1>Visual Clarity Pack</h1>
+          <p class="detail-hero-sub">Satu set template briefing dan dokumen kerja yang dirancang khusus untuk fashion
+            brand — supaya tim, vendor, dan klien lo ngerti dari awal, tanpa perlu diulang berkali-kali.</p>
+          <div class="detail-includes">
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Template brief ke konveksi & vendor
+            </div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Dokumen spec produk (ukuran,
+              material, finishing)</div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Template project timeline produksi
+            </div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Checklist QC sebelum barang
+              diterima</div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Panduan penggunaan lengkap</div>
+          </div>
+        </div>
+        <div class="detail-buy-card">
+          <p class="detail-buy-price">Rp 149k</p>
+          <p class="detail-buy-note">Sekali bayar · Akses selamanya</p>
+          <button class="detail-buy-btn">Beli sekarang</button>
+          <p class="detail-buy-divider">atau pilih bundle</p>
+          <div class="detail-bundle-opts">
+            <button class="detail-bundle-opt">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="detail-bundle-opt-name">Clarity Full — 3 tools</span>
+                <span class="detail-bundle-opt-save">Hemat Rp 158k</span>
+              </div>
+              <p class="detail-bundle-opt-price">Rp 389k · VCP + PCC + DE + akses prioritas</p>
+            </button>
+          </div>
+          <div class="detail-buy-features">
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Format editable (.docx & .pdf)
+            </div>
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Update gratis selamanya
+            </div>
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Garansi uang kembali 7 hari
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-section-title">Kenapa lo butuh ini?</p>
+      <div class="detail-grid-2">
+        <div class="detail-feature-card">
+          <h4>Nggak ada lagi miskomunikasi dengan vendor</h4>
+          <p>Semua spec produk terdokumentasi — ukuran, material, warna, finishing. Vendor langsung ngerti tanpa lo
+            harus bolak-balik chat.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Produksi lebih tepat waktu</h4>
+          <p>Template timeline yang realistis bantu lo dan vendor stay on track. Deadline jelas, milestone jelas, nggak
+            ada yang kelewat.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>QC yang sistematis, bukan feeling</h4>
+          <p>Checklist QC berbasis standar fashion memastikan lo tau persis apa yang harus dicek sebelum barang
+            diterima.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Bisa langsung dipakai hari ini</h4>
+          <p>Bukan template kosong. Semua sudah terisi contoh yang bisa lo adaptasi dalam 30 menit.</p>
+        </div>
+      </div>
+    </div>
+    <hr class="divider-full">
+    <div class="detail-section" style="background:var(--color-background-secondary)">
+      <p class="detail-section-title">Ini untuk siapa?</p>
+      <div class="detail-for-grid">
+        <div class="detail-for-card"><strong>Fashion brand owner</strong>
+          <p>Yang sering kewalahan koordinasi dengan vendor dan tim produksi.</p>
+        </div>
+        <div class="detail-for-card"><strong>Brand baru yang mau mulai rapi</strong>
+          <p>Biar dari hari pertama, sistem kerja lo udah profesional.</p>
+        </div>
+        <div class="detail-for-card"><strong>Designer yang terima orderan produksi</strong>
+          <p>Yang butuh dokumen standar untuk komunikasi dengan konveksi.</p>
+        </div>
+      </div>
+    </div>
+    <hr class="divider-full">
+    <div class="detail-section">
+      <p class="detail-section-title">Pertanyaan yang sering muncul</p>
+      <div class="faq-item">
+        <p class="faq-q">Format filenya apa?</p>
+        <p class="faq-a">Tersedia dalam format .docx (editable di Microsoft Word & Google Docs) dan .pdf. Lo bisa
+          langsung edit sesuai kebutuhan brand lo.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Apakah bisa dipakai untuk produk non-fashion?</p>
+        <p class="faq-a">Template ini dirancang spesifik untuk fashion dan apparel. Untuk kategori lain, beberapa bagian
+          mungkin perlu adaptasi.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Bagaimana cara akses setelah beli?</p>
+        <p class="faq-a">Setelah pembayaran terkonfirmasi, link download dikirim otomatis ke email lo dan tersimpan di
+          dashboard akun lo.</p>
+      </div>
+    </div>
+    <div class="detail-cta">
+      <h2>Siap bikin proses produksi lo lebih rapi?</h2>
+      <p>Satu kali beli, lo punya sistem briefing yang bisa dipakai untuk semua produksi ke depannya.</p>
+      <div class="detail-cta-btns">
+        <button class="btn-primary" style="font-size:14px;padding:11px 28px">Beli Visual Clarity Pack — Rp 149k</button>
+        <button class="btn-secondary" style="font-size:14px;padding:11px 28px" onclick="showPage('home')">Kembali ke
+          semua products</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL PCC -->
+  <div class="page" id="page-detail-pcc">
+    <div class="detail-hero">
+      <div class="detail-breadcrumb"><button onclick="showPage('home')">Home</button><span>/</span><span>Profit Clarity
+          Calculator</span></div>
+      <div class="detail-hero-inner">
+        <div>
+          <span class="detail-tag">HPP & Pricing</span>
+          <h1>Profit Clarity Calculator</h1>
+          <p class="detail-hero-sub">Kalkulator HPP yang dirancang khusus untuk produk fashion — ngitung semua komponen
+            biaya yang sering kelewatan, supaya harga jual lo bukan cuma "keliatan untung" tapi beneran untung.</p>
+          <div class="detail-includes">
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Kalkulator HPP lengkap (bahan, CMT,
+              label, packaging)</div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Komponen hidden cost — reject rate,
+              ongkir, penyimpanan</div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Kalkulasi margin & harga jual
+              minimum</div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Simulasi multi-SKU dalam satu file
+            </div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Panduan cara baca & interpretasi
+              hasil</div>
+          </div>
+        </div>
+        <div class="detail-buy-card">
+          <p class="detail-buy-price">Rp 149k</p>
+          <p class="detail-buy-note">Sekali bayar · Akses selamanya</p>
+          <button class="detail-buy-btn">Beli sekarang</button>
+          <p class="detail-buy-divider">atau pilih bundle</p>
+          <div class="detail-bundle-opts">
+            <button class="detail-bundle-opt">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="detail-bundle-opt-name">Clarity Essentials — 2 tools</span>
+                <span class="detail-bundle-opt-save">Hemat Rp 119k</span>
+              </div>
+              <p class="detail-bundle-opt-price">Rp 279k · PCC + Decision Engine</p>
+            </button>
+            <button class="detail-bundle-opt" style="border-color:var(--cl-orange)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="detail-bundle-opt-name">Clarity Full — 3 tools</span>
+                <span class="detail-bundle-opt-save">Hemat Rp 158k</span>
+              </div>
+              <p class="detail-bundle-opt-price">Rp 389k · VCP + PCC + DE + akses prioritas</p>
+            </button>
+          </div>
+          <div class="detail-buy-features">
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>File spreadsheet (.xlsx)
+            </div>
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Kompatibel Excel & Google Sheets
+            </div>
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Garansi uang kembali 7 hari
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-section-title">Kenapa lo butuh ini?</p>
+      <div class="detail-grid-2">
+        <div class="detail-feature-card">
+          <h4>Ngitung HPP yang beneran lengkap</h4>
+          <p>Bukan cuma bahan + jahit. Termasuk label, hangtag, packaging, reject rate, ongkir ke gudang, dan biaya
+            tersembunyi yang sering bikin margin lo jebol.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Tau harga jual minimum yang aman</h4>
+          <p>Lo tau persis angka terendah yang masih bikin lo untung — sebelum lo tetapkan harga ke market atau
+            reseller.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Simulasi banyak produk sekaligus</h4>
+          <p>Bandingkan profitabilitas antar SKU dalam satu tampilan. Mana yang worth diproduksi, mana yang harus
+            di-review ulang.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Berhenti nebak, mulai ngitung</h4>
+          <p>Kalau lo selama ini nentuin harga dari feeling — ini tools yang bakal bikin lo nggak mau balik ke cara
+            lama.</p>
+        </div>
+      </div>
+    </div>
+    <hr class="divider-full">
+    <div class="detail-section" style="background:var(--color-background-secondary)">
+      <p class="detail-section-title">Ini untuk siapa?</p>
+      <div class="detail-for-grid">
+        <div class="detail-for-card"><strong>Brand owner yang mau pricing lebih akurat</strong>
+          <p>Yang udah jualan tapi nggak yakin margin-nya beneran sehat.</p>
+        </div>
+        <div class="detail-for-card"><strong>Brand baru yang mau mulai dari angka</strong>
+          <p>Sebelum produksi pertama, lo udah tau apakah bisnisnya viable.</p>
+        </div>
+        <div class="detail-for-card"><strong>Brand yang mau scale up</strong>
+          <p>Sebelum nambah SKU atau naik ke produksi massal, lo butuh angka yang jelas.</p>
+        </div>
+      </div>
+    </div>
+    <hr class="divider-full">
+    <div class="detail-section">
+      <p class="detail-section-title">Pertanyaan yang sering muncul</p>
+      <div class="faq-item">
+        <p class="faq-q">Harus bisa Excel dulu?</p>
+        <p class="faq-a">Tidak perlu. Semua formula sudah terpasang — lo tinggal isi angka di kolom yang disediakan,
+          hasilnya otomatis keluar.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Bisa dipakai untuk brand yang masih kecil?</p>
+        <p class="faq-a">Justru ini yang paling butuh tools ini. Semakin awal lo pakai, semakin cepat lo tau mana
+          keputusan yang bikin brand lo profitable.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Apakah ada batasan jumlah SKU yang bisa dihitung?</p>
+        <p class="faq-a">Tidak ada batasan. Lo bisa duplikasi sheet untuk setiap SKU baru yang mau lo hitung.</p>
+      </div>
+    </div>
+    <div class="detail-cta">
+      <h2>Siap tau angka yang sebenarnya?</h2>
+      <p>Hitung HPP produk lo dengan benar — mulai hari ini, mulai dari tools ini.</p>
+      <div class="detail-cta-btns">
+        <button class="btn-primary" style="font-size:14px;padding:11px 28px">Beli Profit Clarity Calculator — Rp
+          149k</button>
+        <button class="btn-secondary" style="font-size:14px;padding:11px 28px" onclick="showPage('home')">Kembali ke
+          semua products</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL DE -->
+  <div class="page" id="page-detail-de">
+    <div class="detail-hero">
+      <div class="detail-breadcrumb"><button onclick="showPage('home')">Home</button><span>/</span><span>Decision
+          Engine</span></div>
+      <div class="detail-hero-inner">
+        <div>
+          <span class="detail-tag">Decision & Strategy</span>
+          <h1>Decision Engine</h1>
+          <p class="detail-hero-sub">Framework evaluasi produk yang bantu lo jawab satu pertanyaan paling penting dalam
+            bisnis fashion: apakah produk ini layak diproduksi dan dijual — berdasarkan data, bukan instinct.</p>
+          <div class="detail-includes">
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Framework evaluasi kelayakan produk
+              baru</div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Scorecard 12 parameter bisnis &
+              market</div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Analisis risiko sebelum produksi
+            </div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Template go / no-go decision report
+            </div>
+            <div class="detail-include-item"><span class="detail-include-dot"></span>Panduan interpretasi skor &
+              rekomendasi aksi</div>
+          </div>
+        </div>
+        <div class="detail-buy-card">
+          <p class="detail-buy-price">Rp 249k</p>
+          <p class="detail-buy-note">Sekali bayar · Akses selamanya</p>
+          <button class="detail-buy-btn">Beli sekarang</button>
+          <p class="detail-buy-divider">atau pilih bundle</p>
+          <div class="detail-bundle-opts">
+            <button class="detail-bundle-opt">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="detail-bundle-opt-name">Clarity Essentials — 2 tools</span>
+                <span class="detail-bundle-opt-save">Hemat Rp 119k</span>
+              </div>
+              <p class="detail-bundle-opt-price">Rp 279k · PCC + Decision Engine</p>
+            </button>
+            <button class="detail-bundle-opt" style="border-color:var(--cl-orange)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="detail-bundle-opt-name">Clarity Full — 3 tools</span>
+                <span class="detail-bundle-opt-save">Hemat Rp 158k</span>
+              </div>
+              <p class="detail-bundle-opt-price">Rp 389k · VCP + PCC + DE + akses prioritas</p>
+            </button>
+          </div>
+          <div class="detail-buy-features">
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Format .xlsx & .pdf
+            </div>
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Bisa dipakai berulang kali
+            </div>
+            <div class="detail-buy-feature">
+              <div class="detail-check"><svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4l2 2 3-3" stroke="#f05423" stroke-width="1.2" stroke-linecap="round" />
+                </svg></div>Garansi uang kembali 7 hari
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-section-title">Kenapa lo butuh ini?</p>
+      <div class="detail-grid-2">
+        <div class="detail-feature-card">
+          <h4>Keputusan produk yang lebih terukur</h4>
+          <p>12 parameter evaluasi — dari demand, margin, kompetisi, hingga kapasitas produksi — dikombinasikan jadi
+            satu skor yang jelas: go atau no-go.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Hindari produksi yang berakhir jadi dead stock</h4>
+          <p>Setiap keputusan produksi yang salah = modal tertahan. Decision Engine bantu lo filter produk sebelum uang
+            lo keluar.</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Dokumentasi keputusan yang bisa dipertanggungjawabkan</h4>
+          <p>Lo punya rekam jejak kenapa sebuah produk diproduksi — bukan sekadar "waktu itu ngerasa bagus."</p>
+        </div>
+        <div class="detail-feature-card">
+          <h4>Jadi sistem, bukan one-time exercise</h4>
+          <p>Bisa lo pakai berulang kali untuk setiap keputusan produk baru — standar evaluasi permanen di brand lo.</p>
+        </div>
+      </div>
+    </div>
+    <hr class="divider-full">
+    <div class="detail-section" style="background:var(--color-background-secondary)">
+      <p class="detail-section-title">Ini untuk siapa?</p>
+      <div class="detail-for-grid">
+        <div class="detail-for-card"><strong>Brand owner yang mau expand lini produk</strong>
+          <p>Sebelum nambah SKU baru, pastikan dulu angkanya masuk akal.</p>
+        </div>
+        <div class="detail-for-card"><strong>Yang pernah salah keputusan produksi</strong>
+          <p>Dan nggak mau ngulang kesalahan yang sama dengan alasan yang sama.</p>
+        </div>
+        <div class="detail-for-card"><strong>Yang mau bangun sistem keputusan bisnis</strong>
+          <p>Bukan cuma sekali pakai — tapi jadi standar evaluasi di brand lo.</p>
+        </div>
+      </div>
+    </div>
+    <hr class="divider-full">
+    <div class="detail-section">
+      <p class="detail-section-title">Pertanyaan yang sering muncul</p>
+      <div class="faq-item">
+        <p class="faq-q">Seberapa lama waktu yang dibutuhkan untuk satu evaluasi?</p>
+        <p class="faq-a">Rata-rata 30–45 menit untuk satu produk, tergantung seberapa banyak data yang sudah lo punya.
+        </p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Apakah hasilnya selalu akurat?</p>
+        <p class="faq-a">Decision Engine adalah framework berbasis data yang lo input. Semakin jujur dan lengkap data
+          lo, semakin relevan hasilnya. Ini tools bantu berpikir, bukan pengganti judgement lo.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Apakah cocok untuk brand yang masih di fase awal?</p>
+        <p class="faq-a">Sangat cocok. Di fase awal, setiap keputusan produksi punya konsekuensi lebih besar — makanya
+          lo butuh framework yang clear dari sekarang.</p>
+      </div>
+    </div>
+    <div class="detail-cta">
+      <h2>Udah cukup mutusin produk dari feeling.</h2>
+      <p>Mulai gunakan framework yang bantu lo ambil keputusan lebih tajam, lebih cepat, dan lebih bisa
+        dipertanggungjawabkan.</p>
+      <div class="detail-cta-btns">
+        <button class="btn-primary" style="font-size:14px;padding:11px 28px">Beli Decision Engine — Rp 249k</button>
+        <button class="btn-secondary" style="font-size:14px;padding:11px 28px" onclick="showPage('home')">Kembali ke
+          semua products</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// IMAGE STORAGE — base64 disimpan di memory
-// ═══════════════════════════════════════════════════════
-const IMG = {};  // key: id -> base64 data URL
-
-function readFileAsBase64(file, callback) {
-  const reader = new FileReader();
-  reader.onload = (e) => callback(e.target.result);
-  reader.onerror = () => callback(null);
-  reader.readAsDataURL(file);
-}
-
-// Logo brand upload
-function handleLogoUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  if (file.size > 3 * 1024 * 1024) { alert('File terlalu besar. Max 3MB.'); return; }
-  readFileAsBase64(file, (b64) => {
-    if (!b64) return;
-    IMG['logo'] = b64;
-    // Update box
-    const box = document.getElementById('logo-box');
-    box.innerHTML = '<img src="' + b64 + '" style="max-height:80px;max-width:100%;object-fit:contain;border-radius:6px">';
-    box.classList.add('has-img');
-    // Update cover preview
-    const area = document.getElementById('prev-logo-area');
-    area.innerHTML = '<img src="' + b64 + '" class="cp-logo-img">';
-  });
-}
-
-// Main AI upload
-function handleMainUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  readFileAsBase64(file, (b64) => {
-    if (!b64) return;
-    IMG['ai-source'] = b64;
-    const inner = document.getElementById('main-upz-inner');
-    inner.innerHTML = '<img src="' + b64 + '" style="max-height:220px;width:100%;object-fit:contain;border-radius:8px;display:block"><p style="font-size:11px;color:var(--t3);margin-top:6px;text-align:center">' + file.name + ' — siap dianalisa</p>';
-    const btn = document.getElementById('ai-btn');
-    btn.disabled = false;
-    btn.style.opacity = '1';
-  });
-}
-
-// Visual uploads (front, back, detail1, detail2, swatch)
-function handleVisualUpload(event, imgId) {
-  const file = event.target.files[0];
-  if (!file) return;
-  readFileAsBase64(file, (b64) => {
-    if (!b64) return;
-    IMG[imgId] = b64;
-    const box = document.getElementById(imgId);
-    box.innerHTML = '<img src="' + b64 + '" style="width:100%;max-height:160px;object-fit:contain;border-radius:6px;display:block">';
-    box.classList.add('has-img');
-  });
-}
-
-// ═══════════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════════
-function gp(id, el) {
-  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.nv').forEach(n => n.classList.remove('on'));
-  document.getElementById('pg-' + id).classList.add('on');
-  if (el) el.classList.add('on');
-  const pct = Math.round((id / 8) * 100);
-  document.getElementById('pfill').style.width = pct + '%';
-  document.getElementById('ppct').textContent = pct + '%';
-  window.scrollTo(0, 0);
-}
-
-// ═══════════════════════════════════════════════════════
-// TAG HELPERS
-// ═══════════════════════════════════════════════════════
-function t1(el, gid) {
-  document.getElementById(gid).querySelectorAll('.tg').forEach(t => t.classList.remove('on'));
-  el.classList.add('on');
-}
-function tM(el) { el.classList.toggle('on'); }
-function tglCi(el) { el.classList.toggle('on'); }
-
-function tglCb(el) {
-  el.classList.toggle('on');
-  el.innerHTML = el.classList.contains('on') ?
-    '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>' : '';
-}
-function tglRc(el, type) {
-  el.closest('.cl-res').querySelectorAll('.rc').forEach(r => r.classList.remove('ok','nok'));
-  el.classList.add(type);
-}
-
-// ═══════════════════════════════════════════════════════
-// COVER PREVIEW
-// ═══════════════════════════════════════════════════════
-function updateCoverPreview() {
-  const b = document.getElementById('c-brand').value.trim();
-  const r = document.getElementById('c-recip-name').value.trim();
-  document.getElementById('prev-brand').textContent = b || 'BRAND';
-  document.getElementById('prev-rec').textContent = r || '[Client, Vendors, Suppliers]';
-}
-function setCoverColor(hex) {
-  document.getElementById('cp-body').style.background = hex;
-}
-
-// ═══════════════════════════════════════════════════════
-// ADD ROWS
-// ═══════════════════════════════════════════════════════
-function addColorRow() {
-  const c = document.getElementById('color-rows');
-  const d = document.createElement('div');
-  d.className = 'g3'; d.style.marginBottom = '10px';
-  d.innerHTML = '<div><label class="fl">Color name</label><input type="text" class="fi" placeholder="Color name"></div><div><label class="fl">Pantone</label><input type="text" class="fi" placeholder="Pantone code"></div><div><label class="fl">HEX</label><input type="text" class="fi" placeholder="#xxxxxx"></div>';
-  c.appendChild(d);
-}
-function addRevRow() {
-  const tb = document.getElementById('rev-body');
-  const tr = document.createElement('tr');
-  tr.innerHTML = '<td><input type="date"></td><td><input type="text" placeholder="v1.x" style="width:55px"></td><td><input type="text" placeholder="Catatan..."></td><td><input type="text" placeholder="Nama"></td><td><select><option>Draft</option><option>Review</option><option>Approved</option><option>Final</option></select></td>';
-  tb.appendChild(tr);
-}
-function addBomRow(id) {
-  const tb = document.getElementById(id);
-  const tr = document.createElement('tr');
-  tr.innerHTML = '<td><input type="text" placeholder="Komponen"></td><td><input type="text" placeholder="Spesifikasi"></td><td><input type="text" placeholder="0"></td><td><select><option>pcs</option><option>meter</option><option>kg</option><option>cm</option></select></td><td><input type="text" placeholder="Rp -"></td><td><input type="text" placeholder="-"></td>';
-  tb.appendChild(tr);
-}
-function addTlRow() {
-  const tb = document.getElementById('tl-body');
-  const tr = document.createElement('tr');
-  tr.innerHTML = '<td><input type="text" placeholder="Milestone baru"></td><td><input type="date"></td><td><input type="date"></td><td><select><option>-</option><option>Done</option><option>On track</option><option>Delay</option></select></td><td><input type="text" placeholder="PIC"></td><td><input type="text" placeholder="-"></td>';
-  tb.appendChild(tr);
-}
-
-// ═══════════════════════════════════════════════════════
-// AI ANALYZE — FIX: proper error handling & CORS
-// ═══════════════════════════════════════════════════════
-async function doAI() {
-  const b64 = IMG['ai-source'];
-  if (!b64) { alert('Upload gambar dulu'); return; }
-
-  const btn = document.getElementById('ai-btn');
-  btn.disabled = true;
-  document.getElementById('ai-loading').style.display = 'block';
-  document.getElementById('ai-result-area').innerHTML = '';
-  document.getElementById('ai-error-area').innerHTML = '';
-  document.getElementById('ai-dot').classList.add('pulse');
-  document.getElementById('ai-txt').textContent = 'Menganalisa...';
-
-  const steps = [
-    'Mengidentifikasi kategori produk...',
-    'Menganalisa konstruksi & material...',
-    'Menentukan grade spec yang tepat...',
-    'Menyusun BOM & trim list...',
-    'Merekomendasikan packaging...',
-    'Menyiapkan care instruction...',
-    'Finalisasi semua rekomendasi...'
-  ];
-  let si = 0;
-  const iv = setInterval(() => {
-    if (si < steps.length) {
-      document.getElementById('ai-step-txt').textContent = steps[si];
-      document.getElementById('ai-step-sub').textContent = 'Langkah ' + (si+1) + ' dari ' + steps.length;
-      si++;
-    }
-  }, 1200);
-
-  const ct = document.getElementById('ctx-type').value;
-  const cm = document.getElementById('ctx-mkt').value;
-  const cn = document.getElementById('ctx-note').value;
-
-  // Detect image media type
-  const mediaType = b64.startsWith('data:image/png') ? 'image/png' :
-                    b64.startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
-  const imageData = b64.split(',')[1];
-
-  const jsonTemplate = '{"product_detected":"nama produk","confidence":82,"category":"kategori","positioning":"mid-range","technical_sheet":{"fabric_type":"Cotton 24s","fabric_construction":"Single jersey","weight_gsm":"180-200 gsm","supplier_recommendation":"Kahatex","color_dominant":"Warna dominan","color_pantone":"1595C","color_hex":"#f05423","trim_list":"Main label, Neck tape, Hangtag, Size label, Care label","sizes_recommended":["S","M","L","XL"],"length_range":"68-76 cm","width_range":"48-58 cm","fabric_reason":"Alasan pemilihan fabric 2-3 kalimat"},"bom":{"fabric_components":[{"name":"Main fabric","spec":"Cotton 24s single jersey 180gsm","qty":"0.8","unit":"meter","supplier":"Kahatex"}],"trim_components":[{"name":"Main label","spec":"Woven 5x3cm","qty":"1","unit":"pcs","est_price":"Rp 800"},{"name":"Neck tape","spec":"Cotton 1.5cm","qty":"45","unit":"cm","est_price":"Rp 500"},{"name":"Hangtag","spec":"Art paper 350gsm","qty":"1","unit":"pcs","est_price":"Rp 1200"},{"name":"Size label","spec":"Heat transfer","qty":"1","unit":"pcs","est_price":"Rp 300"},{"name":"Care label","spec":"Woven","qty":"1","unit":"pcs","est_price":"Rp 400"}],"cmt_estimate":"Rp 15000-25000"},"packaging":{"polybag_type":"OPP biasa","polybag_size":"35 x 45 cm","polybag_thickness":"40 micron","folding_method":"Flat fold","carton_qty":"12 pcs","carton_size":"60x40x40 cm","carton_weight":"5 kg","carton_stack":"max 3","packaging_reason":"Alasan rekomendasi packaging 1-2 kalimat"},"care_instruction":{"symbols_recommended":["handwash","no-bleach","iron-low","no-dryer","inside"],"care_text_id":"Cuci tangan atau mesin cuci maks 30 derajat Celsius. Jangan gunakan pemutih. Setrika dengan suhu rendah. Jemur terbalik.","care_text_en":"Hand wash or machine wash max 30C. Do not bleach. Iron on low heat. Hang dry inside out.","composition":"100% Cotton","care_reason":"Alasan care instruction berdasarkan fabric"}}';
-
-  const prompt = 'Kamu adalah expert fashion product developer untuk brand Indonesia.\n\nAnalisa gambar produk fashion ini.\nKonteks: Jenis=' + (ct||'deteksi') + ', Market=' + (cm||'deteksi') + ', Catatan=' + (cn||'-') + '\n\nReturn HANYA JSON valid, tidak ada teks lain, tidak ada markdown. Ikuti persis struktur ini:\n' + jsonTemplate;
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: mediaType, data: imageData } },
-            { type: 'text', text: prompt }
-          ]
-        }]
-      })
-    });
-
-    clearInterval(iv);
-
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      throw new Error('API Error ' + response.status + ': ' + (errData.error ? errData.error.message : response.statusText));
-    }
-
-    const data = await response.json();
-    const rawText = data.content[0].text;
-    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Format response tidak valid — AI tidak mengembalikan JSON');
-
-    const d = JSON.parse(jsonMatch[0]);
-    fillAllFromAI(d);
-    showAISuccess(d);
-
-  } catch(err) {
-    clearInterval(iv);
-    document.getElementById('ai-error-area').innerHTML =
-      '<div class="ib r"><strong>Error: ' + err.message + '</strong><br>Pastikan lo menggunakan Chrome/Edge dan memiliki koneksi internet. Jika masalah berlanjut, isi field secara manual.</div>';
-    document.getElementById('ai-txt').textContent = 'Error';
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.getElementById('app').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-
-  document.getElementById('ai-loading').style.display = 'none';
-  document.getElementById('ai-dot').classList.remove('pulse');
-  btn.disabled = false;
-  btn.style.opacity = '1';
-}
-
-function sAI(id, val) {
-  if (val === null || val === undefined || val === '') return;
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.value = String(val);
-  el.classList.add('af');
-}
-
-function fillAllFromAI(d) {
-  const ts = d.technical_sheet || {};
-  const bom = d.bom || {};
-  const pkg = d.packaging || {};
-  const care = d.care_instruction || {};
-
-  // Technical sheet
-  sAI('f-fabric', ts.fabric_type);
-  sAI('f-construct', ts.fabric_construction);
-  sAI('f-gsm', ts.weight_gsm);
-  sAI('f-supplier', ts.supplier_recommendation);
-  sAI('f-color', ts.color_pantone ? 'Pantone ' + ts.color_pantone : null);
-  sAI('f-trim', ts.trim_list);
-  sAI('f-fabric-reason', ts.fabric_reason);
-  sAI('f-len', ts.length_range);
-  sAI('f-wid', ts.width_range);
-  sAI('col1-name', ts.color_dominant);
-  sAI('col1-pant', ts.color_pantone);
-  sAI('col1-hex', ts.color_hex);
-
-  if (ts.sizes_recommended && Array.isArray(ts.sizes_recommended)) {
-    document.querySelectorAll('#f-sizes .tg').forEach(t => {
-      const isOn = ts.sizes_recommended.some(s => s.toUpperCase() === t.textContent.trim().toUpperCase());
-      t.classList.remove('on','ai-on');
-      if (isOn) { t.classList.add('on','ai-on'); }
-    });
-  }
-  document.getElementById('mat-badge').style.display = 'inline-flex';
-  document.getElementById('spec-badge').style.display = 'inline-flex';
-
-  // BOM fabric
-  if (bom.fabric_components && bom.fabric_components.length) {
-    const bf = document.getElementById('bom-f');
-    bf.innerHTML = '';
-    bom.fabric_components.forEach(fc => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = '<td><input type="text" value="' + (fc.name||'') + '" class="af"></td><td><input type="text" value="' + (fc.spec||'') + '" class="af"></td><td><input type="text" value="' + (fc.qty||'') + '" class="af"></td><td><select><option>meter</option><option>yard</option><option>kg</option><option>pcs</option></select></td><td><input type="text" placeholder="Rp -"></td><td><input type="text" value="' + (fc.supplier||'') + '" class="af"></td>';
-      bf.appendChild(tr);
-    });
-  }
-  // BOM trim
-  if (bom.trim_components && bom.trim_components.length) {
-    const bt = document.getElementById('bom-t');
-    bt.innerHTML = '';
-    bom.trim_components.forEach(tc => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = '<td><input type="text" value="' + (tc.name||'') + '" class="af"></td><td><input type="text" value="' + (tc.spec||'') + '" class="af"></td><td><input type="text" value="' + (tc.qty||'') + '" class="af"></td><td><select><option>pcs</option><option>meter</option><option>cm</option></select></td><td><input type="text" value="' + (tc.est_price||'') + '" class="af"></td><td><input type="text" placeholder="-"></td>';
-      bt.appendChild(tr);
-    });
-  }
-  sAI('f-cmt', bom.cmt_estimate);
-
-  // Packaging
-  sAI('f-poly-sz', pkg.polybag_size);
-  sAI('f-poly-th', pkg.polybag_thickness);
-  sAI('f-poly-why', pkg.packaging_reason);
-  sAI('f-ctn-qty', pkg.carton_qty);
-  sAI('f-ctn-sz', pkg.carton_size);
-  sAI('f-ctn-wt', pkg.carton_weight);
-  sAI('f-ctn-st', pkg.carton_stack);
-  if (pkg.folding_method) {
-    document.querySelectorAll('#f-fold .tg').forEach(t => {
-      if (t.textContent.toLowerCase().includes(pkg.folding_method.toLowerCase().split(' ')[0].toLowerCase())) {
-        document.querySelectorAll('#f-fold .tg').forEach(x => x.classList.remove('on'));
-        t.classList.add('on');
-      }
-    });
-  }
-  document.getElementById('pkg-badge').style.display = 'inline-flex';
-
-  // Care
-  if (care.symbols_recommended && Array.isArray(care.symbols_recommended)) {
-    document.querySelectorAll('#care-grid .ci').forEach(el => {
-      el.classList.remove('on','ai-on');
-      el.querySelectorAll('.ci-ai').forEach(x => x.remove());
-      if (care.symbols_recommended.includes(el.dataset.c)) {
-        el.classList.add('on','ai-on');
-        const n = document.createElement('div');
-        n.className = 'ci-ai'; n.textContent = '✦ AI';
-        el.appendChild(n);
-      }
-    });
-  }
-  sAI('f-care-id', care.care_text_id);
-  sAI('f-care-en', care.care_text_en);
-  sAI('f-comp', care.composition);
-  document.getElementById('care-badge').style.display = 'inline-flex';
-  if (care.care_reason && ts.fabric_type) {
-    const ctx = document.getElementById('care-ctx');
-    ctx.className = 'ib g';
-    ctx.innerHTML = '<strong>Fabric: ' + ts.fabric_type + '</strong> — ' + care.care_reason;
-  }
-
-  // Mark nav chips
-  ['2','4','5','6'].forEach(n => {
-    const chip = document.getElementById('chip-'+n); if (chip) chip.style.display = 'inline';
-    const nav = document.getElementById('nav-'+n); if (nav) nav.classList.add('ai-done');
-  });
-
-  document.getElementById('ai-txt').textContent = 'AI selesai';
-}
-
-function showAISuccess(d) {
-  const ts = d.technical_sheet || {};
-  document.getElementById('ai-result-area').innerHTML =
-    '<div class="ai-result-box">' +
-    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
-    '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="var(--grn)" stroke-width="1.3" fill="none"/><path d="M4.5 7l2 2L10 5" stroke="var(--grn)" stroke-width="1.4" stroke-linecap="round"/></svg>' +
-    '<span style="font-size:13px;font-weight:800;color:var(--grn)">Analisa selesai — semua field sudah diisi</span>' +
-    '<span style="font-size:11px;color:var(--t3);margin-left:auto">Confidence: ' + (d.confidence||80) + '%</span></div>' +
-    '<div style="height:3px;background:rgba(255,255,255,.5);border-radius:2px;margin-bottom:12px;overflow:hidden">' +
-    '<div style="height:3px;width:' + (d.confidence||80) + '%;background:var(--grn);border-radius:2px"></div></div>' +
-    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">' +
-    '<div style="background:#fff;padding:10px;border-radius:6px;border:1px solid var(--grn-bd)"><p style="font-size:10px;color:var(--t3);text-transform:uppercase;font-weight:700;letter-spacing:.06em;margin-bottom:2px">Produk</p><p style="font-size:13px;font-weight:800">' + (d.product_detected||'-') + '</p></div>' +
-    '<div style="background:#fff;padding:10px;border-radius:6px;border:1px solid var(--grn-bd)"><p style="font-size:10px;color:var(--t3);text-transform:uppercase;font-weight:700;letter-spacing:.06em;margin-bottom:2px">Fabric</p><p style="font-size:13px;font-weight:800">' + (ts.fabric_type||'-') + '</p></div>' +
-    '<div style="background:#fff;padding:10px;border-radius:6px;border:1px solid var(--grn-bd)"><p style="font-size:10px;color:var(--t3);text-transform:uppercase;font-weight:700;letter-spacing:.06em;margin-bottom:2px">Positioning</p><p style="font-size:13px;font-weight:800">' + (d.positioning||'-') + '</p></div>' +
-    '</div>' +
-    '<div style="font-size:12px;color:var(--grn);font-weight:600;margin-bottom:10px">Field <span style="font-weight:800;background:#fff;padding:1px 6px;border-radius:4px;border:1px solid var(--grn-bd)">hijau</span> = diisi AI, bisa diedit bebas.</div>' +
-    '<div style="display:flex;gap:8px">' +
-    '<button onclick="gp(1,document.getElementById(\'nav-1\'))" style="font-size:12px;padding:7px 16px;border:none;border-radius:6px;background:var(--grn);color:#fff;cursor:pointer;font-family:inherit;font-weight:800">Mulai dari Cover →</button>' +
-    '<button onclick="gp(2,document.getElementById(\'nav-2\'))" style="font-size:12px;padding:7px 14px;border:1px solid var(--grn-bd);border-radius:6px;background:transparent;color:var(--grn);cursor:pointer;font-family:inherit;font-weight:700">Lihat Technical Sheet</button>' +
-    '</div></div>';
-}
-
-// ═══════════════════════════════════════════════════════
-// COLLECT DATA
-// ═══════════════════════════════════════════════════════
-function collectAll() {
-  const G = id => { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
-  const GA = gid => { const e = document.getElementById(gid); return e ? [...e.querySelectorAll('.tg.on')].map(t=>t.textContent.trim()).join(', ') : ''; };
-
-  // Cover color
-  let coverColor = '#f05423';
-  try { const s = document.getElementById('cp-body').style.background; if(s) coverColor = s; } catch(e){}
-
-  return {
-    // Cover
-    brand: G('c-brand') || 'BRAND',
-    recipType: GA('c-recip'),
-    recipName: G('c-recip-name'),
-    docDate: G('c-date'),
-    coverColor,
-    // Technical
-    pname: G('f-pname'), art: G('f-art'),
-    pclass: G('f-class'), srp: G('f-srp'),
-    vendor: G('f-vendor'), launch: G('f-launch'),
-    status: GA('f-status'),
-    fabric: G('f-fabric'), construct: G('f-construct'),
-    gsm: G('f-gsm'), supplier: G('f-supplier'),
-    color: G('f-color'), trim: G('f-trim'),
-    fabricReason: G('f-fabric-reason'),
-    sizes: GA('f-sizes'), len: G('f-len'),
-    wid: G('f-wid'), tol: G('f-tol'),
-    colorRows: [...document.querySelectorAll('#color-rows .g3')].map(r => [...r.querySelectorAll('input')].map(i=>i.value)),
-    // Revision
-    rVer: G('r-ver'), rBy: G('r-by'), rDate: G('r-date'),
-    revRows: [...document.querySelectorAll('#rev-body tr')].map(r=>[...r.querySelectorAll('input,select')].map(i=>i.value)),
-    // BOM
-    bomF: [...document.querySelectorAll('#bom-f tr')].map(r=>[...r.querySelectorAll('input,select')].map(i=>i.value)),
-    bomT: [...document.querySelectorAll('#bom-t tr')].map(r=>[...r.querySelectorAll('input,select')].map(i=>i.value)),
-    bomMat: G('bom-mat'), bomTrim: G('bom-trim'),
-    cmt: G('f-cmt'), hpp: G('bom-hpp'),
-    // Packaging
-    polyType: G('f-poly'), polySz: G('f-poly-sz'),
-    polyTh: G('f-poly-th'), polyFold: GA('f-fold'),
-    polyWhy: G('f-poly-why'),
-    stickerInfo: G('f-sticker-info'), stickerPos: G('f-sticker-pos'),
-    ctnQty: G('f-ctn-qty'), ctnSz: G('f-ctn-sz'),
-    ctnWt: G('f-ctn-wt'), ctnSt: G('f-ctn-st'),
-    // Care
-    careSymbols: [...document.querySelectorAll('#care-grid .ci.on')].map(c=>c.querySelector('.ci-nm').textContent),
-    careId: G('f-care-id'), careEn: G('f-care-en'),
-    comp: G('f-comp'), origin: G('f-origin'),
-    // Sample
-    sDate: G('s-date'), sType: G('s-type'),
-    sFrom: G('s-from'), sSize: G('s-size'),
-    clItems: [...document.querySelectorAll('#cl-list .cl-item')].map(item => ({
-      label: item.querySelector('p').textContent,
-      ok: !!item.querySelector('.cb.on'),
-      result: item.querySelector('.rc.ok') ? 'OK' : item.querySelector('.rc.nok') ? 'NOK' : '-'
-    })),
-    approval: GA('f-approval'),
-    sNotes: G('s-notes'), sQC: G('s-qc'), sDecDate: G('s-dec-date'),
-    // Timeline
-    tlDates: [1,2,3,4,5,6,7,8].map(i=>G('tl'+i)),
-    tlRows: [...document.querySelectorAll('#tl-body tr')].map(r=>[...r.querySelectorAll('input,select')].map(i=>i.value)),
-    tlNotes: G('tl-notes'),
-    // Detail labels
-    d1Label: G('d1-label'), d2Label: G('d2-label'),
-  };
-}
-
-// ═══════════════════════════════════════════════════════
-// PDF GENERATION — A3 LANDSCAPE
-// ═══════════════════════════════════════════════════════
-async function generatePDF() {
-  const pdfBtn = document.getElementById('btn-pdf');
-  pdfBtn.disabled = true;
-  pdfBtn.textContent = 'Generating...';
-
-  const D = collectAll();
-  await new Promise(r => setTimeout(r, 80));
-
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a3' });
-    const PW = 420, PH = 297, M = 10, UW = PW - M*2;
-
-    // ─── COLORS ───
-    const ORA=[240,84,35], BLK=[1,1,1], WHT=[255,255,255];
-    const LG=[245,244,240], DG=[44,44,42], MG=[136,135,128];
-    const TS=[102,102,96], TT=[153,153,148], BD=[224,223,219];
-    const GRN=[59,109,17], GLT=[234,243,222], GBD=[151,196,89];
-    const AMBLT=[250,238,218], REDLT=[252,235,235], RBD=[240,149,149];
-
-    // ─── HELPERS ───
-    const fc = (c) => doc.setFillColor(...c);
-    const dc = (c) => doc.setDrawColor(...c);
-    const tc = (c) => doc.setTextColor(...c);
-    const lw = (w) => doc.setLineWidth(w);
-    const sf = (sz, st='normal') => { doc.setFontSize(sz); doc.setFont('helvetica', st); };
-
-    const R = (x,y,w,h,fill,stroke,lw_=0.3) => {
-      if(fill) fc(fill); if(stroke){dc(stroke);doc.setLineWidth(lw_);}
-      if(fill&&stroke) doc.rect(x,y,w,h,'FD');
-      else if(fill) doc.rect(x,y,w,h,'F');
-      else if(stroke) doc.rect(x,y,w,h,'S');
-    };
-    const T = (text,x,y,align='left') => {
-      if(!text||text==='') return;
-      const s = String(text).substring(0,100);
-      doc.text(s,x,y,{align});
-    };
-    const secBar = (x,y,w,h,label,bg=ORA) => {
-      R(x,y,w,h,bg);
-      sf(7,'bold'); tc(WHT);
-      T(label, x+3, y+h*0.68);
-    };
-    const darkBar = (x,y,w,h,label='') => secBar(x,y,w,h,label,DG);
-    const inpBox = (x,y,w,h,val,ai=false) => {
-      R(x,y,w,h,ai?GLT:LG,ai?GBD:BD,0.3);
-      if(val){ sf(7,'normal'); tc(ai?GRN:TS); T(String(val).substring(0,45),x+1.5,y+h*0.68); }
-    };
-    const phBox = (x,y,w,h,label='',fs=7) => {
-      R(x,y,w,h,LG,BD,0.3);
-      sf(fs,'normal'); tc(TT);
-      const lw2 = doc.getTextWidth(label);
-      T(label, x+w/2-lw2/2, y+h/2+fs*0.35);
-    };
-
-    const addImage = (imgId, x, y, w, h) => {
-      const src = IMG[imgId];
-      if (!src) { phBox(x,y,w,h,'[ No image ]',6); return; }
-      try {
-        const fmt = src.startsWith('data:image/png') ? 'PNG' : src.startsWith('data:image/webp') ? 'WEBP' : 'JPEG';
-        doc.addImage(src, fmt, x, y, w, h, undefined, 'FAST');
-      } catch(e) { phBox(x,y,w,h,'[ Image error ]',6); }
-    };
-
-    const footer = (pg) => {
-      sf(6,'normal'); tc(TT);
-      T('ClarityLab - Visual Clarity Pack  |  Halaman '+pg+' dari 8  |  CONFIDENTIAL', M, PH-4);
-      T('claritylab.id', PW-M, PH-4, 'right');
-      dc(BD); lw(0.2); doc.line(M,PH-7,PW-M,PH-7);
-    };
-
-    const pageHeader = (pg) => {
-      R(0,0,PW,15,ORA);
-      sf(10,'bold'); tc(WHT); T('TECHNICAL PACKAGE', M, 7);
-      sf(6.5,'normal'); tc([253,232,224]); T('CONFIDENTIAL', M, 12.5);
-      if(D.pname||D.art){
-        sf(6.5,'normal'); tc(WHT); T('Article :', 52, 6.5);
-        sf(6.5,'bolditalic'); tc([253,232,224]); T(D.pname||'product Name', 65, 6.5);
-        sf(6.5,'normal'); tc(WHT); T('Serial Name :', 52, 12);
-        sf(6.5,'bolditalic'); tc([253,232,224]); T(D.art||'Article Number', 72, 12);
-      }
-      if(D.pclass){
-        sf(6.5,'normal'); tc(WHT); T('Class :', 120, 6.5);
-        sf(6.5,'bolditalic'); tc([253,232,224]); T(D.pclass, 130, 6.5);
-        T('SRP :', 120, 12); T(D.srp||'-', 128, 12);
-      }
-      if(D.docDate){
-        sf(6.5,'normal'); tc(WHT); T('Date :', 180, 6.5);
-        sf(6.5,'bolditalic'); tc([253,232,224]); T(D.docDate, 189, 6.5);
-      }
-      sf(6.5,'normal'); tc(WHT);
-      if(D.status){ T('Status :', 260, 12); sf(6.5,'bolditalic'); tc([253,232,224]); T(D.status, 272, 12); }
-      sf(14,'bold'); tc(WHT); T(D.brand||'BRAND', PW-M, 10, 'right');
-      sf(6.5,'normal'); tc([253,232,224]); T('[Logo Here]', PW-M, 14, 'right');
-    };
-
-    // ══════════════════════════════════════
-    // PAGE 1: COVER
-    // ══════════════════════════════════════
-    let cc = [240,84,35];
-    try {
-      const hex = D.coverColor.replace(/[^#0-9a-fA-F]/g,'');
-      if(hex.startsWith('#') && hex.length===7){
-        cc=[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];
-      }
-    } catch(e){}
-    R(0,0,PW,PH,cc);
-    R(0,0,PW,22,BLK);
-    R(M,PH-22,58,14,BLK);
-    sf(8,'bold'); tc(WHT); T('TECHNICAL PACKAGE', M+3, PH-15);
-    sf(6,'normal'); tc(MG); T('CONFIDENTIAL', M+3, PH-9);
-    sf(80,'bold'); tc(WHT); T((D.brand||'BRAND').toUpperCase(), PW/2, PH/2+15, 'center');
-    // Logo on cover
-    if(IMG['logo']){
-      try { doc.addImage(IMG['logo'],'PNG',PW/2-15,PH/2-10,30,20,'','FAST'); } catch(e){}
-    } else {
-      sf(10,'normal'); tc([255,255,255,0.5]); T('[Logo Here]', PW/2, PH/2-3, 'center');
-    }
-    sf(13,'bold'); tc(WHT); T('Document for :', PW/2, PH/2-25, 'center');
-    sf(10,'normal'); tc([253,232,224]); T('['+( D.recipType||'Client, Vendors, Suppliers')+']', PW/2, PH/2-32, 'center');
-    sf(11,'bold'); tc(WHT); T('Visual Clarity Pack', M, 14);
-    sf(8,'normal'); tc(MG); T('Technical Package System  |  claritylab.id', M, 19);
-    sf(8,'normal'); tc([100,100,100]); T('1 / 8', PW-M, 19, 'right');
-    doc.addPage();
-
-    // ══════════════════════════════════════
-    // PAGE 2: TECHNICAL SHEET
-    // ══════════════════════════════════════
-    pageHeader(2);
-    let ty=18;
-    // LAYOUT: 3 columns
-    const c1=62, c2=120, c3=UW-c1-c2-4;
-    secBar(M,ty,c1,6,'MATERIAL & TRIM');
-    secBar(M+c1+2,ty,c2,6,'VISUAL & DETAIL TECHNICAL');
-    secBar(M+c1+c2+4,ty,c3,6,'CONSTRUCTION DETAILS');
-    ty+=6;
-
-    // Col1: Material
-    let x1=M, cy1=ty+4;
-    const mf=[['Fabric',D.fabric],['Construction',D.construct],['Weight',D.gsm],['Supplier',D.supplier],['Color',D.color],['Trim',D.trim]];
-    mf.forEach(([l,v])=>{
-      sf(6.5,'normal'); tc(TS); T(l+' :', x1+1, cy1);
-      sf(6.5,'bolditalic'); tc(ORA); T((v||'-').substring(0,18), x1+20, cy1);
-      cy1+=5;
-    });
-    cy1+=2;
-    // Swatches
-    if(IMG['img-swatch1']){ addImage('img-swatch1',x1,cy1,c1-2,20); }
-    else { phBox(x1,cy1,c1-2,20,'SWATCH 1',6); }
-    cy1+=22;
-    if(IMG['img-swatch2']){ addImage('img-swatch2',x1,cy1,c1-2,20); }
-    else { phBox(x1,cy1,c1-2,20,'SWATCH 2',6); }
-
-    // Col2: Visual
-    let x2=M+c1+2;
-    const vh=55;
-    if(IMG['img-front']){ addImage('img-front',x2,ty+2,c2/2-1,vh); }
-    else { phBox(x2,ty+2,c2/2-1,vh,'FRONT VIEW',7); }
-    if(IMG['img-back']){ addImage('img-back',x2+c2/2+1,ty+2,c2/2-1,vh); }
-    else { phBox(x2+c2/2+1,ty+2,c2/2-1,vh,'BACK VIEW',7); }
-    sf(6,'normal'); tc(TT);
-    T('FRONT VIEW',x2+c2/4,ty+vh+5,'center');
-    T('BACK VIEW',x2+c2*3/4,ty+vh+5,'center');
-    // Detail shots
-    const dh=28, dw=(c2-2)/2;
-    const detailSlots=[
-      {id:'img-d1',x:x2,y:ty+vh+7,lbl:'DETAIL 1: '+(D.d1Label||'')},
-      {id:'img-d2',x:x2+dw+2,y:ty+vh+7,lbl:'DETAIL 2: '+(D.d2Label||'')},
-    ];
-    detailSlots.forEach(({id,x,y,lbl})=>{
-      sf(5.5,'normal'); tc(TT); T(lbl.substring(0,30),x+1,y+3);
-      if(IMG[id]){ addImage(id,x,y+4,dw,dh-5); }
-      else { phBox(x,y+4,dw,dh-5,'VISUAL',7); }
-    });
-
-    // Col3: Construction details (grade spec, color spec, reasoning)
-    let x3=M+c1+c2+4;
-    let cy3=ty+3;
-    secBar(x3,cy3,c3,5,'GRADE SPEC'); cy3+=7;
-    R(x3,cy3,c3,22,LG,BD,0.3);
-    sf(7,'normal'); tc(ORA);
-    T(D.sizes||'[S|M|L|XL]', x3+2, cy3+5);
-    T('P: '+(D.len||'-'), x3+2, cy3+11);
-    T('L: '+(D.wid||'-'), x3+2, cy3+17);
-    sf(6.5,'normal'); tc(TS); T('Toleransi: '+(D.tol||'+/- 1 cm'), x3+2, cy3+23); cy3+=26;
-
-    secBar(x3,cy3,c3,5,'COLOR SPEC'); cy3+=7;
-    R(x3,cy3,c3,28,LG,BD,0.3);
-    D.colorRows.forEach((row,i)=>{
-      if(row[0]||row[1]||row[2]){
-        sf(6.5,'normal'); tc(TS);
-        T((row[0]||'-')+' | '+(row[1]||'-')+' | '+(row[2]||'-'), x3+2, cy3+5+i*6);
-        // Color swatch dot
-        try {
-          const hx = (row[2]||'').replace('#','');
-          if(hx.length===6){
-            const r=parseInt(hx.slice(0,2),16),g2=parseInt(hx.slice(2,4),16),b=parseInt(hx.slice(4,6),16);
-            R(x3+c3-8,cy3+2+i*6,5,4,[r,g2,b],BD,0.2);
-          }
-        } catch(e){}
-      }
-    });
-    cy3+=30;
-
-    if(D.fabricReason){
-      secBar(x3,cy3,c3,5,'AI REASONING'); cy3+=7;
-      R(x3,cy3,c3,28,LG,BD,0.3);
-      sf(6.5,'normal'); tc(TS);
-      const lines = doc.splitTextToSize(D.fabricReason, c3-4);
-      lines.slice(0,5).forEach((l,i)=>T(l,x3+2,cy3+5+i*5));
-    }
-
-    // Bottom: Reference image area
-    let botY = ty+vh+7+dh+8;
-    const botH = PH-botY-12;
-    if(botH > 10){
-      secBar(M,botY,UW,5,'REFERENCE IMAGE'); botY+=5;
-      phBox(M,botY,UW,botH,'Upload gambar referensi di halaman Technical Sheet',8);
-    }
-
-    footer(2); doc.addPage();
-
-    // ══════════════════════════════════════
-    // PAGE 3: REVISION LOG
-    // ══════════════════════════════════════
-    pageHeader(3);
-    ty=20;
-    sf(11,'bold'); tc(BLK); T('Revision Log', M, ty); ty+=6;
-    sf(8,'normal'); tc(TS); T('Versi: '+(D.rVer||'-')+'  |  Dibuat oleh: '+(D.rBy||'-')+'  |  Tanggal: '+(D.rDate||'-'), M, ty); ty+=10;
-    const rCols=[35,18,UW-35-18-35-28,35,28];
-    const rH=['Tanggal','Versi','Catatan Revisi','Oleh','Status'];
-    darkBar(M,ty,UW,7,''); sf(6.5,'bold'); tc(WHT);
-    let rcx=M; rH.forEach((h,i)=>{T(h,rcx+2,ty+4.8);rcx+=rCols[i];}); ty+=7;
-    D.revRows.forEach((row,i)=>{
-      const rh=9; R(M,ty,UW,rh,i%2===0?LG:WHT,BD,0.3);
-      rcx=M; row.forEach((cell,j)=>{sf(6.5,'normal');tc(j===0?ORA:TS);T((cell||'').substring(0,j===2?55:18),rcx+2,ty+5.8);rcx+=rCols[j];}); ty+=rh;
-    });
-    for(let i=0;i<6;i++){R(M,ty,UW,9,i%2===0?LG:WHT,BD,0.3);ty+=9;}
-    footer(3); doc.addPage();
-
-    // ══════════════════════════════════════
-    // PAGE 4: BOM
-    // ══════════════════════════════════════
-    pageHeader(4);
-    ty=20; sf(11,'bold'); tc(BLK); T('Bill of Materials (BOM)', M, ty); ty+=6;
-    sf(8,'normal'); tc(TS); T('Semua komponen produk dengan estimasi qty dan harga per unit.', M, ty); ty+=10;
-    const bomCols=[52,62,20,20,30,UW-52-62-20-20-30];
-    const bomH=['Komponen','Spesifikasi','Qty','Satuan','Est. Harga','Supplier'];
-    const drawBomSection=(label,rows)=>{
-      secBar(M,ty,UW,5,label); ty+=5;
-      darkBar(M,ty,UW,6,''); sf(6.5,'bold'); tc(WHT);
-      let bcx=M; bomH.forEach((h,i)=>{T(h,bcx+2,ty+4.2);bcx+=bomCols[i];}); ty+=6;
-      [...rows,...Array(2).fill(null)].forEach((row,i)=>{
-        const rh=8; R(M,ty,UW,rh,i%2===0?LG:WHT,BD,0.3);
-        if(row){bcx=M;row.forEach((cell,j)=>{sf(6.5,j===0?'bolditalic':'normal');tc(j===0?ORA:TS);T((cell||'').substring(0,j===1?28:18),bcx+2,ty+5.2);bcx+=bomCols[j];});}
-        ty+=rh;
-      }); ty+=4;
-    };
-    drawBomSection('FABRIC & MATERIAL', D.bomF);
-    drawBomSection('TRIM, LABEL & AKSESORIS', D.bomT);
-    secBar(M,ty,UW,5,'ESTIMASI HPP PER UNIT'); ty+=5;
-    R(M,ty,UW,14,LG,BD);
-    const sw=UW/4;
-    [['Total Material',D.bomMat||'Rp -'],['Total Trim',D.bomTrim||'Rp -'],['CMT Jahit',D.cmt||'Rp -'],['Est. HPP / unit',D.hpp||'Rp -']].forEach(([lbl,val],i)=>{
-      const bx=M+i*sw;
-      sf(6.5,'normal');tc(TT);T(lbl,bx+2,ty+5);
-      sf(8,'bold');tc(i===3?ORA:TS);T(val,bx+2,ty+11);
-      if(i<3){dc(BD);lw(0.2);doc.line(bx+sw,ty,bx+sw,ty+14);}
-    });
-    ty+=16; sf(7,'bolditalic'); tc(TT); T('Untuk HPP lengkap termasuk reject rate & hidden cost -> gunakan Profit Clarity Calculator ClarityLab', M, ty);
-    footer(4); doc.addPage();
-
-    // ══════════════════════════════════════
-    // PAGE 5: PACKAGING
-    // ══════════════════════════════════════
-    pageHeader(5);
-    ty=20; sf(11,'bold'); tc(BLK); T('Packaging Specification', M, ty); ty+=6;
-    sf(8,'normal'); tc(TS); T('Spesifikasi polybag, cara folding, sticker, dan master carton.', M, ty); ty+=10;
-    const drawSpecBlock=(label,fields)=>{
-      secBar(M,ty,UW,5,label); ty+=5;
-      const half=UW/2-2, rh=8.5, rows=Math.ceil(fields.length/2);
-      R(M,ty,UW,rows*rh+4,LG,BD);
-      for(let i=0;i<fields.length;i++){
-        const [l,v,ai]=fields[i], col=i%2, row=Math.floor(i/2);
-        const bx=M+(col*(half+4)), by=ty+row*rh+rh/2;
-        sf(6.5,'normal');tc(TT);T(l,bx+2,by+2);
-        inpBox(bx+30,by-1,half-32,7,v,!!ai);
-      }
-      ty+=rows*rh+8;
-    };
-    drawSpecBlock('POLYBAG',[
-      ['Jenis',D.polyType,false],['Ukuran (cm)',D.polySz,true],
-      ['Ketebalan',D.polyTh,true],['Cara folding',D.polyFold,false],
-      ['Alasan AI',D.polyWhy,true]
-    ]);
-    drawSpecBlock('STICKER & LABEL PACKAGING',[
-      ['Sticker SKU',D.stickerPos?'Ya':'Tidak',false],['Posisi',D.stickerPos,false],
-      ['Info sticker',D.stickerInfo,false]
-    ]);
-    drawSpecBlock('MASTER CARTON',[
-      ['Qty/carton',D.ctnQty,true],['Ukuran (cm)',D.ctnSz,true],
-      ['Est. berat',D.ctnWt,true],['Tumpukan maks',D.ctnSt,true]
-    ]);
-    footer(5); doc.addPage();
-
-    // ══════════════════════════════════════
-    // PAGE 6: CARE INSTRUCTION
-    // ══════════════════════════════════════
-    pageHeader(6);
-    ty=20; sf(11,'bold'); tc(BLK); T('Washing & Care Instruction', M, ty); ty+=6;
-    sf(8,'normal'); tc(TS); T('Simbol perawatan dan instruksi label untuk semua produk.', M, ty); ty+=10;
-    secBar(M,ty,UW,5,'SIMBOL PERAWATAN'); ty+=5;
-    const allCare=['Cuci tangan','Mesin cuci','Jangan bleach','Jangan dryer','Setrika rendah','Jangan dry clean','Jemur terbalik','Jangan diperas','Hindari matahari','Cuci terpisah'];
-    const symW=UW/allCare.length, symH=22;
-    allCare.forEach((nm,i)=>{
-      const sx=M+i*symW, isOn=D.careSymbols.includes(nm);
-      R(sx+1,ty+1,symW-2,symH-2,isOn?GLT:LG,isOn?GBD:BD,isOn?1:0.3);
-      dc(isOn?GBD:BD); lw(isOn?1:0.5); doc.circle(sx+symW/2,ty+symH-9,4.5,'S');
-      if(isOn){sf(9,'bold');tc(GRN);T('v',sx+symW/2-1.5,ty+symH-6.5);}
-      sf(5.5,isOn?'bold':'normal');tc(isOn?GRN:TT);T(nm,sx+symW/2,ty+symH-3,'center');
-      if(isOn){sf(5,'bold');tc(GRN);T('AI',sx+symW/2,ty+symH-0.5,'center');}
-    });
-    ty+=symH+5;
-    secBar(M,ty,UW,5,'INSTRUKSI TEKS UNTUK LABEL'); ty+=5;
-    const hw=UW/2-1;
-    R(M,ty,hw,28,LG,BD,0.3);
-    sf(6.5,'bold');tc(TT);T('Bahasa Indonesia',M+2,ty+4);
-    sf(6.5,'normal');tc(TS);
-    if(D.careId){ doc.splitTextToSize(D.careId,hw-4).slice(0,5).forEach((l,i)=>T(l,M+2,ty+9+i*4.5)); }
-    R(M+hw+2,ty,hw,28,LG,BD,0.3);
-    sf(6.5,'bold');tc(TT);T('English',M+hw+4,ty+4);
-    sf(6.5,'normal');tc(TS);
-    if(D.careEn){ doc.splitTextToSize(D.careEn,hw-4).slice(0,5).forEach((l,i)=>T(l,M+hw+4,ty+9+i*4.5)); }
-    ty+=30;
-    secBar(M,ty,UW,5,'KOMPOSISI & COUNTRY OF ORIGIN'); ty+=5;
-    R(M,ty,UW,11,LG,BD);
-    sf(6.5,'normal');tc(TT);T('Komposisi :',M+2,ty+5);
-    inpBox(M+25,ty+2,UW/2-30,7,D.comp);
-    T('Country of Origin :',M+UW/2+2,ty+5);
-    inpBox(M+UW/2+35,ty+2,UW/2-40,7,D.origin);
-    footer(6); doc.addPage();
-
-    // ══════════════════════════════════════
-    // PAGE 7: SAMPLE CHECKLIST
-    // ══════════════════════════════════════
-    pageHeader(7);
-    ty=20; sf(11,'bold'); tc(BLK); T('Sample Approval Checklist', M, ty); ty+=6;
-    sf(8,'normal'); tc(TS); T('Diisi saat menerima sample. Tandai OK atau NOK untuk setiap poin pemeriksaan.', M, ty); ty+=10;
-    secBar(M,ty,UW,5,'INFORMASI SAMPLE'); ty+=5;
-    R(M,ty,UW,11,LG,BD);
-    [['Tanggal terima',D.sDate],['Jenis',D.sType],['Dari',D.sFrom],['Ukuran',D.sSize]].forEach(([l,v],i)=>{
-      const bx=M+2+i*UW/4; sf(6.5,'normal');tc(TT);T(l,bx,ty+5); inpBox(bx,ty+6,UW/4-4,6,v);
-    }); ty+=13;
-    const clCols=[12,UW-12-65-28,65,28];
-    const clH=['No.','Poin Pemeriksaan','Catatan','Hasil'];
-    darkBar(M,ty,UW,6,''); sf(6.5,'bold');tc(WHT);
-    let ccx=M; clH.forEach((h,i)=>{T(h,ccx+2,ty+4.2);ccx+=clCols[i];}); ty+=6;
-    D.clItems.forEach((item,i)=>{
-      const rh=9; R(M,ty,UW,rh,i%2===0?LG:WHT,BD,0.3);
-      sf(7,'bold');tc(TS);T(String(i+1),M+3,ty+5.8);
-      sf(7,'bold');tc(BLK);T(item.label.substring(0,60),M+clCols[0]+2,ty+5.8);
-      R(M+clCols[0]+clCols[1],ty,clCols[2],rh,WHT,BD,0.2);
-      const okX=M+clCols[0]+clCols[1]+clCols[2]+2;
-      const isOK=item.result==='OK', isNOK=item.result==='NOK';
-      R(okX,ty+1.5,11,6,isOK?GLT:WHT,isOK?GBD:BD,0.5);
-      sf(6.5,'bold');tc(isOK?GRN:TT);T('OK',okX+3.5,ty+5.5);
-      R(okX+13,ty+1.5,11,6,isNOK?REDLT:WHT,isNOK?RBD:BD,0.5);
-      sf(6.5,'bold');tc(isNOK?[228,75,74]:TT);T('NOK',okX+14.5,ty+5.5);
-      ty+=rh;
-    });
-    ty+=5;
-    secBar(M,ty,UW,5,'KEPUTUSAN APPROVAL'); ty+=5;
-    R(M,ty,UW,28,LG,BD);
-    let ax=M+3;
-    [['Approved',GRN,GLT,GBD],['Approved with notes',[186,117,23],AMBLT,[239,159,39]],['Rejected',[228,75,74],REDLT,RBD]].forEach(([lbl,tc2,bg2,bd2])=>{
-      const tw=doc.getStringUnitWidth(lbl)*7/doc.internal.scaleFactor+8;
-      R(ax,ty+2,tw,8,bg2,bd2,0.6); sf(6.5,'bold');tc(tc2);T(lbl,ax+2,ty+7); ax+=tw+4;
-    });
-    sf(6.5,'normal');tc(TT);T('Catatan untuk vendor :',M+3,ty+15);
-    R(M+3,ty+16,UW/2-6,10,WHT,BD);
-    if(D.sNotes){sf(6.5,'normal');tc(TS);T(D.sNotes.substring(0,80),M+5,ty+22);}
-    T('Diperiksa oleh :',M+UW/2+3,ty+15); inpBox(M+UW/2+3+28,ty+12,55,7,D.sQC);
-    T('Tanggal :',M+UW/2+3,ty+22); inpBox(M+UW/2+3+28,ty+19,55,7,D.sDecDate);
-    footer(7); doc.addPage();
-
-    // ══════════════════════════════════════
-    // PAGE 8: PRODUCTION TIMELINE
-    // ══════════════════════════════════════
-    pageHeader(8);
-    ty=20; sf(11,'bold'); tc(BLK); T('Production Timeline', M, ty); ty+=6;
-    sf(8,'normal'); tc(TS); T('Milestone dari order fabric sampai delivery.', M, ty); ty+=10;
-    secBar(M,ty,UW,5,'TIMELINE VISUAL'); ty+=5;
-    const ms=['Order\nFabric','Fabric\nArrive','Cutting','Sewing','Finishing','QC &\nPack','Shipment','Delivery'];
-    const nS=ms.length, slW=UW/nS, tlY=ty+22;
-    dc(BD); lw(1.5); doc.line(M+slW/2,tlY+7,PW-M-slW/2,tlY+7);
-    ms.forEach((m,i)=>{
-      const cx=M+i*slW+slW/2;
-      const isDone=i<2, isCur=i===2;
-      fc(isDone?GLT:isCur?ORA:LG); dc(isDone?GBD:isCur?ORA:BD); lw(isDone||isCur?1.2:0.5);
-      doc.circle(cx,tlY+7,4,'FD');
-      sf(7,'bold'); tc(isDone?GRN:isCur?WHT:TT);
-      T(isDone?'v':String(i+1),cx-1.5,tlY+8.5);
-      m.split('\n').forEach((ln,j)=>{sf(6,i<3?'bold':'normal');tc(i<3?BLK:TT);T(ln,cx,tlY-1-j*4.5,'center');});
-      if(D.tlDates[i]){sf(5.5,'normal');tc(TS);T(D.tlDates[i],cx,tlY+15,'center');}
-    });
-    ty=tlY+20;
-    secBar(M,ty,UW,5,'DETAIL MILESTONE'); ty+=5;
-    const tlCols=[68,28,28,24,40,UW-68-28-28-24-40];
-    const tlH=['Milestone','Target','Actual','Status','PIC','Catatan'];
-    darkBar(M,ty,UW,6,''); sf(6.5,'bold');tc(WHT);
-    let tcx=M; tlH.forEach((h,i)=>{T(h,tcx+2,ty+4.2);tcx+=tlCols[i];}); ty+=6;
-    const sColors={'Done':GRN,'On track':[186,117,23],'Delay':[228,75,74]};
-    const sBg={'Done':GLT,'On track':AMBLT,'Delay':REDLT};
-    D.tlRows.forEach((row,i)=>{
-      const rh=8; R(M,ty,UW,rh,i%2===0?LG:WHT,BD,0.3);
-      tcx=M;
-      row.forEach((cell,j)=>{
-        if(j===3&&cell&&cell!=='-'&&sColors[cell]){
-          R(tcx+1,ty+1.5,tlCols[j]-3,rh-3,sBg[cell],sColors[cell],0.5);
-          sf(6,'bold');tc(sColors[cell]);T(cell,tcx+tlCols[j]/2,ty+5.5,'center');
-        } else {
-          sf(6.5,j===0?'bold':'normal');tc(j===0?ORA:TS);T((cell||'').substring(0,j===0?28:16),tcx+2,ty+5);
-        }
-        tcx+=tlCols[j];
-      }); ty+=rh;
-    });
-    ty+=5;
-    if(D.tlNotes){
-      secBar(M,ty,UW,5,'CATATAN PRODUKSI'); ty+=5;
-      R(M,ty,UW,20,LG,BD);
-      sf(7,'normal');tc(TS);
-      doc.splitTextToSize(D.tlNotes,UW-6).slice(0,4).forEach((l,i)=>T(l,M+3,ty+5+i*4.5));
-    }
-    footer(8);
-
-    // ── SAVE ──
-    const fname = 'VCP_' + (D.brand||'Brief').replace(/\s+/g,'_') + '_' + new Date().toISOString().slice(0,10) + '.pdf';
-    doc.save(fname);
-
-  } catch(err) {
-    console.error('PDF Error:', err);
-    alert('Error saat generate PDF: ' + err.message + '\n\nCoba refresh halaman dan coba lagi.');
-  }
-
-  pdfBtn.disabled = false;
-  pdfBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v8M4 7.5l3 3 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11h10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Download PDF — A3';
-}
 </script>
-</body>
-</html>

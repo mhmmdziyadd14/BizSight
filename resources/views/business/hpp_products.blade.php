@@ -51,7 +51,7 @@
         }
         
         .table-row-hover:hover {
-            background: linear-gradient(90deg, #FEF3C7 0%, #FFF7ED 100%);
+            background: linear-gradient(90deg, rgba(254, 243, 199, 0.1) 0%, rgba(255, 247, 237, 0.05) 100%);
         }
         
         .stat-card {
@@ -123,41 +123,61 @@
             color: #F97316;
         }
         
+        .dark .badge-fashion {
+            background: linear-gradient(135deg, #78350F, #451A03);
+            color: #FDBA74;
+        }
+        
         .badge-fnb {
             background: linear-gradient(135deg, #FEF3C7, #FFEDD5);
             color: #F59E0B;
+        }
+ 
+        .dark .badge-fnb {
+            background: linear-gradient(135deg, #78350F, #451A03);
+            color: #FCD34D;
         }
         
         .badge-furniture {
             background: linear-gradient(135deg, #FEF3C7, #FFEDD5);
             color: #F97316;
         }
+ 
+        .dark .badge-furniture {
+            background: linear-gradient(135deg, #78350F, #451A03);
+            color: #FDBA74;
+        }
         
         .badge-digital {
             background: linear-gradient(135deg, #FEF3C7, #FFEDD5);
             color: #F59E0B;
         }
+ 
+        .dark .badge-digital {
+            background: linear-gradient(135deg, #78350F, #451A03);
+            color: #FCD34D;
+        }
     </style>
-
-    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-navy-50/30 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ 
+    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-orange-100/20 dark:from-navy-800 dark:via-navy-900 dark:to-navy-950 min-h-screen transition-colors duration-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 fade-in-up">
             
             <!-- Header Section -->
-            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b pb-6 border-orange-200/50 fade-in-up">
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b pb-6 border-orange-500/10 dark:border-orange-500/30">
                 <div>
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-12 h-12 bg-gradient-orange rounded-2xl flex items-center justify-center shadow-lg">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
                         </div>
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
                                 <span class="text-gradient-orange">Clarity</span>
-                                <span class="text-navy-800">Profit</span>
+                                <span class="text-navy-900 dark:text-white">Profit</span>
                             </h1>
-                            <p class="mt-2 text-sm text-navy-600 max-w-2xl">
-                                Data produk (HPP master) yang sudah disimpan. Gunakan ini sebagai referensi untuk analisis atau pencetakan laporan.
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-300 max-w-2xl">
+                                Kelola katalog produk hasil perhitungan HPP untuk kemudahan manajemen inventory.
                             </p>
                         </div>
                     </div>
@@ -171,19 +191,19 @@
                     </a>
                 </div>
             </div>
-
+ 
             @include('business.partials.hpp_nav')
-
+ 
             <!-- Stats Cards -->
             @if(!$products->isEmpty())
             <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-10 fade-in-up">
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Produk</p>
-                            <p class="text-2xl font-black text-navy-900 mt-1">{{ $products->count() }}</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Total Produk</p>
+                            <p class="text-2xl font-black text-navy-900 dark:text-white mt-1">{{ $products->count() }}</p>
                         </div>
-                        <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
@@ -191,13 +211,13 @@
                     </div>
                 </div>
                 
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Rata-rata HPP</p>
-                            <p class="text-xl font-black text-navy-900 mt-1">Rp{{ number_format($products->avg('total_hpp_per_unit') ?? 0, 0, ',', '.') }}</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Rata-rata HPP</p>
+                            <p class="text-xl font-black text-navy-900 dark:text-white mt-1">Rp{{ number_format($products->avg('total_hpp_per_unit') ?? 0, 0, ',', '.') }}</p>
                         </div>
-                        <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -205,13 +225,13 @@
                     </div>
                 </div>
                 
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Rata-rata Harga Jual</p>
-                            <p class="text-xl font-black text-navy-900 mt-1">Rp{{ number_format($products->avg('target_selling_price') ?? 0, 0, ',', '.') }}</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Rata-rata Harga Jual</p>
+                            <p class="text-xl font-black text-navy-900 dark:text-white mt-1">Rp{{ number_format($products->avg('target_selling_price') ?? 0, 0, ',', '.') }}</p>
                         </div>
-                        <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -219,10 +239,10 @@
                     </div>
                 </div>
                 
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Rata-rata Profit</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Rata-rata Profit</p>
                             @php
                                 $avgProfit = $products->avg(function($p) {
                                     return $p->target_selling_price - $p->total_hpp_per_unit;
@@ -232,7 +252,7 @@
                                 Rp{{ number_format($avgProfit, 0, ',', '.') }}
                             </p>
                         </div>
-                        <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
@@ -241,123 +261,106 @@
                 </div>
             </div>
             @endif
-
+ 
             <!-- Products Table Card -->
-            <div class="bg-white rounded-3xl shadow-xl border border-orange-100 overflow-hidden fade-in-up">
-                <div class="bg-gradient-navy px-6 py-5 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            <div class="bg-white dark:bg-navy-900 rounded-3xl shadow-xl border border-orange-500/10 dark:border-orange-500/20 overflow-hidden fade-in-up transition-all">
+                <div class="bg-orange-50 dark:bg-navy-950 px-8 py-6 flex justify-between items-center border-b border-orange-200/60 dark:border-white/5 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-gradient-orange rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
                         </div>
-                        <h3 class="font-bold text-white text-base tracking-wide">Daftar Produk (HPP Master)</h3>
+                        <h3 class="font-black text-slate-900 dark:text-white text-lg tracking-wide uppercase">Daftar Produk (HPP Master)</h3>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                        <span class="text-[9px] font-bold text-orange-300 uppercase tracking-wider">{{ $products->count() }} Produk</span>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest">{{ $products->count() }} Produk Aktif</span>
                     </div>
                 </div>
-
+ 
                 @if($products->isEmpty())
                     <div class="p-16 text-center empty-state">
-                        <div class="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-12 h-12 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        <div class="w-24 h-24 bg-orange-50 dark:bg-navy-950 rounded-full flex items-center justify-center mx-auto mb-6 transition-colors">
+                            <svg class="w-12 h-12 text-orange-500 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-black text-navy-800 mb-2">Belum Ada Data Produk</h3>
-                        <p class="text-sm text-navy-500 max-w-md mx-auto">
-                            Buat HPP baru untuk menyimpan detail produk dan memulai analisis bisnis Anda.
+                        <h3 class="text-lg font-black text-navy-900 dark:text-white mb-2">Belum Ada Data Produk</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                            Simpan hasil perhitungan HPP untuk mendaftarkan produk baru secara otomatis di sini.
                         </p>
-                        <div class="mt-6">
-                            <a href="{{ route('hpp.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-orange text-white rounded-xl text-xs font-black uppercase tracking-wider hover:shadow-lg transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                Buat HPP Sekarang
-                            </a>
-                        </div>
                     </div>
                 @else
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-orange-50/70 border-b border-orange-100">
-                                <tr class="text-[10px] font-black text-navy-600 uppercase tracking-wider">
-                                    <th class="py-4 px-6">ID Produk</th>
-                                    <th class="py-4 px-6">Nama Produk</th>
-                                    <th class="py-4 px-6">Kategori</th>
-                                    <th class="py-4 px-6 text-right">HPP/Unit</th>
-                                    <th class="py-4 px-6 text-right">Harga Jual</th>
-                                    <th class="py-4 px-6 text-right">Profit/Unit</th>
-                                    <th class="py-4 px-6 text-center">Aksi</th>
-                                  \\
+                            <thead class="bg-orange-50/50 dark:bg-navy-950/50 border-b border-orange-500/10 transition-colors">
+                                <tr class="text-[11px] font-black text-navy-900 dark:text-slate-300 uppercase tracking-widest">
+                                    <th class="py-5 px-8">ID Produk</th>
+                                    <th class="py-5 px-8">Nama Produk</th>
+                                    <th class="py-5 px-8">Kategori</th>
+                                    <th class="py-5 px-8 text-right">HPP/Unit</th>
+                                    <th class="py-5 px-8 text-right">Harga Jual</th>
+                                    <th class="py-5 px-8 text-right">Profit/Unit</th>
+                                    <th class="py-5 px-8 text-center">Aksi</th>
+                                </tr>
                             </thead>
-                            <tbody class="divide-y divide-orange-50">
+                            <tbody class="divide-y divide-orange-500/10">
                                 @foreach($products as $product)
                                     @php
                                         $profit = $product->target_selling_price - $product->total_hpp_per_unit;
                                         $profitMargin = $product->target_selling_price > 0 ? ($profit / $product->target_selling_price) * 100 : 0;
+                                        $isPositive = $profit >= 0;
                                     @endphp
-                                    <tr class="table-row-hover transition-colors">
-                                        <td class="py-4 px-6">
-                                            <span class="font-mono font-black text-navy-800 text-sm">{{ $product->hpp_id }}</span>
+                                    <tr class="table-row-hover hover:bg-orange-500/5 transition-colors group">
+                                        <td class="py-5 px-8">
+                                            <span class="font-mono font-bold text-navy-800 dark:text-slate-300 text-xs">{{ $product->hpp_id }}</span>
                                         </td>
-                                        <td class="py-4 px-6">
-                                            <div class="flex items-center gap-2">
-                                                <div class="w-7 h-7 bg-gradient-orange rounded-lg flex items-center justify-center">
-                                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <td class="py-5 px-8">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 bg-orange-500/10 text-orange-500 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                                     </svg>
                                                 </div>
-                                                <span class="font-bold text-navy-800">{{ $product->name }}</span>
+                                                <span class="font-black text-navy-900 dark:text-white">{{ $product->name }}</span>
                                             </div>
                                         </td>
-                                        <td class="py-4 px-6">
-                                            @php
-                                                $badgeClass = 'badge-fashion';
-                                                if($product->category === 'F&B') $badgeClass = 'badge-fnb';
-                                                if($product->category === 'Furniture') $badgeClass = 'badge-furniture';
-                                                if($product->category === 'Digital') $badgeClass = 'badge-digital';
-                                            @endphp
-                                            <span class="category-badge {{ $badgeClass }}">
+                                        <td class="py-5 px-8">
+                                            <span class="inline-flex px-3 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-[10px] font-black uppercase tracking-widest border border-orange-500/10">
                                                 {{ $product->category }}
                                             </span>
                                         </td>
-                                        <td class="py-4 px-6 text-right">
-                                            <span class="font-mono font-bold text-navy-700">Rp{{ number_format($product->total_hpp_per_unit, 0, ',', '.') }}</span>
+                                        <td class="py-5 px-8 text-right font-mono font-bold text-navy-900 dark:text-white">
+                                            Rp{{ number_format($product->total_hpp_per_unit, 0, ',', '.') }}
                                         </td>
-                                        <td class="py-4 px-6 text-right">
-                                            <span class="font-mono font-bold text-green-600">Rp{{ number_format($product->target_selling_price, 0, ',', '.') }}</span>
+                                        <td class="py-5 px-8 text-right font-mono font-bold text-green-600 dark:text-green-500">
+                                            Rp{{ number_format($product->target_selling_price, 0, ',', '.') }}
                                         </td>
-                                        <td class="py-4 px-6 text-right">
+                                        <td class="py-5 px-8 text-right">
                                             <div class="flex flex-col items-end">
-                                                <span class="font-mono font-bold {{ $profit >= 0 ? 'profit-positive' : 'profit-negative' }}">
-                                                    Rp{{ number_format($profit, 0, ',', '.') }}
+                                                <span class="font-mono font-black {{ $isPositive ? 'text-green-600' : 'text-red-500' }}">
+                                                    {{ $isPositive ? '' : '-' }}Rp{{ number_format(abs($profit), 0, ',', '.') }}
                                                 </span>
-                                                <span class="text-[9px] font-black {{ $profitMargin >= 0 ? 'text-green-500' : 'text-red-500' }}">
-                                                    {{ $profitMargin >= 0 ? '+' : '' }}{{ number_format($profitMargin, 1) }}%
+                                                <span class="text-[9px] font-bold {{ $isPositive ? 'text-green-500' : 'text-red-400' }}">
+                                                    {{ $isPositive ? '+' : '' }}{{ number_format($profitMargin, 1) }}%
                                                 </span>
                                             </div>
                                         </td>
-                                        <td class="py-4 px-6 text-center">
-                                            <div class="flex items-center justify-center gap-3">
-                                                <a href="{{ route('hpp.show', $product->id) }}" class="inline-flex items-center gap-1 text-xs font-black uppercase tracking-wider text-orange-500 hover:text-orange-600 transition-colors group">
-                                                    <svg class="w-3.5 h-3.5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <td class="py-5 px-8 text-center">
+                                            <div class="flex items-center justify-center gap-4">
+                                                <a href="{{ route('hpp.show', $product->id) }}" class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-orange-500 hover:text-orange-600 transition-colors">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                     </svg>
                                                     Detail
                                                 </a>
-                                                <form action="{{ route('hpp.destroy', $product->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus produk ini?');">
+                                                <form action="{{ route('hpp.destroy', $product->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus data produk ini?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="inline-flex items-center gap-1 text-xs font-black uppercase tracking-wider text-red-500 hover:text-red-600 transition-colors group">
-                                                        <svg class="w-3.5 h-3.5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                    <button type="submit" class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path>
                                                         </svg>
                                                         Hapus
                                                     </button>
@@ -369,21 +372,22 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    <!-- Table Footer -->
-                    <div class="bg-orange-50/30 px-6 py-3 border-t border-orange-100 flex justify-between items-center">
-                        <div class="text-[10px] font-semibold text-navy-500">
+
+                    <div class="bg-orange-50/30 dark:bg-navy-950/30 px-8 py-5 border-t border-orange-500/10 flex justify-between items-center transition-colors">
+                        <div class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">
                             Menampilkan {{ $products->count() }} produk dari total keseluruhan
                         </div>
-                        <div class="flex gap-3 text-[10px] font-bold">
-                            <span class="flex items-center gap-1">
-                                <span class="w-2 h-2 rounded-full bg-green-500"></span> 
-                                Profit Positif
-                            </span>
-                            <span class="flex items-center gap-1">
-                                <span class="w-2 h-2 rounded-full bg-red-500"></span> 
-                                Profit Negatif
-                            </span>
+                        <div class="flex items-center gap-6">
+                            <div class="flex items-center gap-4 text-[9px] font-black uppercase tracking-widest">
+                                <span class="flex items-center gap-1.5 text-green-500">
+                                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                    Profit Positif
+                                </span>
+                                <span class="flex items-center gap-1.5 text-red-500">
+                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                    Profit Negatif
+                                </span>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -391,7 +395,7 @@
 
             <!-- Profit Summary Alert -->
             @if(!$products->isEmpty() && $products->filter(function($p) { return $p->target_selling_price <= $p->total_hpp_per_unit; })->count() > 0)
-            <div class="mt-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-4 fade-in-up">
+            <div class="mt-6 bg-red-500/10 border border-red-500/30 dark:border-red-500/20 rounded-2xl p-4 fade-in-up transition-all">
                 <div class="flex items-start gap-3">
                     <div class="flex-shrink-0">
                         <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -399,8 +403,8 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs font-bold text-red-600 uppercase tracking-wider">Perhatian!</p>
-                        <p class="text-xs text-navy-600 mt-1">
+                        <p class="text-xs font-bold text-red-600 dark:text-red-500 uppercase tracking-wider">Perhatian!</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                             Terdapat {{ $products->filter(function($p) { return $p->target_selling_price <= $p->total_hpp_per_unit; })->count() }} produk dengan harga jual yang kurang dari atau sama dengan HPP. 
                             Segera evaluasi harga jual atau efisiensi biaya produksi.
                         </p>

@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'approved' => \App\Http\Middleware\CheckAppApproved::class,
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'feature' => \App\Http\Middleware\CheckFeatureAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

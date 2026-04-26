@@ -51,7 +51,7 @@
         }
         
         .table-row-hover:hover {
-            background: linear-gradient(90deg, #FEF3C7 0%, #FFF7ED 100%);
+            background: linear-gradient(90deg, rgba(254, 243, 199, 0.1) 0%, rgba(255, 247, 237, 0.05) 100%);
         }
         
         .bom-card {
@@ -102,11 +102,11 @@
         }
     </style>
 
-    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-navy-50/30 min-h-screen">
+    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-orange-100/20 dark:from-navy-800 dark:via-navy-900 dark:to-navy-950 min-h-screen transition-colors duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Header Section -->
-            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b pb-6 border-orange-200/50 fade-in-up">
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b pb-6 border-orange-500/10 dark:border-orange-500/30 fade-in-up">
                 <div>
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-12 h-12 bg-gradient-orange rounded-2xl flex items-center justify-center shadow-lg">
@@ -117,9 +117,9 @@
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
                                 <span class="text-gradient-orange">Clarity</span>
-                                <span class="text-navy-800">Profit</span>
+                                <span class="text-navy-900 dark:text-white">Profit</span>
                             </h1>
-                            <p class="mt-2 text-sm text-navy-600 max-w-2xl">
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-300 max-w-2xl">
                                 Bill of Material (BOM) menampilkan bahan yang digunakan pada setiap produk HPP.
                             </p>
                         </div>
@@ -137,17 +137,66 @@
 
             @include('business.partials.hpp_nav')
 
+            <!-- Summary Stats (when BOM exists) -->
+            @if(!$bomList->isEmpty())
+                <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-5 fade-in-up">
+                    <div class="bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-black text-orange-500 dark:text-orange-400 uppercase tracking-wider">Total Produk</p>
+                                <p class="text-2xl font-black text-navy-900 dark:text-white mt-1">{{ $bomList->count() }}</p>
+                            </div>
+                            <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-black text-orange-500 dark:text-orange-400 uppercase tracking-wider">Total Bahan</p>
+                                <p class="text-2xl font-black text-navy-900 dark:text-white mt-1">{{ $bomList->sum(function($hpp) { return $hpp->items->count(); }) }}</p>
+                            </div>
+                            <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-black text-orange-500 dark:text-orange-400 uppercase tracking-wider">Total Nilai BOM</p>
+                                <p class="text-2xl font-black text-orange-600 dark:text-orange-400 mt-1">
+                                    Rp{{ number_format($bomList->sum(function($hpp) { return $hpp->items->sum('subtotal_cost'); }), 0, ',', '.') }}
+                                </p>
+                            </div>
+                            <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- BOM Content -->
-            <div class="bg-white rounded-3xl shadow-xl border border-orange-100 overflow-hidden fade-in-up">
+            <div class="bg-white dark:bg-navy-900 rounded-3xl shadow-xl border border-orange-500/10 dark:border-orange-500/20 overflow-hidden fade-in-up transition-all">
                 @if($bomList->isEmpty())
                     <div class="p-16 text-center empty-state">
-                        <div class="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div class="w-24 h-24 bg-orange-50 dark:bg-navy-950 rounded-full flex items-center justify-center mx-auto mb-6 transition-colors">
                             <svg class="w-12 h-12 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-black text-navy-800 mb-2">Belum Ada Bill of Material</h3>
-                        <p class="text-sm text-navy-500 max-w-md mx-auto">
+                        <h3 class="text-lg font-black text-navy-900 dark:text-white mb-2">Belum Ada Bill of Material</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
                             Belum ada Bill of Material karena belum ada perhitungan HPP. Buat HPP untuk melihat BOM.
                         </p>
                         <div class="mt-6">
@@ -162,23 +211,23 @@
                 @else
                     <div class="space-y-8 p-6">
                         @foreach($bomList as $index => $hpp)
-                            <div class="bom-card border border-orange-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
+                            <div class="bom-card bg-white dark:bg-navy-900 border border-orange-100 dark:border-orange-500/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
                                 <!-- Card Header -->
-                                <div class="bg-gradient-navy px-8 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div class="bg-orange-50 dark:bg-navy-950 px-8 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-orange-200/60 dark:border-orange-500/10 transition-colors">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
                                             <span class="text-white font-black text-lg">{{ $index + 1 }}</span>
                                         </div>
                                         <div>
-                                            <div class="text-[10px] font-black text-orange-300 uppercase tracking-wider">Produk</div>
-                                            <div class="text-xl font-black text-white">
+                                            <div class="text-[10px] font-black text-orange-600 dark:text-orange-300 uppercase tracking-wider">Produk</div>
+                                            <div class="text-xl font-black text-navy-900 dark:text-white">
                                                 {{ $hpp->name }}
-                                                <span class="text-xs text-orange-300/70 font-mono ml-2">({{ $hpp->hpp_id }})</span>
+                                                <span class="text-xs text-orange-600/70 dark:text-orange-300/70 font-mono ml-2">({{ $hpp->hpp_id }})</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <a href="{{ route('hpp.show', $hpp->id) }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-orange-300 hover:text-orange-200 border border-orange-500/30 hover:border-orange-400 transition-all group">
+                                        <a href="{{ route('hpp.show', $hpp->id) }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-orange-600 dark:text-orange-300 hover:text-orange-700 dark:hover:text-orange-200 border border-orange-500/30 hover:border-orange-400 transition-all group">
                                             <span>Lihat Detail</span>
                                             <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -187,7 +236,7 @@
                                         <form action="{{ route('hpp.destroy', $hpp->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus produk ini beserta material list-nya?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-red-300 hover:text-red-200 border border-red-500/30 hover:border-red-400 transition-all group">
+                                            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-red-600 dark:text-red-300 hover:text-red-700 dark:hover:text-red-200 border border-red-500/30 hover:border-red-400 transition-all group">
                                                 <svg class="w-3.5 h-3.5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                 </svg>
@@ -197,11 +246,11 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Table -->
+                                 <!-- Table -->
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left text-sm">
-                                        <thead class="bg-orange-50/70 border-b border-orange-100">
-                                            <tr class="text-[10px] font-black text-navy-600 uppercase tracking-wider">
+                                        <thead class="bg-orange-50 dark:bg-navy-950 border-b border-orange-200/60 dark:border-orange-500/20 transition-colors">
+                                            <tr class="text-[10px] font-black text-orange-600 dark:text-slate-300 uppercase tracking-wider">
                                                 <th class="py-4 px-6">Bahan</th>
                                                 <th class="py-4 px-6">Warna</th>
                                                 <th class="py-4 px-6 text-right">Kebutuhan</th>
@@ -210,12 +259,12 @@
                                                 <th class="py-4 px-6">Satuan</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="divide-y divide-orange-50">
+                                        <tbody class="divide-y divide-orange-500/10">
                                             @foreach($hpp->items as $item)
-                                                <tr class="table-row-hover transition-colors">
-                                                    <td class="py-4 px-6 font-bold text-navy-800">
+                                                <tr class="table-row-hover transition-colors hover:bg-orange-500/5">
+                                                    <td class="py-4 px-6 font-bold text-navy-900 dark:text-white">
                                                         <div class="flex items-center gap-2">
-                                                            <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
+                                                            <div class="w-6 h-6 bg-orange-50 dark:bg-navy-950 rounded-lg flex items-center justify-center">
                                                                 <svg class="w-3 h-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                                                 </svg>
@@ -226,24 +275,24 @@
                                                     <td class="py-4 px-6">
                                                         @if($item->material->color && $item->material->color !== '-')
                                                             <div class="flex items-center gap-2">
-                                                                <span class="color-dot" style="background-color: {{ $item->material->color }};"></span>
-                                                                <span class="text-sm text-navy-600">{{ $item->material->color }}</span>
+                                                                <span class="color-dot border border-orange-500/20" style="background-color: {{ $item->material->color }};"></span>
+                                                                <span class="text-sm text-slate-500 dark:text-slate-400">{{ $item->material->color }}</span>
                                                             </div>
                                                         @else
-                                                            <span class="text-gray-400 text-xs">-</span>
+                                                            <span class="text-slate-400 dark:text-slate-500 text-xs">-</span>
                                                         @endif
                                                     </td>
-                                                    <td class="py-4 px-6 text-right font-mono font-bold text-navy-700">
+                                                    <td class="py-4 px-6 text-right font-mono font-bold text-navy-800 dark:text-slate-300">
                                                         {{ number_format($item->usage_amount, 2, ',', '.') }}
                                                     </td>
-                                                    <td class="py-4 px-6 text-right font-mono font-bold text-navy-700">
+                                                    <td class="py-4 px-6 text-right font-mono font-bold text-navy-800 dark:text-slate-300">
                                                         Rp{{ number_format($item->material->price, 0, ',', '.') }}
                                                     </td>
-                                                    <td class="py-4 px-6 text-right font-mono font-bold text-orange-600">
+                                                    <td class="py-4 px-6 text-right font-mono font-bold text-orange-600 dark:text-orange-400">
                                                         Rp{{ number_format($item->subtotal_cost, 0, ',', '.') }}
                                                     </td>
                                                     <td class="py-4 px-6">
-                                                        <span class="inline-flex px-2 py-1 rounded-lg bg-gray-100 text-gray-600 text-[10px] font-bold uppercase tracking-wider">
+                                                        <span class="inline-flex px-2 py-1 rounded-lg bg-orange-50 dark:bg-navy-950 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider border border-orange-500/10">
                                                             {{ $item->material->unit }}
                                                         </span>
                                                     </td>
@@ -254,12 +303,12 @@
                                         @php
                                             $totalCost = $hpp->items->sum('subtotal_cost');
                                         @endphp
-                                        <tfoot class="bg-orange-50/30 border-t border-orange-100">
+                                        <tfoot class="bg-orange-50 dark:bg-navy-950 border-t border-orange-200/60 dark:border-orange-500/20 transition-colors">
                                             <tr>
-                                                <td colspan="4" class="py-4 px-6 text-right font-black text-navy-700 uppercase tracking-wider text-xs">
+                                                <td colspan="4" class="py-4 px-6 text-right font-black text-navy-900 dark:text-slate-300 uppercase tracking-wider text-xs">
                                                     Total Bahan Baku:
                                                 </td>
-                                                <td class="py-4 px-6 text-right font-black text-orange-600 text-base">
+                                                <td class="py-4 px-6 text-right font-black text-orange-600 dark:text-orange-400 text-base">
                                                     Rp{{ number_format($totalCost, 0, ',', '.') }}
                                                 </td>
                                                 <td class="py-4 px-6"></td>
@@ -272,55 +321,6 @@
                     </div>
                 @endif
             </div>
-
-            <!-- Summary Stats (when BOM exists) -->
-            @if(!$bomList->isEmpty())
-                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5 fade-in-up">
-                    <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Produk</p>
-                                <p class="text-2xl font-black text-navy-900 mt-1">{{ $bomList->count() }}</p>
-                            </div>
-                            <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Bahan</p>
-                                <p class="text-2xl font-black text-navy-900 mt-1">{{ $bomList->sum(function($hpp) { return $hpp->items->count(); }) }}</p>
-                            </div>
-                            <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Nilai BOM</p>
-                                <p class="text-2xl font-black text-orange-600 mt-1">
-                                    Rp{{ number_format($bomList->sum(function($hpp) { return $hpp->items->sum('subtotal_cost'); }), 0, ',', '.') }}
-                                </p>
-                            </div>
-                            <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
 </x-app-layout>

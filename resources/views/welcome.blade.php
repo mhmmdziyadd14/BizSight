@@ -4,43 +4,48 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ClarityLabs | SME Intelligence Platform</title>
+    <title>ClarityLab | Fashion Brand Intelligence</title>
     
-    <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    <!-- Fonts -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Alpine.js for Modals -->
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
+        :root {
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --ora: #F97316;
+            --ora-dk: #EA580C;
         }
+        
+        * { font-family: var(--font-sans); }
         
         body { 
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            background: linear-gradient(160deg, #fff7f3 0%, #ffffff 40%, #fff3ed 70%, #fef9f7 100%);
             overflow-x: hidden;
+            color: #1e293b;
         }
+        
+        .dark body { background: #0F172A; color: #f8fafc; }
         
         .glass-nav { 
-            background: rgba(15, 23, 42, 0.9); 
-            backdrop-filter: blur(12px); 
-            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+            background: rgba(255, 255, 255, 0.92); 
+            backdrop-filter: blur(16px); 
+            border-bottom: 1px solid rgba(249, 115, 22, 0.1);
         }
         
-        .modal-bg { 
-            background: rgba(0, 0, 0, 0.85); 
-            backdrop-filter: blur(12px); 
-        }
-        
-        .bg-gradient-orange {
-            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
-        }
+        .dark .glass-nav { background: rgba(15, 23, 42, 0.95); border-bottom-color: rgba(249, 115, 22, 0.2); }
         
         .text-gradient-orange {
             background: linear-gradient(135deg, #F97316 0%, #F59E0B 100%);
@@ -48,385 +53,291 @@
             background-clip: text;
             color: transparent;
         }
-        
-        .feature-card {
+
+        .hero-title { font-size: 4rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; }
+        .hero-sub { font-size: 1.25rem; color: #475569; max-width: 600px; line-height: 1.6; }
+        .dark .hero-sub { color: #94a3b8; }
+
+        .pcard {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 32px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
         }
+        .dark .pcard { background: #1e293b; border-color: #334155; }
+        .pcard:hover { transform: translateY(-8px); border-color: var(--ora); box-shadow: 0 20px 25px -12px rgba(249, 115, 22, 0.15); }
+
+        .btn-primary { background: var(--ora); color: white; padding: 12px 28px; border-radius: 14px; font-weight: 700; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { background: var(--ora-dk); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3); }
+
+        .btn-secondary { background: #f1f5f9; color: #1e293b; padding: 12px 28px; border-radius: 14px; font-weight: 700; transition: all 0.2s; }
+        .dark .btn-secondary { background: #334155; color: #f8fafc; }
+
+        .badge-premium { background: var(--ora); color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
         
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #F97316, #F59E0B);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
+        .section-eyebrow { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ora); margin-bottom: 12px; }
+        .section-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
         
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(249, 115, 22, 0.5);
-            box-shadow: 0 20px 35px -12px rgba(249, 115, 22, 0.2);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
-        }
-        
-        .btn-outline {
-            border: 1px solid rgba(249, 115, 22, 0.5);
-            transition: all 0.2s ease;
-        }
-        
-        .btn-outline:hover {
-            background: rgba(249, 115, 22, 0.1);
-            border-color: #F97316;
-            transform: translateY(-2px);
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .float-animation {
-            animation: float 4s ease-in-out infinite;
-        }
-        
-        @keyframes glowPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.05); }
-        }
-        
-        .hero-glow {
-            animation: glowPulse 4s ease-in-out infinite;
-        }
-        
-        [x-cloak] { display: none !important; }
+        @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } }
     </style>
 </head>
-<body class="antialiased text-white overflow-x-hidden" x-data="{ openModal: false, activeFeature: {} }">
+<body x-data="{ checkoutModal: false, selectedProduct: null, selectedPrice: 0 }">
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 glass-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
-            <!-- Brand Logo -->
-            <a href="{{ url('/') }}" class="text-3xl font-black tracking-tight transition-all hover:scale-105 flex items-center gap-1">
-                <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Clarity</span>
-                <span class="text-white">Labs</span>
+    <!-- Navigation -->
+    <nav class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="{{ route('welcome') }}" class="flex items-center gap-2 group">
+                <!-- Tampil di Light Mode (Logo Dark) -->
+                <img src="{{ asset('images/ClarityLabs_Light.svg') }}" alt="ClarityLabs" class="h-10 w-auto block dark:hidden group-hover:scale-105 transition-transform duration-300">
+                <!-- Tampil di Dark Mode (Logo Light) -->
+                <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="ClarityLabs" class="h-10 w-auto hidden dark:block group-hover:scale-105 transition-transform duration-300">
+                <span class="text-xl font-black tracking-tight dark:text-white transition-colors">ClarityLab</span>
             </a>
-
-            <!-- Menu Kanan -->
-            <div class="flex items-center gap-6">
-                <a href="#features" class="text-[10px] font-bold text-gray-400 hover:text-orange-400 uppercase tracking-wider transition-all hidden md:block">
-                    Fitur Utama
-                </a>
-                
-                <div class="h-6 w-px bg-orange-500/30 hidden md:block"></div>
-
-                @if (Route::has('login'))
-                    <div class="flex items-center space-x-4">
-                        @auth
-                            <!-- Tampilan User Aktif -->
-                            <div class="flex items-center space-x-3 bg-white/5 px-4 py-2 rounded-xl border border-orange-500/30 group hover:border-orange-400 transition-all">
-                                <div class="w-8 h-8 bg-gradient-orange rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[8px] font-bold text-gray-500 uppercase leading-none mb-1">User Active</span>
-                                    <a href="{{ route('profile.edit') }}" class="text-[10px] font-bold uppercase tracking-wide text-white hover:text-orange-400 transition-all leading-none">
-                                        {{ Auth::user()->name }}
-                                    </a>
-                                </div>
-                                <span class="text-gray-600 px-1">|</span>
-                                <form method="POST" action="{{ route('logout') }}" class="inline">
-                                    @csrf
-                                    <button type="submit" class="text-[10px] font-bold text-orange-400 uppercase tracking-wider hover:text-white transition-all bg-gray-800/50 px-3 py-1.5 rounded-lg">
-                                        Logout
-                                    </button>
-                                </form>
-                            </div>
-                        @else
-                            <!-- Menu Guest -->
-                            <a href="{{ route('login') }}" class="text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-orange-400 transition-all px-2">Login</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn-primary text-white px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider shadow-lg hover:shadow-orange-500/25 transition-all">
-                                    Daftar Akun
-                                </a>
-                            @endif
-                        @endauth
-                    </div>
-                @endif
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#products" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors">Products</a>
+                <a href="#pricing" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors">Pricing</a>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn-primary py-2 px-6">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="text-sm font-bold text-gray-900 dark:text-white">Log in</a>
+                    <a href="{{ route('register') }}" class="btn-primary py-2 px-6">Get started</a>
+                @endauth
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="pt-48 pb-28 text-center relative overflow-hidden">
-        <div class="max-w-5xl mx-auto px-4 relative z-10">
-            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-[9px] font-bold uppercase tracking-wider mb-8">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-                </span>
-                SME Intelligence Dashboard
-            </div>
-            <h1 class="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-6 leading-[0.9]">
-                <span class="text-white">Cek</span>
-                <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Profit</span>
-                <br>
-                <span class="text-white">Tanpa</span>
-                <span class="bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">Ribet</span>
-                <span class="text-white">.</span>
-            </h1>
-            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
-                Kuasai Harga Pokok Penjualan dan Analisis kelayakan bisnis UMKM Anda bersama ClarityLabs.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#features" class="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-wider text-white shadow-xl transition-all">
-                    <span>Mulai Analisis</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                    </svg>
-                </a>
-                <a href="{{ route('business.index') }}" class="btn-outline inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-wider text-orange-400 hover:text-orange-300 transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                    </svg>
-                    Demo Gratis
-                </a>
+    <!-- Hero -->
+    <section class="pt-40 pb-24 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-columns-2 gap-16 items-center">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 mb-8">
+                    <div class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+                    <span class="text-[11px] font-extrabold text-orange-600 dark:text-orange-400 uppercase tracking-widest">Tools untuk fashion brand owner</span>
+                </div>
+                <h1 class="hero-title mb-8 dark:text-white">
+                    Jalanin bisnis fashion<br>dengan <span class="text-gradient-orange">clarity</span>, bukan<br>tebak-tebakan.
+                </h1>
+                <p class="hero-sub mb-10">
+                    ClarityLab menyediakan tools digital untuk bantu lo hitung HPP, susun brief yang jelas, dan ambil keputusan bisnis berdasarkan data — bukan feeling.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#products" class="btn-primary text-lg px-10">Lihat semua tools →</a>
+                </div>
+                <div class="mt-16 flex gap-12">
+                    <div>
+                        <p class="text-3xl font-black text-gray-900 dark:text-white">5</p>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Tools Ekosistem</p>
+                    </div>
+                    <div class="w-px h-12 bg-gray-200 dark:bg-gray-800"></div>
+                    <div>
+                        <p class="text-3xl font-black text-gray-900 dark:text-white">3</p>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Tersedia Sekarang</p>
+                    </div>
+                    <div class="w-px h-12 bg-gray-200 dark:bg-gray-800"></div>
+                    <div>
+                        <p class="text-3xl font-black text-gray-900 dark:text-white">2</p>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Segera Hadir</p>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Animated Background Elements -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-orange-500/10 rounded-full blur-[140px] hero-glow -z-10"></div>
-        <div class="absolute top-20 right-10 w-64 h-64 bg-orange-400/5 rounded-full blur-[100px] -z-10 float-animation"></div>
-        <div class="absolute bottom-20 left-10 w-80 h-80 bg-orange-600/5 rounded-full blur-[120px] -z-10 float-animation" style="animation-delay: 2s;"></div>
-    </header>
+    </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-32 bg-gradient-to-b from-navy-900 to-navy-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Products -->
+    <section id="products" class="py-24 px-6 bg-white dark:bg-navy-900 transition-colors">
+        <div class="max-w-7xl mx-auto">
+            <p class="section-eyebrow">Products</p>
+            <h2 class="section-title dark:text-white">Satu ekosistem, lima tools.</h2>
+            <p class="hero-sub mb-16">Dari ngitung HPP, bikin brief, evaluasi produk, kontrol inventory, sampai visual profesional — semua ada di satu tempat.</p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- VCP -->
+                <div class="pcard">
+                    <div class="w-12 h-12 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500 mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span class="badge-premium mb-4 inline-block">Brief & Visual</span>
+                    <h3 class="text-xl font-extrabold mb-4 dark:text-white">Visual Clarity Pack</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Template briefing dan dokumen kerja yang bikin tim, vendor, dan klien lo ngerti dari awal — tanpa perlu diulang.</p>
+                    <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
+                        <p class="text-2xl font-black dark:text-white">Rp 149k</p>
+                        <button @click="checkoutModal = true; selectedProduct = { id: 1, name: 'Visual Clarity Pack' }; selectedPrice = 149000" class="btn-primary py-2 px-6">Beli</button>
+                    </div>
+                </div>
+
+                <!-- PCC -->
+                <div class="pcard border-orange-500/50 shadow-xl shadow-orange-500/10">
+                    <div class="w-12 h-12 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500 mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="badge-premium bg-orange-600">Terlaris</span>
+                    </div>
+                    <h3 class="text-xl font-extrabold mb-4 dark:text-white">Profit Clarity Calculator</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Hitung HPP produk fashion lo dengan benar — bahan, CMT, packaging, reject rate, sampai margin yang realistis.</p>
+                    <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
+                        <p class="text-2xl font-black dark:text-white">Rp 149k</p>
+                        <button @click="checkoutModal = true; selectedProduct = { id: 2, name: 'Profit Clarity Calculator' }; selectedPrice = 149000" class="btn-primary py-2 px-6">Beli</button>
+                    </div>
+                </div>
+
+                <!-- DE -->
+                <div class="pcard">
+                    <div class="w-12 h-12 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500 mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span class="badge-premium mb-4 inline-block">Decision</span>
+                    <h3 class="text-xl font-extrabold mb-4 dark:text-white">Decision Engine</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Evaluasi apakah produk layak dijual — berdasarkan angka, bukan feeling. Sebelum produksi, lo udah tau jawabannya.</p>
+                    <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
+                        <p class="text-2xl font-black dark:text-white">Rp 249k</p>
+                        <button @click="checkoutModal = true; selectedProduct = { id: 3, name: 'Decision Engine' }; selectedPrice = 249000" class="btn-primary py-2 px-6">Beli</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bundle -->
+    <section id="pricing" class="py-24 px-6">
+        <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <span class="text-[10px] font-bold text-orange-400 uppercase tracking-wider border border-orange-500/30 px-4 py-2 rounded-full">Core Features</span>
-                <h2 class="text-4xl md:text-5xl font-black tracking-tight mt-6">
-                    <span class="text-white">Powerful Tools for</span>
-                    <br>
-                    <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Business Intelligence</span>
-                </h2>
+                <p class="section-eyebrow">Bundles</p>
+                <h2 class="section-title dark:text-white">Pilih paket yang paling sesuai.</h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <!-- Feature 1: Clarity Profit -->
-                <div @click="openModal = true; activeFeature = { 
-                        title: 'Clarity Profit', 
-                        desc: 'Hitung HPP real, bukan perkiraan. Ketahui margin sebenarnya dan profit per produk dengan akurat. Berhenti rugi dalam hitungan.',
-                        url: '{{ route('hpp.bahan') }}',
-                        icon: 'PROFIT',
-                        theme: 'orange'
-                    }" 
-                    class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-pointer group hover:border-orange-500/50 transition-all">
-                    <div class="w-14 h-14 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                        </svg>
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <!-- Tier 1 -->
+                <div class="pcard">
+                    <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Tier 1</p>
+                    <h3 class="text-2xl font-black mb-4 dark:text-white">Clarity Essentials</h3>
+                    <p class="text-sm text-gray-500 mb-8 leading-relaxed">Dua tools inti untuk keputusan produk yang lebih tajam — hitung HPP dulu, lalu evaluasi apakah produknya layak dijual.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-3 text-sm font-bold text-gray-700 dark:text-gray-300">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+                            Profit Clarity Calculator
+                        </div>
+                        <div class="flex items-center gap-3 text-sm font-bold text-gray-700 dark:text-gray-300">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+                            Decision Engine
+                        </div>
+                        <div class="flex items-center gap-3 text-sm font-bold text-gray-400 line-through">
+                            <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+                            Visual Clarity Pack
+                        </div>
                     </div>
-                    <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">01</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Profit</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Hitung HPP real dengan margin sebenarnya per unit produk.</p>
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
-                        Buka Informasi
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </span>
+                    <div class="flex items-baseline gap-3 mb-6">
+                        <span class="text-3xl font-black dark:text-white">Rp 279k</span>
+                        <span class="text-sm text-gray-400 line-through">Rp 398k</span>
+                    </div>
+                    <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 119k dari harga satuan</p>
+                    <button class="btn-secondary w-full">Beli Essentials</button>
                 </div>
 
-                <!-- Feature 2: Clarity Decision -->
-                <div @click="openModal = true; activeFeature = { 
-                        title: 'Clarity Decision', 
-                        desc: 'Jelas mana yang perlu dilanjutkan atau dihentikan. PO atau ready stock, growth atau efisiensi. Buat keputusan bisnis dengan data real.',
-                        url: '{{ route('business.index') }}',
-                        icon: 'DECISION',
-                        theme: 'orange'
-                    }"
-                    class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-pointer group hover:border-orange-500/50 transition-all">
-                    <div class="w-14 h-14 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                        </svg>
+                <!-- Tier 2 -->
+                <div class="pcard border-orange-500 border-2 relative overflow-hidden">
+                    <div class="absolute top-6 right-6 badge-premium">Rekomendasi</div>
+                    <p class="text-xs font-black text-orange-500 uppercase tracking-widest mb-2">Tier 2</p>
+                    <h3 class="text-2xl font-black mb-4 dark:text-white">Clarity Full</h3>
+                    <p class="text-sm text-gray-500 mb-8 leading-relaxed">Ekosistem lengkap — brief yang jelas, HPP yang akurat, dan keputusan produk yang terukur. Plus akses prioritas ke tools berikutnya.</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center gap-3 text-sm font-bold text-gray-700 dark:text-gray-300">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+                            Visual Clarity Pack
+                        </div>
+                        <div class="flex items-center gap-3 text-sm font-bold text-gray-700 dark:text-gray-300">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+                            Profit Clarity Calculator
+                        </div>
+                        <div class="flex items-center gap-3 text-sm font-bold text-gray-700 dark:text-gray-300">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+                            Decision Engine
+                        </div>
+                        <div class="flex items-center gap-3 text-sm font-bold text-orange-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+                            Akses prioritas tools baru
+                        </div>
                     </div>
-                    <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">02</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Decision</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Framework keputusan bisnis berbasis data real untuk strategi cepat.</p>
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
-                        Buka Informasi
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </span>
-                </div>
-
-                <!-- Feature 3: Clarity Visual -->
-                <div @click="openModal = true; activeFeature = { 
-                        title: 'Clarity Visual', 
-                        desc: 'Sederhanakan ide bisnis kompleks menjadi visual yang jelas. Lihat masalah lebih jernih dan komunikasikan strategy ke tim dengan mudah.',
-                        url: '{{ route('download.template') }}',
-                        icon: 'VISUAL',
-                        theme: 'orange'
-                    }"
-                    class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-pointer group hover:border-orange-500/50 transition-all">
-                    <div class="w-14 h-14 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
+                    <div class="flex items-baseline gap-3 mb-6">
+                        <span class="text-3xl font-black dark:text-white">Rp 389k</span>
+                        <span class="text-sm text-gray-400 line-through">Rp 547k</span>
                     </div>
-                    <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">03</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Visual</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Template visual untuk mapping ide bisnis dan analisis masalah strategis.</p>
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
-                        Unduh Resource
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </span>
-                </div>
-
-                <!-- Feature 4: Clarity Control (Coming Soon) -->
-                <div class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-default opacity-60 group hover:border-orange-500/50 transition-all relative">
-                    <div class="absolute top-4 right-4 inline-flex items-center px-3 py-1.5 bg-orange-500/20 border border-orange-500/30 rounded-full">
-                        <span class="text-[9px] font-bold text-orange-400 uppercase tracking-wider">Coming Soon</span>
-                    </div>
-                    <div class="w-14 h-14 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">04</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Control</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Inventory control system. Tahu kapan restock, hindari dead stock, jaga cashflow tetap sehat.</p>
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
-                        Segera Hadir
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </span>
-                </div>
-
-                <!-- Feature 5: Clarity Studio (Coming Soon) -->
-                <div class="feature-card bg-white/5 border border-white/10 p-8 rounded-3xl cursor-default opacity-60 group hover:border-orange-500/50 transition-all relative">
-                    <div class="absolute top-4 right-4 inline-flex items-center px-3 py-1.5 bg-orange-500/20 border border-orange-500/30 rounded-full">
-                        <span class="text-[9px] font-bold text-orange-400 uppercase tracking-wider">Coming Soon</span>
-                    </div>
-                    <div class="w-14 h-14 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2"></path>
-                        </svg>
-                    </div>
-                    <div class="text-orange-400 font-black text-4xl mb-4 opacity-30 group-hover:opacity-100 transition-all">05</div>
-                    <h4 class="text-xl font-black mb-3 tracking-tight text-white">Clarity <span class="text-gradient-orange">Studio</span></h4>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Mockup design system. Visual produk profesional, tingkatkan perceived value, percepat konten.</p>
-                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-400 uppercase tracking-wider group-hover:gap-2 transition-all">
-                        Segera Hadir
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </span>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="py-20 bg-gradient-to-b from-navy-800 to-navy-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="p-6">
-                    <div class="text-4xl font-black text-orange-400 mb-2">500+</div>
-                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Business Analyzed</div>
-                </div>
-                <div class="p-6 border-l border-r border-orange-500/20">
-                    <div class="text-4xl font-black text-orange-400 mb-2">98%</div>
-                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Accuracy Rate</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-4xl font-black text-orange-400 mb-2">24/7</div>
-                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Support Available</div>
+                    <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 158k — bayar 2, dapet 3</p>
+                    <button class="btn-primary w-full">Beli Clarity Full</button>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Modal Explanation -->
-    <div x-show="openModal" 
-         class="fixed inset-0 z-[60] flex items-center justify-center p-6 modal-bg" 
-         x-transition.opacity 
-         x-cloak>
-        <div class="bg-gradient-to-br from-gray-900 to-navy-900 border border-orange-500/30 w-full max-w-2xl rounded-3xl p-10 shadow-2xl relative overflow-hidden" @click.away="openModal = false">
-            <div class="absolute -right-20 -top-20 w-64 h-64 rounded-full blur-[100px] bg-orange-500/20"></div>
-            <div class="absolute -left-20 -bottom-20 w-64 h-64 rounded-full blur-[100px] bg-orange-600/20"></div>
-            
-            <div class="mb-8 relative z-10">
-                <div class="w-12 h-12 bg-gradient-orange rounded-2xl flex items-center justify-center mb-6">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                </div>
-                <span class="text-[9px] font-bold text-orange-400 uppercase tracking-wider" x-text="'Engine Module: ' + activeFeature.icon"></span>
-                <h3 class="text-3xl font-black tracking-tight mt-3 text-white" x-text="activeFeature.title"></h3>
-            </div>
-            <p class="text-gray-400 text-base leading-relaxed mb-10 relative z-10" x-text="activeFeature.desc"></p>
-            <div class="flex flex-col sm:flex-row gap-4 relative z-10">
-                <a :href="activeFeature.url" class="btn-primary flex-1 text-center py-4 rounded-xl text-sm font-black uppercase tracking-wider text-white shadow-lg transition-all">
-                    Aktifkan Fitur Sekarang
-                </a>
-                <button @click="openModal = false" class="px-8 py-4 border border-orange-500/30 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-orange-500/10 transition-all text-white">
-                    Tutup
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer -->
-    <footer class="bg-navy-900 border-t border-orange-500/20 py-20 text-center">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-center gap-2 mb-6">
-                <div class="w-8 h-8 bg-gradient-orange rounded-xl flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
+    <footer class="py-24 px-6 bg-gray-50 dark:bg-navy-950 transition-colors">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <!-- Tampil di Light Mode (Logo Dark) -->
+                        <img src="{{ asset('images/ClarityLabs_Light.svg') }}" alt="ClarityLabs" class="h-8 w-auto block dark:hidden">
+                        <!-- Tampil di Dark Mode (Logo Light) -->
+                        <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="ClarityLabs" class="h-8 w-auto hidden dark:block">
+                        <span class="text-lg font-black dark:text-white tracking-tight">ClarityLab</span>
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400 max-w-sm leading-relaxed">Tools digital untuk fashion brand owner yang mau jalanin bisnis dengan data, bukan feeling. Berhenti nebak-tebak, mulai dengan clarity.</p>
                 </div>
-                <div class="text-2xl font-black tracking-tight">
-                    <span class="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">Clarity</span>
-                    <span class="text-white">Labs</span>
+                <div>
+                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Products</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Visual Clarity Pack</a></li>
+                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Profit Clarity Calculator</a></li>
+                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Decision Engine</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Company</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">About</a></li>
+                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Support</a></li>
+                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Instagram</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-6">
-                COMMAND CENTER • BUSINESS INTELLIGENCE PLATFORM
+            <div class="pt-8 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center flex-wrap gap-4">
+                <p class="text-sm text-gray-400">© 2024 ClarityLab.id. All rights reserved.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="text-xs font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest">Privacy</a>
+                    <a href="#" class="text-xs font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest">Terms</a>
+                </div>
             </div>
-            <div class="h-px w-20 bg-orange-500/30 mx-auto mb-8"></div>
-            <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">
-                Developed by Muhammad Ziyad • Institut Teknologi Nasional Bandung
-            </p>
         </div>
     </footer>
+
+    <!-- Checkout Modal -->
+    <div x-show="checkoutModal" class="fixed inset-0 z-[100] flex items-center justify-center px-4" x-cloak>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="checkoutModal = false"></div>
+        <div class="bg-white dark:bg-navy-900 w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
+            <h2 class="text-2xl font-black mb-2 dark:text-white">Satu langkah lagi.</h2>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">Lo akan membeli <span class="font-black text-orange-500" x-text="selectedProduct?.name"></span>.</p>
+            
+            <form action="{{ route('checkout') }}" method="POST">
+                @csrf
+                <input type="hidden" name="product_id" :value="selectedProduct?.id">
+                <input type="hidden" name="total_price" :value="selectedPrice">
+                
+                <div class="bg-gray-50 dark:bg-navy-950 p-6 rounded-2xl mb-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Bayar</span>
+                        <span class="text-2xl font-black text-orange-500" x-text="'Rp ' + (selectedPrice/1000) + 'k'"></span>
+                    </div>
+                    <p class="text-[10px] text-gray-400">Pembayaran aman via Midtrans. Akses instan setelah bayar.</p>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button type="button" @click="checkoutModal = false" class="btn-secondary flex-1">Batal</button>
+                    <button type="submit" class="btn-primary flex-1 justify-center">Lanjutkan ke Pembayaran</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>

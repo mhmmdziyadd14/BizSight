@@ -49,7 +49,44 @@ class BusinessController extends Controller
     {
         $calc = BusinessCalculation::where('user_id', Auth::id())->findOrFail($id);
 
-        return view('business.decisions_show', compact('calc'));
+        $hppPct = $calc->selling_price > 0 ? ($calc->hpp / $calc->selling_price) * 100 : 0;
+        $adminPct = $calc->admin_fee_percent ?? 0;
+        $adsPct = $calc->ads_per_unit ?? 0;
+        $affiliatePct = $calc->affiliate_percent ?? 0;
+        $promoPct = $calc->promo_percent ?? 0;
+        $overheadPct = $calc->overhead_percent ?? 0;
+        $taxPct = $calc->tax_percent ?? 0;
+
+        $totalCostPct = $hppPct + $adminPct + $adsPct + $affiliatePct + $promoPct + $overheadPct + $taxPct;
+        $netProfitPct = $calc->net_margin_percent;
+
+        $costs = [
+            ['hpp', $hppPct],
+            ['admin', $adminPct],
+            ['ads', $adsPct],
+            ['affiliate', $affiliatePct],
+            ['promo', $promoPct],
+            ['overhead', $overheadPct],
+            ['tax', $taxPct]
+        ];
+        usort($costs, function($a, $b) { return $b[1] <=> $a[1]; });
+        $topCosts = array_slice($costs, 0, 3);
+
+        $insight = $calc->status_label === 'CRITICAL' ? 'Cost structure terlalu berat bahkan sebelum scaling dimulai.' : ($calc->status_label === 'FRAGILE' ? 'Margin tertekan oleh kombinasi ads + platform fee.' : 'Cost structure masih dalam batas sehat dan scalable.');
+        $risks = $calc->status_label === 'CRITICAL' ? ['Product is not profitable', 'Cashflow drain risk'] : ($calc->status_label === 'FRAGILE' ? ['Margin pressure', 'Avoid large production'] : ['No significant risks']);
+        $strategy = $calc->status_label === 'HEALTHY' ? 'Scale Aggressive' : ($calc->status_label === 'FRAGILE' ? 'Optimization' : 'Stop & Redesign');
+        $focus = $calc->status_label === 'CRITICAL' ? 'memperbaiki unit economics, bukan jualan' : ($calc->status_label === 'FRAGILE' ? 'jaga margin & cashflow' : 'scale & expansion');
+        
+        $adsStatus = $adsPct > 20 ? 'DANGEROUS' : ($adsPct > 10 ? 'PRESSURING' : 'SAFE');
+        $adsMessage = $adsPct > 20 ? 'Ads cost is too high' : 'Ads cost is manageable';
+
+        $actionPlan = array_map('trim', explode("\n", $calc->action_required));
+        $actionPlan = array_filter($actionPlan, function($value) { return !empty($value); });
+
+        return view('business.decisions_show', compact(
+            'calc', 'hppPct', 'totalCostPct', 'topCosts', 'insight', 'risks', 
+            'strategy', 'focus', 'adsStatus', 'adsMessage', 'actionPlan'
+        ));
     }
 
     /**
@@ -61,7 +98,18 @@ class BusinessController extends Controller
                             ->orderBy('created_at', 'desc')
                             ->get();
 
-        return view('business.hpp_index', compact('hppCalculations'));
+        $products = $hppCalculations; // same data as hppCalculations
+
+        $materials = Material::where('user_id', Auth::id())
+                        ->orderBy('name')
+                        ->get();
+
+        $bomList = HppCalculation::with('items.material')
+                        ->where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('business.hpp_index', compact('hppCalculations', 'products', 'materials', 'bomList'));
     }
 
     /**
@@ -148,146 +196,197 @@ class BusinessController extends Controller
      */
     public function calculate(Request $request)
     {
-        $request->validate([
-            'product_name' => 'required|string|max:255',
-            'product_id' => 'required|string|max:255',
-            'product_id_source' => 'required|in:manual,existing',
-            'product_id_manual' => 'nullable|string|max:255',
-            'product_id_existing' => 'nullable|string|max:255',
-            'hpp' => 'required|numeric',
-            'selling_price' => 'required|numeric',
-            'ads_percent' => 'nullable|numeric|min:0|max:100',
-            'affiliate_percent' => 'nullable|numeric|min:0|max:100',
-            'admin_fee_percent' => 'nullable|numeric|min:0|max:100',
-            'overhead_percent' => 'nullable|numeric|min:0|max:100',
-            'tax_percent' => 'nullable|numeric|min:0|max:100',
-            'promo_percent' => 'nullable|numeric|min:0|max:100',
-            'est_batch_quantity' => 'required|integer|min:1',
-        ]);
+        try {
+            $request->validate([
+                'product_name' => 'required|string|max:255',
+                'product_id_source' => 'required|in:manual,existing',
+                'product_id_manual' => 'required_if:product_id_source,manual|nullable|string|max:255',
+                'product_id_existing' => 'required_if:product_id_source,existing|nullable|string|max:255',
+                'hpp' => 'required|numeric',
+                'selling_price' => 'required|numeric',
+                'ads_percent' => 'nullable|numeric|min:0|max:100',
+                'affiliate_percent' => 'nullable|numeric|min:0|max:100',
+                'admin_fee_percent' => 'nullable|numeric|min:0|max:100',
+                'overhead_percent' => 'nullable|numeric|min:0|max:100',
+                'tax_percent' => 'nullable|numeric|min:0|max:100',
+                'promo_percent' => 'nullable|numeric|min:0|max:100',
+                'est_batch_quantity' => 'required|integer|min:1',
+            ]);
 
-        $hpp = (float) $request->hpp;
-        $sellingPrice = (float) $request->selling_price;
-        $adsPct = (float) ($request->ads_percent ?? 0);
-        $affiliatePct = (float) ($request->affiliate_percent ?? 0);
-        $adminFeePct = (float) ($request->admin_fee_percent ?? 0);
-        $overheadPct = (float) ($request->overhead_percent ?? 0);
-        $taxPct = (float) ($request->tax_percent ?? 0);
-        $promoPct = (float) ($request->promo_percent ?? 0);
-        $qty = (int) $request->est_batch_quantity;
+            $hpp = (float) $request->hpp;
+            $sellingPrice = (float) $request->selling_price;
+            $adsPct = (float) ($request->ads_percent ?? 0);
+            $affiliatePct = (float) ($request->affiliate_percent ?? 0);
+            $adminFeePct = (float) ($request->admin_fee_percent ?? 0);
+            $overheadPct = (float) ($request->overhead_percent ?? 0);
+            $taxPct = (float) ($request->tax_percent ?? 0);
+            $promoPct = (float) ($request->promo_percent ?? 0);
+            $qty = (int) $request->est_batch_quantity;
 
-        // Biaya langsung per unit termasuk biaya proportional
-        $costMultiplier = 1 + ($adminFeePct + $overheadPct + $taxPct + $affiliatePct) / 100;
-        $totalCostPerUnit = $hpp * $costMultiplier;
+            // Match frontend logic: fees are percentage of selling price
+            $feesPctTotal = $adminFeePct + $overheadPct + $taxPct + $affiliatePct;
+            $totalFeesPerUnit = ($sellingPrice * $feesPctTotal) / 100;
+            
+            // Ads are also percentage of selling price
+            $adsPerUnit = ($sellingPrice * $adsPct) / 100;
 
-        // Ads disesuaikan dalam persen terhadap harga jual
-        $adsPerUnit = ($sellingPrice * $adsPct) / 100;
+            // Margin normal (tanpa promo)
+            $totalCostPerUnit = $hpp + $totalFeesPerUnit;
+            $netProfitPerUnit = $sellingPrice - $totalCostPerUnit - $adsPerUnit;
+            $totalNetProfit = $netProfitPerUnit * $qty;
+            $marginPercent = ($sellingPrice > 0) ? ($netProfitPerUnit / $sellingPrice) * 100 : 0;
 
-        // Margin normal (tanpa promo)
-        $netProfitPerUnit = $sellingPrice - $totalCostPerUnit - $adsPerUnit;
-        $totalNetProfit = $netProfitPerUnit * $qty;
-        $marginPercent = ($sellingPrice > 0) ? ($netProfitPerUnit / $sellingPrice) * 100 : 0;
+            // Margin setelah promo
+            $sellingPricePromo = $sellingPrice * (1 - ($promoPct / 100));
+            // Fees on promo price (usually fees apply to the final selling price)
+            $totalFeesPromoPerUnit = ($sellingPricePromo * $feesPctTotal) / 100;
+            $netProfitPromoPerUnit = $sellingPricePromo - $hpp - $totalFeesPromoPerUnit - $adsPerUnit;
+            $promoMarginPercent = ($sellingPricePromo > 0) ? ($netProfitPromoPerUnit / $sellingPricePromo) * 100 : 0;
 
-        // Margin setelah promo
-        $sellingPricePromo = $sellingPrice * (1 - ($promoPct / 100));
-        $netProfitPromoPerUnit = $sellingPricePromo - $totalCostPerUnit - $adsPerUnit;
-        $promoMarginPercent = ($sellingPricePromo > 0) ? ($netProfitPromoPerUnit / $sellingPricePromo) * 100 : 0;
+            // Perbandingan margin normal vs promo
+            $marginDiffPercent = $marginPercent - $promoMarginPercent;
 
-        // Perbandingan margin normal vs promo
-        $marginDiffPercent = $marginPercent - $promoMarginPercent;
+            // Logika status (CRITICAL/FRAGILE/HEALTHY) sesuai batas baru 20-34-40
+            if ($marginPercent < 20) {
+                $status = 'CRITICAL';
+            } elseif ($marginPercent < 40) {
+                $status = 'FRAGILE';
+            } else {
+                $status = 'HEALTHY';
+            }
 
-        // Logika status (CRITICAL/FRAGILE/HEALTHY) sesuai batas baru 20-34-40
-        if ($marginPercent < 20) {
-            $status = 'CRITICAL';
-        } elseif ($marginPercent < 40) {
-            $status = 'FRAGILE';
-        } else {
-            $status = 'HEALTHY';
+            if ($status === 'CRITICAL') {
+                $reason = "CRITICAL ZONE: Margin di bawah 20% menunjukkan bahwa bisnis hampir tidak punya ruang bernapas.\n\n" .
+                    "What it means:\n" .
+                    "- bisnis berjalan namun hampir tanpa buffer\n" .
+                    "- sangat sensitif pada biaya marketing, operational, overhead, dan waste\n\n" .
+                    "Sangat tidak disarankan untuk scale!";
+                $action = "STOP MARKETING & RE-EVALUATE STRUCTURE";
+            } elseif ($status === 'FRAGILE') {
+                $reason = "FRAGILE ZONE: Margin 20% - 40% adalah zona kuning.\n\n" .
+                    "What it means:\n" .
+                    "- ada profit, namun tipis\n" .
+                    "- biaya marketing harus sangat efisien\n" .
+                    "- tidak disarankan untuk tim marketing yang belum expert\n\n" .
+                    "Saran: Gunakan sistem PO untuk meminimalkan risiko.";
+                $action = "OPTIMIZE ADS & EFFICIENCY";
+            } else {
+                $reason = "HEALTHY ZONE: Margin di atas 40% adalah zona hijau yang ideal.\n\n" .
+                    "What it means:\n" .
+                    "- ada ruang untuk error (marketing test, waste, dll)\n" .
+                    "- cashflow biasanya lebih sehat\n" .
+                    "- bisa test produk baru\n\n" .
+                    "Catatan: jangan reckless, jangan buang margin demi volume";
+                $action = "GREEN LIGHT TO SCALE";
+            }
+
+            $marginMatch = $sellingPrice - $totalCostPerUnit;
+            $bepUnit = ($marginMatch > 0) ? ceil(($adsPerUnit * $qty) / $marginMatch) : 0;
+
+            $productId = $request->product_id_source === 'manual' 
+                ? $request->product_id_manual 
+                : $request->product_id_existing;
+
+            $hppCalcId = null;
+            if ($request->product_id_source === 'existing') {
+                // Check if the selected ID exists in HppCalculation
+                $hppCalc = HppCalculation::where('user_id', Auth::id())
+                            ->where('hpp_id', $request->product_id_existing)
+                            ->first();
+                if ($hppCalc) {
+                    $hppCalcId = $hppCalc->id;
+                }
+            }
+
+            $confidence = 50;
+            if ($marginPercent > 25) $confidence += 15;
+            
+            BusinessCalculation::create([
+                'user_id' => Auth::id(),
+                'product_name' => $request->product_name,
+                'product_id' => $productId,
+                'hpp' => $hpp,
+                'selling_price' => $sellingPrice,
+                'ads_per_unit' => $adsPct,
+                'admin_fee_percent' => $adminFeePct,
+                'overhead_percent' => $overheadPct,
+                'tax_percent' => $taxPct,
+                'promo_percent' => $promoPct,
+                'operational_fee' => 0,
+                'est_batch_quantity' => $qty,
+                'net_profit' => $netProfitPerUnit,
+                'net_margin_percent' => $marginPercent,
+                'promo_margin_percent' => $promoMarginPercent,
+                'margin_diff_percent' => $marginDiffPercent,
+                'status_label' => $status,
+                'logic_reason' => $reason,
+                'action_required' => $action,
+                'bep_unit' => $bepUnit,
+                'hpp_calculation_id' => $hppCalcId,
+                'confidence' => $confidence
+            ]);
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'status' => $status,
+                        'grossProfit' => ($sellingPrice - $hpp) * $qty,
+                        'netProfit' => $totalNetProfit,
+                        'netMargin' => $marginPercent / 100,
+                        'promoMargin' => $promoMarginPercent / 100,
+                        'marginDiff' => $marginDiffPercent / 100,
+                        'bepUnit' => $bepUnit,
+                        'confidence' => $confidence,
+                        'strategy' => ($status === 'HEALTHY' ? 'Scale Aggressive' : ($status === 'FRAGILE' ? 'Optimization' : 'Stop & Redesign')),
+                        'production' => [
+                            'model' => 'Batch Limited',
+                            'batch' => $qty
+                        ],
+                        'logic' => [
+                            'reason' => $reason,
+                            'action' => $action
+                        ],
+                        'hero' => [
+                            'title' => ($status === 'HEALTHY' ? 'Green Light to Scale' : ($status === 'FRAGILE' ? 'Proceed with Caution' : 'Critical - Optimization Needed')),
+                            'subtext' => ($status === 'HEALTHY' ? 'Produk ini memiliki margin yang sangat sehat.' : ($status === 'FRAGILE' ? 'Produk memiliki potensi, namun margin cukup tipis.' : 'Produk ini memerlukan perbaikan struktur biaya segera.'))
+                        ],
+                        'costBreakdown' => [
+                            'hpp' => $sellingPrice > 0 ? round(($hpp / $sellingPrice) * 100, 1) : 0,
+                            'admin' => $adminFeePct,
+                            'ads' => $adsPct,
+                            'affiliate' => $affiliatePct,
+                            'promo' => $promoPct,
+                            'overhead' => $overheadPct,
+                            'tax' => $taxPct,
+                            'total' => $sellingPrice > 0 ? round((($totalCostPerUnit + $adsPerUnit) / $sellingPrice) * 100, 1) : 0,
+                            'netProfit' => round($marginPercent, 1)
+                        ],
+                        'topCosts' => [
+                            ['hpp', $sellingPrice > 0 ? $hpp / $sellingPrice : 0],
+                            ['ads', $adsPct / 100],
+                            ['overhead', $overheadPct / 100]
+                        ],
+                        'risks' => ($status === 'CRITICAL' ? ['Product is not profitable', 'Cashflow drain risk'] : ($status === 'FRAGILE' ? ['Margin pressure', 'Avoid large production'] : ['No significant risks'])),
+                        'ads' => [
+                            'status' => ($adsPct > 20 ? 'DANGEROUS' : ($adsPct > 10 ? 'PRESSURING' : 'SAFE')),
+                            'message' => ($adsPct > 20 ? 'Ads cost is too high' : 'Ads cost is manageable')
+                        ],
+                        'actions' => ($status === 'CRITICAL' ? ['Stop ads', 'Recalculate pricing'] : ($status === 'FRAGILE' ? ['Optimize ads', 'Avoid large production'] : ['Scale ads gradually']))
+                    ]
+                ]);
+            }
+
+            return redirect()->route('business.index')->with('success', 'Analisis berhasil disimpan!');
+        } catch (\Exception $e) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+            throw $e;
         }
-
-        if ($status === 'CRITICAL') {
-            $reason = "CRITICAL ZONE: Margin di bawah 20% menunjukkan bahwa bisnis hampir tidak punya ruang bernapas.\n\n" .
-                "What it means:\n" .
-                "- bisnis berjalan namun hampir tanpa buffer\n" .
-                "- sangat sensitif pada biaya marketing, operational, overhead, dan waste\n\n" .
-                "Logic reasoning:\n" .
-                "- Contribution margin terlalu kecil untuk menyerap biaya lain\n" .
-                "- Sedikit kenaikan biaya (ads, bahan, produksi) langsung bikin rugi\n" .
-                "- Tidak ada buffer untuk scaling\n" .
-                "- Tidak sustainable dalam jangka menengah";
-
-            $action = "Decision implication:\n" .
-                "- Jangan scale\n" .
-                "- Jangan tambah stock\n" .
-                "- Jangan tambah SKU\n\n" .
-                "Evaluate ulang:\n" .
-                "- optimize cost\n" .
-                "- improve pricing\n" .
-                "- improve efficiency\n" .
-                "- pertimbangkan stop product atau redesign model bisnis\n\n" .
-                "Alasan: margin terlalu rendah; tanpa tindakan, risiko kerugian agravasi dan cashflow buruk meningkat.";
-        } elseif ($status === 'FRAGILE') {
-            $reason = "FRAGILE ZONE: Margin 20-39% menunjukkan bisnis masih berjalan namun rentan.\n\n" .
-                "What it means:\n" .
-                "- masih profit tetapi tidak kuat menghadapi tekanan\n" .
-                "- sensitif terhadap diskon, kenaikan biaya, dan inefficiency kecil\n\n" .
-                "Logic reasoning:\n" .
-                "- cukup untuk survive, tetapi belum siap untuk aggressive growth\n" .
-                "- profit terjaga tapi mudah terganggu\n" .
-                "- scaling terasa berat; perlu sering promo untuk maintain sales\n" .
-                "- sedikit salah keputusan langsung terasa";
-
-            $action = "Decision implication:\n" .
-                "- jalan tapi hati-hati\n" .
-                "- jangan terlalu cepat scale\n" .
-                "- jangan over-expand SKU\n\n" .
-                "Fokus utama:\n" .
-                "- optimize cost\n" .
-                "- improve pricing\n" .
-                "- improve efficiency";
-        } else {
-            $reason = "HEALTHY ZONE: Margin >=40% menunjukkan ruang pertumbuhan yang baik.\n\n" .
-                "What it means:\n" .
-                "- ada buffer dan fleksibilitas\n" .
-                "- siap absorb marketing cost, operational inefficiency, dan eksperimen\n" .
-                "- bisa handle diskon tanpa langsung collapse\n\n" .
-                "Logic reasoning:\n" .
-                "- sampai saat ini cashflow lebih sehat\n" .
-                "- bisa test channel baru dan invest ke growth\n" .
-                "- keputusan bisa lebih tenang, tidak panik";
-
-            $action = "Decision implication:\n" .
-                "- bisa mulai scale\n" .
-                "- bisa tambah channel\n" .
-                "- bisa test produk baru\n\n" .
-                "Catatan: jangan reckless, jangan buang margin demi volume";
-        }
-
-        $marginMatch = $sellingPrice - $totalCostPerUnit;
-        $bepUnit = ($marginMatch > 0) ? ceil(($adsPerUnit * $qty) / $marginMatch) : 0;
-
-        BusinessCalculation::create([
-            'user_id' => Auth::id(),
-            'product_name' => $request->product_name,
-            'hpp' => $hpp,
-            'selling_price' => $sellingPrice,
-            'ads_per_unit' => $adsPct,
-            'admin_fee_percent' => $adminFeePct,
-            'overhead_percent' => $overheadPct,
-            'tax_percent' => $taxPct,
-            'promo_percent' => $promoPct,
-            'operational_fee' => 0,
-            'est_batch_quantity' => $qty,
-            'net_profit' => $netProfitPerUnit,
-            'net_margin_percent' => $marginPercent,
-            'promo_margin_percent' => $promoMarginPercent,
-            'margin_diff_percent' => $marginDiffPercent,
-            'status_label' => $status,
-            'logic_reason' => $reason,
-            'action_required' => $action,
-            'bep_unit' => $bepUnit
-        ]);
-
-        return redirect()->route('business.index')->with('success', 'Analisis berhasil disimpan!');
     }
 
     /**
@@ -452,5 +551,22 @@ class BusinessController extends Controller
         $hpp->delete();
         
         return redirect()->route('hpp.index')->with('success', 'HPP berhasil dihapus beserta data materialnya.');
+    }
+
+    /**
+     * Menampilkan halaman Visual Clarity Pack (VCP).
+     */
+    public function clarityVisual()
+    {
+        return view('business.visual');
+    }
+
+    /**
+     * Menyimpan data visual (VCP).
+     */
+    public function storeVisual(Request $request)
+    {
+        // Logic untuk menyimpan data visual jika diperlukan di masa depan
+        return redirect()->back()->with('success', 'Data visual berhasil disimpan.');
     }
 }

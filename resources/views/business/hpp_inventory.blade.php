@@ -51,7 +51,7 @@
         }
         
         .table-row-hover:hover {
-            background: linear-gradient(90deg, #FEF3C7 0%, #FFF7ED 100%);
+            background: linear-gradient(90deg, rgba(254, 243, 199, 0.1) 0%, rgba(255, 247, 237, 0.05) 100%);
         }
         
         .stat-card {
@@ -130,11 +130,11 @@
         }
     </style>
 
-    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-navy-50/30 min-h-screen">
+    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-orange-100/20 dark:from-navy-800 dark:via-navy-900 dark:to-navy-950 min-h-screen transition-colors duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Header Section -->
-            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b pb-6 border-orange-200/50 fade-in-up">
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b pb-6 border-orange-500/10 dark:border-orange-500/30 fade-in-up">
                 <div>
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-12 h-12 bg-gradient-orange rounded-2xl flex items-center justify-center shadow-lg">
@@ -145,9 +145,9 @@
                         <div>
                             <h1 class="text-3xl font-extrabold tracking-tight">
                                 <span class="text-gradient-orange">Clarity</span>
-                                <span class="text-navy-800">Profit</span>
+                                <span class="text-navy-900 dark:text-white">Profit</span>
                             </h1>
-                            <p class="mt-2 text-sm text-navy-600 max-w-2xl">
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-300 max-w-2xl">
                                 Data persediaan bahan. Lihat stok awal, masuk, keluar, dan stok akhir secara otomatis.
                             </p>
                         </div>
@@ -168,13 +168,13 @@
             <!-- Stats Cards -->
             @if(!$materials->isEmpty())
             <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-10 fade-in-up">
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Bahan</p>
-                            <p class="text-2xl font-black text-navy-900 mt-1">{{ $materials->count() }}</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Total Bahan</p>
+                            <p class="text-2xl font-black text-navy-900 dark:text-white mt-1">{{ $materials->count() }}</p>
                         </div>
-                        <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
@@ -182,13 +182,13 @@
                     </div>
                 </div>
                 
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Stok</p>
-                            <p class="text-2xl font-black text-navy-900 mt-1">{{ number_format($materials->sum(function($m) { return ($m->stock_initial ?? 0) + ($m->stock_in ?? 0) - ($m->stock_out ?? 0); }), 0, ',', '.') }}</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Total Stok</p>
+                            <p class="text-2xl font-black text-navy-900 dark:text-white mt-1">{{ number_format($materials->sum(function($m) { return ($m->stock_initial ?? 0) + ($m->stock_in ?? 0) - ($m->stock_out ?? 0); }), 0, ',', '.') }}</p>
                         </div>
-                        <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
@@ -196,13 +196,13 @@
                     </div>
                 </div>
                 
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Masuk</p>
-                            <p class="text-2xl font-black text-blue-600 mt-1">{{ number_format($materials->sum('stock_in'), 0, ',', '.') }}</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Total Masuk</p>
+                            <p class="text-2xl font-black text-blue-600 dark:text-blue-400 mt-1">{{ number_format($materials->sum('stock_in'), 0, ',', '.') }}</p>
                         </div>
-                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5 5 5m-5-5v12"></path>
                             </svg>
@@ -210,13 +210,13 @@
                     </div>
                 </div>
                 
-                <div class="stat-card bg-white rounded-2xl shadow-sm border border-orange-100 p-5 card-hover">
+                <div class="stat-card bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-orange-500/10 dark:border-orange-500/20 p-5 card-hover transition-all">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Keluar</p>
-                            <p class="text-2xl font-black text-red-600 mt-1">{{ number_format($materials->sum('stock_out'), 0, ',', '.') }}</p>
+                            <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Total Keluar</p>
+                            <p class="text-2xl font-black text-red-600 dark:text-red-400 mt-1">{{ number_format($materials->sum('stock_out'), 0, ',', '.') }}</p>
                         </div>
-                        <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-orange-50 dark:bg-navy-950 rounded-xl flex items-center justify-center">
                             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5-5-5m5-5v12"></path>
                             </svg>
@@ -227,127 +227,103 @@
             @endif
 
             <!-- Inventory Table Card -->
-            <div class="bg-white rounded-3xl shadow-xl border border-orange-100 overflow-hidden fade-in-up">
-                <div class="bg-gradient-navy px-6 py-5 flex justify-between items-center">
+            <div class="bg-white dark:bg-navy-900 rounded-3xl shadow-xl border border-orange-500/10 dark:border-orange-500/20 overflow-hidden fade-in-up transition-all">
+                <div class="bg-orange-50 dark:bg-navy-950 px-6 py-5 flex justify-between items-center border-b border-orange-200/60 dark:border-orange-500/10 transition-colors">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                         </div>
-                        <h3 class="font-bold text-white text-base tracking-wide">Daftar Persediaan Bahan</h3>
+                        <h3 class="font-bold text-navy-900 dark:text-white text-base tracking-wide">Ringkasan Stok Bahan</h3>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="relative flex h-2 w-2">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                         </span>
-                        <span class="text-[9px] font-bold text-orange-300 uppercase tracking-wider">{{ $materials->count() }} Bahan</span>
+                        <span class="text-[9px] font-bold text-orange-600 dark:text-orange-300 uppercase tracking-wider">{{ $materials->count() }} Bahan Aktif</span>
                     </div>
                 </div>
 
                 @if($materials->isEmpty())
                     <div class="p-16 text-center empty-state">
-                        <div class="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-12 h-12 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-24 h-24 bg-orange-50 dark:bg-navy-950 rounded-full flex items-center justify-center mx-auto mb-6 transition-colors">
+                            <svg class="w-12 h-12 text-orange-500 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-black text-navy-800 mb-2">Belum Ada Data Bahan</h3>
-                        <p class="text-sm text-navy-500 max-w-md mx-auto">
-                            Tambahkan bahan baku terlebih dahulu untuk melihat data persediaan.
+                        <h3 class="text-lg font-black text-navy-900 dark:text-white mb-2">Belum Ada Data Bahan</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                            Silakan tambahkan bahan baku terlebih dahulu di menu Kelola Bahan.
                         </p>
-                        <div class="mt-6">
-                            <a href="{{ route('materials.index') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-orange text-white rounded-xl text-xs font-black uppercase tracking-wider hover:shadow-lg transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                Tambah Bahan Sekarang
-                            </a>
-                        </div>
                     </div>
                 @else
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-orange-50/70 border-b border-orange-100">
-                                <tr class="text-[10px] font-black text-navy-600 uppercase tracking-wider">
+                            <thead class="bg-orange-50 dark:bg-navy-950 border-b border-orange-200/60 dark:border-orange-500/10 transition-colors">
+                                <tr class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">
                                     <th class="py-4 px-6">Nama Bahan</th>
-                                    <th class="py-4 px-6">Warna</th>
-                                    <th class="py-4 px-6 text-right">Stok Awal</th>
-                                    <th class="py-4 px-6 text-right">Masuk</th>
-                                    <th class="py-4 px-6 text-right">Keluar</th>
-                                    <th class="py-4 px-6 text-right">Stok Akhir</th>
-                                    <th class="py-4 px-6">Satuan</th>
+                                    <th class="py-4 px-6">Kategori</th>
+                                    <th class="py-4 px-6 text-center">Stok Awal</th>
+                                    <th class="py-4 px-6 text-center">Masuk (+)</th>
+                                    <th class="py-4 px-6 text-center">Keluar (-)</th>
+                                    <th class="py-4 px-6 text-center">Stok Akhir</th>
                                     <th class="py-4 px-6 text-center">Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-orange-50">
+                            <tbody class="divide-y divide-orange-500/10">
                                 @foreach($materials as $material)
                                     @php
-                                        $stockEnd = ($material->stock_initial ?? 0) + ($material->stock_in ?? 0) - ($material->stock_out ?? 0);
-                                        $stockStatus = $stockEnd <= 0 ? 'critical' : ($stockEnd <= 10 ? 'low' : 'normal');
+                                        $stock_akhir = ($material->stock_initial ?? 0) + ($material->stock_in ?? 0) - ($material->stock_out ?? 0);
                                     @endphp
-                                    <tr class="table-row-hover transition-colors">
+                                    <tr class="table-row-hover hover:bg-orange-500/5 transition-colors">
                                         <td class="py-4 px-6">
-                                            <div class="flex items-center gap-2">
-                                                <div class="w-7 h-7 bg-gradient-orange rounded-lg flex items-center justify-center">
-                                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                                    </svg>
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-lg bg-orange-100 dark:bg-navy-950 flex items-center justify-center text-orange-600 dark:text-orange-500 font-bold border border-orange-500/20">
+                                                    {{ strtoupper(substr($material->name, 0, 1)) }}
                                                 </div>
-                                                <span class="font-bold text-navy-800">{{ $material->name }}</span>
+                                                <div>
+                                                    <p class="font-bold text-navy-900 dark:text-white">{{ $material->name }}</p>
+                                                    <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ $material->color ?? 'Tanpa Warna' }}</p>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="py-4 px-6">
-                                            @if($material->color && $material->color !== '-')
-                                                <div class="flex items-center gap-1.5">
-                                                    <span class="w-3 h-3 rounded-full" style="background-color: {{ $material->color }};"></span>
-                                                    <span class="text-sm text-navy-600">{{ $material->color }}</span>
-                                                </div>
-                                            @else
-                                                <span class="text-gray-400 text-xs">-</span>
-                                            @endif
-                                        </td>
-                                        <td class="py-4 px-6 text-right font-mono font-bold text-navy-700">
-                                            {{ number_format($material->stock_initial ?? 0, 2, ',', '.') }}
-                                        </td>
-                                        <td class="py-4 px-6 text-right font-mono font-bold text-green-600">
-                                            + {{ number_format($material->stock_in ?? 0, 2, ',', '.') }}
-                                        </td>
-                                        <td class="py-4 px-6 text-right font-mono font-bold text-red-500">
-                                            - {{ number_format($material->stock_out ?? 0, 2, ',', '.') }}
-                                        </td>
-                                        <td class="py-4 px-6 text-right">
-                                            <span class="font-mono font-black text-lg {{ $stockStatus == 'critical' ? 'stock-critical' : ($stockStatus == 'low' ? 'stock-low' : 'text-navy-800') }}">
-                                                {{ number_format($stockEnd, 2, ',', '.') }}
+                                            <span class="inline-flex px-2 py-1 rounded-lg bg-orange-100 dark:bg-navy-950 text-orange-600 dark:text-orange-400 text-[10px] font-black uppercase tracking-wider border border-orange-500/10">
+                                                {{ $material->category ?? 'Umum' }}
                                             </span>
                                         </td>
-                                        <td class="py-4 px-6">
-                                            <span class="inline-flex px-2 py-1 rounded-lg bg-gray-100 text-gray-600 text-[10px] font-bold uppercase tracking-wider">
-                                                {{ $material->unit }}
+                                        <td class="py-4 px-6 text-center font-mono font-bold text-slate-500 dark:text-slate-300">
+                                            {{ number_format($material->stock_initial ?? 0, 0, ',', '.') }}
+                                        </td>
+                                        <td class="py-4 px-6 text-center font-mono font-bold text-green-600 dark:text-green-400">
+                                            +{{ number_format($material->stock_in ?? 0, 0, ',', '.') }}
+                                        </td>
+                                        <td class="py-4 px-6 text-center font-mono font-bold text-red-600 dark:text-red-400">
+                                            -{{ number_format($material->stock_out ?? 0, 0, ',', '.') }}
+                                        </td>
+                                        <td class="py-4 px-6 text-center">
+                                            <span class="text-base font-black text-navy-900 dark:text-white">
+                                                {{ number_format($stock_akhir, 0, ',', '.') }}
+                                                <span class="text-[10px] text-slate-500 ml-0.5">{{ $material->unit }}</span>
                                             </span>
                                         </td>
                                         <td class="py-4 px-6 text-center">
-                                            @if($stockStatus == 'critical')
-                                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-red-100 text-red-600 text-[9px] font-black uppercase">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                    </svg>
+                                            @if($stock_akhir <= 0)
+                                                <span class="stock-badge bg-red-500/10 text-red-500 border border-red-500/20">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                                     Habis
                                                 </span>
-                                            @elseif($stockStatus == 'low')
-                                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-orange-100 text-orange-600 text-[9px] font-black uppercase">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                    </svg>
+                                            @elseif($stock_akhir < 10)
+                                                <span class="stock-badge bg-orange-500/10 text-orange-500 border border-orange-500/20">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                     Menipis
                                                 </span>
                                             @else
-                                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-600 text-[9px] font-black uppercase">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                    </svg>
-                                                    Tersedia
+                                                <span class="stock-badge bg-green-500/10 text-green-500 border border-green-500/20">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                                    Aman
                                                 </span>
                                             @endif
                                         </td>
@@ -358,20 +334,20 @@
                     </div>
                     
                     <!-- Table Footer -->
-                    <div class="bg-orange-50/30 px-6 py-3 border-t border-orange-100 flex justify-between items-center">
-                        <div class="text-[10px] font-semibold text-navy-500">
-                            Menampilkan {{ $materials->count() }} bahan
+                    <div class="bg-orange-50 dark:bg-navy-950 px-6 py-4 border-t border-orange-200/60 dark:border-orange-500/20 flex justify-between items-center transition-colors">
+                        <div class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                            Menampilkan {{ $materials->count() }} jenis bahan dari total keseluruhan
                         </div>
                         <div class="flex gap-3 text-[10px] font-bold">
-                            <span class="flex items-center gap-1">
+                            <span class="flex items-center gap-1 text-slate-500 dark:text-slate-300">
                                 <span class="w-2 h-2 rounded-full bg-green-500"></span> 
-                                Tersedia
+                                Aman
                             </span>
-                            <span class="flex items-center gap-1">
+                            <span class="flex items-center gap-1 text-slate-500 dark:text-slate-300">
                                 <span class="w-2 h-2 rounded-full bg-orange-500"></span> 
                                 Menipis
                             </span>
-                            <span class="flex items-center gap-1">
+                            <span class="flex items-center gap-1 text-slate-500 dark:text-slate-300">
                                 <span class="w-2 h-2 rounded-full bg-red-500"></span> 
                                 Habis
                             </span>
@@ -382,7 +358,7 @@
 
             <!-- Stock Alert Info -->
             @if(!$materials->isEmpty() && $materials->filter(function($m) { $stockEnd = ($m->stock_initial ?? 0) + ($m->stock_in ?? 0) - ($m->stock_out ?? 0); return $stockEnd <= 10; })->count() > 0)
-            <div class="mt-6 bg-orange-500/10 border border-orange-500/30 rounded-2xl p-4 fade-in-up">
+            <div class="mt-6 bg-orange-500/10 border border-orange-500/30 dark:border-orange-500/20 rounded-2xl p-4 fade-in-up transition-all">
                 <div class="flex items-start gap-3">
                     <div class="flex-shrink-0">
                         <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -390,8 +366,8 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs font-bold text-orange-600 uppercase tracking-wider">Peringatan Stok</p>
-                        <p class="text-xs text-navy-600 mt-1">
+                        <p class="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider">Peringatan Stok</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                             Terdapat {{ $materials->filter(function($m) { $stockEnd = ($m->stock_initial ?? 0) + ($m->stock_in ?? 0) - ($m->stock_out ?? 0); return $stockEnd <= 10; })->count() }} bahan dengan stok menipis atau habis. 
                             Segera lakukan pengadaan bahan untuk kelancaran produksi.
                         </p>

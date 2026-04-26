@@ -3,16 +3,24 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 // Landing Page
 Route::get('/', function () {
-    return view('welcome');
+    $products = \App\Models\Product::all();
+    return view('welcome', compact('products'));
 })->name('welcome');
+
+// Midtrans Webhook (No CSRF)
+Route::post('/api/midtrans/callback', [PaymentController::class, 'callback'])->name('midtrans.callback')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 // Middleware Auth
 Route::middleware(['auth', 'verified', 'approved'])->group(function () {
-    
+
+    Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -22,70 +30,55 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
         Route::get('/product', [AdminController::class, 'product'])->name('admin.product');
-        
+
         // Rute untuk Approve User (WAJIB ADA untuk tombol Grant Access)
         Route::patch('/users/{id}/approve', [AdminController::class, 'approve'])->name('admin.users.approve');
+        Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
     });
 
-    // --- FITUR BUSINESS & HPP ---
-    // Halaman List HPP (Index)
-    Route::get('/business', [BusinessController::class, 'index'])->name('business.index');
-    // Daftar Hasil Decision Engine
-    Route::get('/decisions', [BusinessController::class, 'decisionsList'])->name('decisions.list');
-    // Detail Hasil Decision Engine
-    Route::get('/decisions/{id}', [BusinessController::class, 'showDecision'])->name('decisions.show');
-    // Halaman Form HPP (Sesuai nama file Anda: hpp_create)
-    Route::get('/hpp/create', [BusinessController::class, 'create'])->name('hpp.create');
-    Route::get('/hpp/bahan', [BusinessController::class, 'bahan'])->name('hpp.bahan');
-    // Proses Simpan HPP
-    Route::post('/hpp/store', [BusinessController::class, 'store'])->name('hpp.store');
-    // Daftar HPP (List)
-    Route::get('/hpp', [BusinessController::class, 'hppIndex'])->name('hpp.index');
-    // Data Produk (HPP master)
-    Route::get('/hpp/products', [BusinessController::class, 'products'])->name('hpp.products');
-    // Data Persediaan Bahan
-    Route::get('/hpp/inventory', [BusinessController::class, 'inventory'])->name('hpp.inventory');
-    // Bill of Material (BOM)
-    Route::get('/hpp/bom', [BusinessController::class, 'bom'])->name('hpp.bom');
-    // Cetak PDF HPP
-    Route::get('/hpp/{id}/print', [BusinessController::class, 'printHppPdf'])->name('hpp.print');
-    // Cetak PDF BOM
-    Route::get('/hpp/{id}/bom/print', [BusinessController::class, 'printBomPdf'])->name('hpp.bom.print');
-    // Cetak PDF Decision Engine
-    Route::get('/business/{id}/print', [BusinessController::class, 'printDecisionEnginePdf'])->name('business.print');
-    // Lihat detail hasil HPP
-    Route::get('/hpp/{id}', [BusinessController::class, 'show'])->name('hpp.show');
+    // --- FITUR BUSINESS & HPP (Profit Clarity Calculator - PCC) ---
+    Route::middleware('feature:PCC')->group(function () {
+        Route::get('/business', [BusinessController::class, 'index'])->name('business.index');
+        Route::get('/hpp/create', [BusinessController::class, 'create'])->name('hpp.create');
+        Route::get('/hpp/bahan', [BusinessController::class, 'bahan'])->name('hpp.bahan');
+        Route::post('/hpp/store', [BusinessController::class, 'store'])->name('hpp.store');
+        Route::get('/hpp', [BusinessController::class, 'hppIndex'])->name('hpp.index');
+        Route::get('/hpp/products', [BusinessController::class, 'products'])->name('hpp.products');
+        Route::get('/hpp/inventory', [BusinessController::class, 'inventory'])->name('hpp.inventory');
+        Route::get('/hpp/bom', [BusinessController::class, 'bom'])->name('hpp.bom');
+        Route::get('/hpp/{id}/print', [BusinessController::class, 'printHppPdf'])->name('hpp.print');
+        Route::get('/hpp/{id}/bom/print', [BusinessController::class, 'printBomPdf'])->name('hpp.bom.print');
+        Route::get('/hpp/{id}', [BusinessController::class, 'show'])->name('hpp.show');
+        Route::get('/hpp/{id}/edit', [BusinessController::class, 'edit'])->name('hpp.edit');
+        Route::put('/hpp/{id}', [BusinessController::class, 'update'])->name('hpp.update');
+        Route::delete('/hpp/{id}', [BusinessController::class, 'destroyHpp'])->name('hpp.destroy');
+        
+        // Materials (Bagian dari HPP)
+        Route::get('/materials', [\App\Http\Controllers\MaterialController::class, 'index'])->name('materials.index');
+        Route::get('/materials/{id}/edit', [\App\Http\Controllers\MaterialController::class, 'edit'])->name('materials.edit');
+        Route::put('/materials/{id}', [\App\Http\Controllers\MaterialController::class, 'update'])->name('materials.update');
+        Route::post('/materials', [\App\Http\Controllers\MaterialController::class, 'store'])->name('materials.store');
+        Route::delete('/materials/{id}', [\App\Http\Controllers\MaterialController::class, 'destroy'])->name('materials.destroy');
+    });
 
-    // --- FITUR BAHAN BAKU (MATERIALS) ---
-    Route::get('/materials', [\App\Http\Controllers\MaterialController::class, 'index'])->name('materials.index');
-    Route::get('/materials/{id}/edit', [\App\Http\Controllers\MaterialController::class, 'edit'])->name('materials.edit');
-    Route::put('/materials/{id}', [\App\Http\Controllers\MaterialController::class, 'update'])->name('materials.update');
-    Route::post('/materials', [\App\Http\Controllers\MaterialController::class, 'store'])->name('materials.store');
-    Route::delete('/materials/{id}', [\App\Http\Controllers\MaterialController::class, 'destroy'])->name('materials.destroy');
+    // --- FITUR DECISION ENGINE (DE) ---
+    Route::middleware('feature:DE')->group(function () {
+        Route::get('/decisions', [BusinessController::class, 'decisionsList'])->name('decisions.list');
+        Route::get('/decisions/{id}', [BusinessController::class, 'showDecision'])->name('decisions.show');
+        Route::get('/business/{id}/print', [BusinessController::class, 'printDecisionEnginePdf'])->name('business.print');
+        Route::post('/calculate', [BusinessController::class, 'calculate'])->name('calculate');
+        Route::get('/print-pdf/{id}', [BusinessController::class, 'printPdf'])->name('print.pdf');
+        Route::delete('/business/{id}', [BusinessController::class, 'destroy'])->name('business.destroy');
+    });
 
-    // --- FITUR HPP CALCULATION (CRUD) ---
-    Route::get('/hpp/{id}/edit', [BusinessController::class, 'edit'])->name('hpp.edit');
-    Route::put('/hpp/{id}', [BusinessController::class, 'update'])->name('hpp.update');
-    Route::delete('/hpp/{id}', [BusinessController::class, 'destroyHpp'])->name('hpp.destroy');
-
-    // Proses Kalkulasi Cepat (Business Checker)
-    Route::post('/calculate', [BusinessController::class, 'calculate'])->name('calculate');
-
-    // Utility
-    Route::get('/print-pdf/{id}', [BusinessController::class, 'printPdf'])->name('print.pdf');
-    Route::delete('/business/{id}', [BusinessController::class, 'destroy'])->name('business.destroy');
-    Route::middleware(['auth', 'verified'])->group(function () {
-    // Halaman Utama Clarity Visual
-    Route::get('/clarity-visual', function() {
-        return view('clarity-visual.index');
-    })->name('clarity.visual');
-
-    // Route Download (Jika nantinya ingin mengunduh PDF/Resource)
-    Route::get('/download-template', function() {
-        // Logika download bisa diletakkan di sini
-        return response()->json(['status' => 'success', 'message' => 'Resource siap']);
-    })->name('download.template');
-});
+    // --- FITUR VISUAL CLARITY PACK (VCP) ---
+    Route::middleware('feature:VCP')->group(function () {
+        Route::get('/clarity-visual', [BusinessController::class, 'clarityVisual'])->name('clarity.visual');
+        Route::post('/business/visual', [BusinessController::class, 'storeVisual'])->name('business.store-visual');
+        Route::get('/download-template', function () {
+            return response()->json(['status' => 'success', 'message' => 'Resource siap']);
+        })->name('download.template');
+    });
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -93,4 +86,4 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

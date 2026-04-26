@@ -125,6 +125,11 @@
             color: #475569;
         }
         
+        .dark .badge-pendukung {
+            background: linear-gradient(135deg, #334155, #1E293B);
+            color: #CBD5E1;
+        }
+        
         .badge-lainnya {
             background: linear-gradient(135deg, #FEF3C7, #FFEDD5);
             color: #F59E0B;
@@ -136,7 +141,7 @@
         $typeOptions = ['Bahan Utama','Bahan Pendukung','Bahan Lainnya'];
     @endphp
 
-    <div class="py-12 bg-gradient-to-br from-orange-50 via-white to-navy-50/30 min-h-screen">
+    <div class="py-12 bg-gradient-to-br from-navy-800 via-navy-900 to-navy-950 min-h-screen transition-colors duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Header Section -->
@@ -148,11 +153,11 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-black text-navy-900 tracking-tight">Kelola Bahan Baku</h1>
-                        <p class="mt-1 text-sm text-navy-600">Tambahkan bahan baku yang akan digunakan pada perhitungan HPP.</p>
+                        <h1 class="text-3xl font-black text-white tracking-tight">Kelola Bahan Baku</h1>
+                        <p class="mt-1 text-sm text-slate-300">Tambahkan bahan baku yang akan digunakan pada perhitungan HPP.</p>
                     </div>
                 </div>
-                <a href="{{ route('hpp.bahan') }}" class="btn-back inline-flex items-center gap-2 px-6 py-3 bg-white border border-orange-300 rounded-xl text-sm font-black uppercase tracking-wider text-orange-600 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all shadow-md">
+                <a href="{{ route('hpp.bahan') }}" class="btn-back inline-flex items-center gap-2 px-6 py-3 bg-navy-800 border border-orange-500/30 rounded-xl text-sm font-black uppercase tracking-wider text-orange-400 hover:bg-orange-600 hover:text-white transition-all shadow-md">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -173,28 +178,28 @@
             @endif
 
             <!-- Add Material Form - Full Width -->
-            <div class="bg-white rounded-3xl shadow-xl border border-orange-100 p-10 fade-in-up mb-10">
+            <div class="bg-navy-900 rounded-3xl shadow-xl border border-orange-500/20 p-10 fade-in-up mb-10 transition-all">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-black text-navy-900">Tambah Bahan Baru</h2>
+                    <h2 class="text-2xl font-black text-white">Tambah Bahan Baru</h2>
                 </div>
                 
                 <form action="{{ route('materials.store') }}" method="POST">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         <div>
-                            <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Tanggal Pembelian</label>
+                            <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Tanggal Pembelian</label>
                             <input type="date" name="purchase_date" value="{{ old('purchase_date', now()->toDateString()) }}" required
-                                class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                                class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Jenis</label>
+                            <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Jenis</label>
                             <select name="type" id="typeSelect" required
-                                class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                                class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                                 <option value="">-- Pilih Jenis --</option>
                                 @foreach($typeOptions as $type)
                                     <option value="{{ $type }}" {{ old('type') === $type ? 'selected' : '' }}>{{ $type }}</option>
@@ -202,7 +207,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Nama Bahan</label>
+                            <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Nama Bahan</label>
                             <div class="relative">
                                 <input 
                                     type="text" 
@@ -210,7 +215,7 @@
                                     placeholder="-- Pilih atau ketik nama bahan baru --"
                                     value="{{ old('name') }}"
                                     autocomplete="off"
-                                    class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all peer">
+                                    class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all peer">
                                 <input 
                                     type="hidden" 
                                     name="name" 
@@ -218,8 +223,8 @@
                                     required>
                                 <select 
                                     id="materialNameSelect" 
-                                    class="hidden peer-focus:block absolute top-full left-0 right-0 mt-1 bg-white border border-orange-300 rounded-xl z-10 max-h-64 overflow-y-auto">
-                                    <option value="">-- Pilih dari daftar --</option>
+                                    class="hidden peer-focus:block absolute top-full left-0 right-0 mt-1 bg-navy-950 border border-orange-500/30 rounded-xl z-10 max-h-64 overflow-y-auto text-white">
+                                    <option value="" class="bg-navy-950">-- Pilih dari daftar --</option>
                                     @php
                                         $uniqueMaterials = $materials->unique('name')->sortBy('name');
                                     @endphp
@@ -230,30 +235,30 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Warna (opsional)</label>
+                            <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Warna (opsional)</label>
                             <input type="text" name="color" value="{{ old('color') }}" placeholder="Contoh: Putih, Merah"
-                                class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                                class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         <div>
-                            <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Harga Pembelian (Rp)</label>
+                            <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Harga Pembelian (Rp)</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 text-xs font-bold">Rp</span>
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500 text-xs font-bold">Rp</span>
                                 <input type="number" name="price" value="{{ old('price', 0) }}" min="0" step="0.01" required
-                                    class="w-full pl-10 bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                                    class="w-full pl-10 bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Volume Beli</label>
+                            <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Volume Beli</label>
                             <input type="number" name="purchase_volume" value="{{ old('purchase_volume', 1) }}" min="0" step="0.01" required
-                                class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                                class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Satuan</label>
+                            <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Satuan</label>
                             <select name="unit" required
-                                class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                                class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                                 <option value="">-- Pilih Satuan --</option>
                                 @foreach($unitOptions as $unit)
                                     <option value="{{ $unit }}" {{ old('unit') === $unit ? 'selected' : '' }}>{{ $unit }}</option>
@@ -273,8 +278,8 @@
             </div>
 
             <!-- Materials List - Full Width -->
-            <div class="bg-white rounded-3xl shadow-xl border border-orange-100 overflow-hidden fade-in-up mb-10">
-                <div class="bg-gradient-navy px-10 py-6">
+            <div class="bg-navy-900 rounded-3xl shadow-xl border border-orange-500/20 overflow-hidden fade-in-up mb-10 transition-all">
+                <div class="bg-navy-950 px-10 py-6 border-b border-orange-500/10">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,17 +293,17 @@
                 <div class="overflow-x-auto">
                     @if($materials->isEmpty())
                         <div class="text-center py-12 px-6">
-                            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <div class="w-16 h-16 bg-navy-950 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                 </svg>
                             </div>
-                            <p class="text-navy-600 font-medium">Belum ada bahan baku. Tambahkan bahan terlebih dahulu untuk dapat menggunakannya di kalkulator HPP.</p>
+                            <p class="text-slate-400 font-medium">Belum ada bahan baku. Tambahkan bahan terlebih dahulu untuk dapat menggunakannya di kalkulator HPP.</p>
                         </div>
                     @else
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-gradient-to-r from-orange-50/50 to-orange-50 border-b border-orange-200">
-                                <tr class="text-[11px] font-black text-navy-700 uppercase tracking-wider">
+                            <thead class="bg-navy-950 border-b border-orange-500/20">
+                                <tr class="text-[11px] font-black text-slate-300 uppercase tracking-wider">
                                     <th class="py-4 px-6">Tanggal</th>
                                     <th class="py-4 px-6">Jenis</th>
                                     <th class="py-4 px-6">Nama</th>
@@ -309,10 +314,10 @@
                                     <th class="py-4 px-6 text-center">Aksi</th>
                                  </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
+                            <tbody class="divide-y divide-orange-500/10">
                                 @foreach($materials as $material)
-                                    <tr class="table-row-hover hover:bg-orange-50/30 transition-colors">
-                                        <td class="py-4 px-6 text-navy-700 font-medium">{{ \Carbon\Carbon::parse($material->purchase_date)->format('d M Y') }}</td>
+                                    <tr class="table-row-hover hover:bg-orange-500/5 transition-colors">
+                                        <td class="py-4 px-6 text-slate-300 font-medium">{{ \Carbon\Carbon::parse($material->purchase_date)->format('d M Y') }}</td>
                                         <td class="py-4 px-6">
                                             @php
                                                 $badgeClass = 'badge-utama';
@@ -323,14 +328,14 @@
                                                 {{ $material->type }}
                                             </span>
                                         </td>
-                                        <td class="py-4 px-6 font-bold text-navy-800">{{ $material->name }}</td>
-                                        <td class="py-4 px-6 text-navy-600">{{ $material->color ?? '-' }}</td>
-                                        <td class="py-4 px-6 text-right font-mono font-bold text-orange-600">Rp{{ number_format($material->price, 0, ',', '.') }}</td>
-                                        <td class="py-4 px-6 text-right font-mono font-bold text-navy-700">{{ number_format($material->purchase_volume, 2, ',', '.') }}</td>
-                                        <td class="py-4 px-6"><span class="px-3 py-1 rounded-lg bg-navy-100 text-navy-700 text-xs font-bold uppercase tracking-wider">{{ $material->unit }}</span></td>
+                                        <td class="py-4 px-6 font-bold text-white">{{ $material->name }}</td>
+                                        <td class="py-4 px-6 text-slate-400">{{ $material->color ?? '-' }}</td>
+                                        <td class="py-4 px-6 text-right font-mono font-bold text-orange-500">Rp{{ number_format($material->price, 0, ',', '.') }}</td>
+                                        <td class="py-4 px-6 text-right font-mono font-bold text-slate-300">{{ number_format($material->purchase_volume, 2, ',', '.') }}</td>
+                                        <td class="py-4 px-6"><span class="px-3 py-1 rounded-lg bg-navy-950 text-orange-400 text-xs font-bold uppercase tracking-wider border border-orange-500/10">{{ $material->unit }}</span></td>
                                         <td class="py-4 px-6 text-center">
                                             <div class="flex items-center justify-center gap-3">
-                                                <a href="{{ route('materials.edit', $material->id) }}" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-black uppercase tracking-wider text-orange-600 hover:text-white hover:bg-orange-600 rounded-lg transition-all">
+                                                <a href="{{ route('materials.edit', $material->id) }}" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-black uppercase tracking-wider text-orange-500 hover:text-white hover:bg-orange-600 rounded-lg transition-all">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
@@ -339,9 +344,9 @@
                                                 <form action="{{ route('materials.destroy', $material->id) }}" method="POST" onsubmit="return confirm('Hapus bahan ini?');" class="inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-black uppercase tracking-wider text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all">
+                                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-black uppercase tracking-wider text-red-500 hover:text-white hover:bg-red-600 rounded-lg transition-all">
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path>
                                                         </svg>
                                                         Hapus
                                                     </button>
@@ -357,53 +362,53 @@
             </div>
 
             <!-- Unit Converter -->
-            <div class="bg-white rounded-3xl shadow-xl border border-orange-100 p-8 fade-in-up">
+            <div class="bg-navy-900 rounded-3xl shadow-xl border border-orange-500/20 p-8 fade-in-up transition-all">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-black text-navy-900">Kalkulator Konversi Satuan</h2>
+                    <h2 class="text-2xl font-black text-white">Kalkulator Konversi Satuan</h2>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
-                        <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Nilai</label>
+                        <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Nilai</label>
                         <input type="number" id="convertValue" value="1" step="0.01" 
-                            class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                            class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Dari</label>
-                        <select id="convertFrom" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                        <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Dari</label>
+                        <select id="convertFrom" class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                             @foreach($unitOptions as $unit)
-                                <option value="{{ $unit }}">{{ $unit }}</option>
+                                <option value="{{ $unit }}" {{ $unit === 'kg' ? 'selected' : '' }}>{{ $unit }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-black text-orange-600 uppercase tracking-wider mb-3">Ke</label>
-                        <select id="convertTo" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm font-semibold text-navy-900 focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all">
+                        <label class="block text-[11px] font-black text-orange-400 uppercase tracking-wider mb-3">Ke</label>
+                        <select id="convertTo" class="w-full bg-navy-950 border border-orange-500/10 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
                             @foreach($unitOptions as $unit)
-                                <option value="{{ $unit }}" {{ $unit === 'meter' ? 'selected' : '' }}>{{ $unit }}</option>
+                                <option value="{{ $unit }}" {{ $unit === 'gr' ? 'selected' : '' }}>{{ $unit }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-6">
+                <div class="bg-navy-950 border border-orange-500/30 rounded-2xl p-6 transition-all">
                     <div class="flex items-center justify-between flex-wrap gap-4">
                         <div>
-                            <div class="text-[10px] font-black text-orange-600 uppercase tracking-wider">Hasil Konversi</div>
-                            <div id="conversionResult" class="text-2xl font-black text-navy-900 mt-2">-</div>
+                            <div class="text-[10px] font-black text-orange-400 uppercase tracking-wider">Hasil Konversi</div>
+                            <div id="conversionResult" class="text-2xl font-black text-white mt-2">-</div>
                         </div>
                         <button type="button" id="convertButton" class="px-8 py-3 bg-gradient-orange text-white rounded-xl font-black text-sm uppercase tracking-wider hover:shadow-lg transition-all">
                             Konversi
                         </button>
                     </div>
-                    <p class="mt-3 text-xs text-navy-600">Catatan: hanya konversi antar jenis satuan yang sama (mL ⇄ L, gr ⇄ kg, cm ⇄ meter, pcs/lembar/roll/buah).</p>
+                    <p class="mt-3 text-xs text-slate-400">Catatan: hanya konversi antar jenis satuan yang sama (mL ⇄ L, gr ⇄ kg, cm ⇄ meter, pcs/lembar/roll/buah).</p>
                 </div>
-            </div>
+            </div></div>
         </div>
     </div>
 
