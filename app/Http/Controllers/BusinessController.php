@@ -479,16 +479,17 @@ class BusinessController extends Controller
         return view('business.hpp_show', compact('hpp'));
     }
 
-    public function printHppPdf($id)
+    public function printHppPdf(Request $request, $id)
     {
         $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
+        $qty = max(1, (int) $request->query('qty', 1));
 
         if (! $hpp->printed_at) {
             $hpp->printed_at = now();
             $hpp->save();
         }
 
-        $pdf = Pdf::loadView('business.hpp_pdf', compact('hpp'));
+        $pdf = Pdf::loadView('business.hpp_pdf', compact('hpp', 'qty'));
         return $pdf->download("hpp-{$hpp->hpp_id}.pdf");
     }
 
@@ -500,33 +501,68 @@ class BusinessController extends Controller
         return $pdf->download("business-report-{$id}.pdf");
     }
 
-    public function printPdf($id)
+    public function printPdf(Request $request, $id)
     {
         // Attempt decision-engine BusinessCalculation first
         $calc = BusinessCalculation::where('user_id', Auth::id())->find($id);
 
         if ($calc) {
-            $pdf = Pdf::loadView('business.pdf', compact('calc'));
+            $hppPct = ($calc->selling_price > 0) ? ($calc->hpp / $calc->selling_price) * 100 : 0;
+            $adminPct = $calc->admin_fee_percent ?? 0;
+            $adsPct = $calc->ads_per_unit ?? 0;
+            $affiliatePct = $calc->affiliate_percent ?? 0;
+            $promoPct = $calc->promo_percent ?? 0;
+            $overheadPct = $calc->overhead_percent ?? 0;
+            $taxPct = $calc->tax_percent ?? 0;
+            
+            $totalCostPct = $hppPct + $adminPct + $adsPct + $affiliatePct + $promoPct + $overheadPct + $taxPct;
+            
+            $costs = [
+                ['hpp', $hppPct],
+                ['admin', $adminPct],
+                ['ads', $adsPct],
+                ['affiliate', $affiliatePct],
+                ['promo', $promoPct],
+                ['overhead', $overheadPct],
+                ['tax', $taxPct]
+            ];
+            usort($costs, function($a, $b) { return $b[1] <=> $a[1]; });
+            $topCosts = array_slice($costs, 0, 3);
+            
+            $insight = $calc->status_label === 'CRITICAL' ? 'Cost structure terlalu berat bahkan sebelum scaling dimulai.' : ($calc->status_label === 'FRAGILE' ? 'Margin tertekan oleh kombinasi ads + platform fee.' : 'Cost structure masih dalam batas sehat dan scalable.');
+            $risks = $calc->status_label === 'CRITICAL' ? ['Product is not profitable', 'Cashflow drain risk'] : ($calc->status_label === 'FRAGILE' ? ['Margin pressure', 'Avoid large production'] : ['No significant risks']);
+            $strategy = $calc->status_label === 'HEALTHY' ? 'Scale Aggressive' : ($calc->status_label === 'FRAGILE' ? 'Optimization' : 'Stop & Redesign');
+            $focus = $calc->status_label === 'CRITICAL' ? 'memperbaiki unit economics, bukan jualan' : ($calc->status_label === 'FRAGILE' ? 'jaga margin & cashflow' : 'scale & expansion');
+            
+            $adsStatus = $adsPct > 20 ? 'DANGEROUS' : ($adsPct > 10 ? 'PRESSURING' : 'SAFE');
+            $adsMessage = $adsPct > 20 ? 'Ads cost is too high' : 'Ads cost is manageable';
+            
+            $actionPlan = array_map('trim', explode("\n", $calc->action_required));
+            $actionPlan = array_filter($actionPlan, function($value) { return !empty($value); });
+
+            $pdf = Pdf::loadView('business.pdf', compact('calc', 'hppPct', 'totalCostPct', 'topCosts', 'insight', 'risks', 'strategy', 'focus', 'adsStatus', 'adsMessage', 'actionPlan'));
             return $pdf->download("business-report-{$id}.pdf");
         }
 
         // Fallback to HPP report for backward compatibility
         $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
+        $qty = max(1, (int) $request->query('qty', 1));
 
         if (! $hpp->printed_at) {
             $hpp->printed_at = now();
             $hpp->save();
         }
 
-        $pdf = Pdf::loadView('business.hpp_pdf', compact('hpp'));
+        $pdf = Pdf::loadView('business.hpp_pdf', compact('hpp', 'qty'));
         return $pdf->download("hpp-{$id}.pdf");
     }
 
-    public function printBomPdf($id)
+    public function printBomPdf(Request $request, $id)
     {
         $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
+        $qty = max(1, (int) $request->query('qty', 1));
 
-        $pdf = Pdf::loadView('business.bom_pdf', compact('hpp'));
+        $pdf = Pdf::loadView('business.bom_pdf', compact('hpp', 'qty'));
         return $pdf->download("bom-{$hpp->hpp_id}.pdf");
     }
 
@@ -554,11 +590,266 @@ class BusinessController extends Controller
     }
 
     /**
+     * Menganalisis gambar menggunakan Gemini API
+     */
+    public function analyzeImage(Request $request)
+    {
+        // Tingkatkan memory limit untuk memproses gambar base64 berukuran besar
+        ini_set('memory_limit', '512M');
+
+        $request->validate([
+            'image' => 'required|string',
+            'type' => 'nullable|string',
+            'market' => 'nullable|string',
+            'note' => 'nullable|string'
+        ]);
+
+        $apiKey = env('GEMINI_API_KEY');
+        if (!$apiKey) {
+            return response()->json(['success' => false, 'message' => 'GEMINI_API_KEY belum diatur di .env. Silakan tambahkan API Key dari Google Gemini.']);
+        }
+
+        $base64 = $request->input('image');
+        // Pisahkan mime type dan data base64 mentah
+        if (preg_match('/^data:image\/(\w+);base64,/', $base64, $type)) {
+            $mimeType = 'image/' . strtolower($type[1]);
+            $base64Data = substr($base64, strpos($base64, ',') + 1);
+        } else {
+            $mimeType = 'image/jpeg'; // Default mime type
+            $base64Data = str_replace(' ', '+', $base64);
+        }
+
+        // Menggunakan model yang valid dan langsung di-hardcode agar tidak terpengaruh cache .env
+        $model = 'gemini-3.1-flash-lite';
+        
+        $systemPrompt = "SYSTEM PROMPT (CORE AI BRAIN):
+        You are a Senior Fashion Product Developer and Technical Designer with expertise in apparel, bags, footwear, and fashion accessories.
+        You are part of an advanced R&D system that generates accurate, production-ready techpack material recommendations based on product images.
+        Your priorities: 1. Deep visual observation of the provided image (colors, textures, visible details like zippers, pockets, cut) 2. Real-world manufacturability 3. Match materials with the observed product 4. Dynamic and varied output based EXACTLY on what is visible in the image.
+        
+        UNIVERSAL PRODUCT CLASSIFICATION:
+        You MUST classify the product into one of these groups:
+        1. Soft Apparel (t-shirt, gamis, sweater, sweatshirt)
+        2. Structured Apparel (shirt, pants, blazer)
+        3. Outerwear (jacket, coat, vest)
+        4. Footwear (sneakers, shoes, sandals)
+        5. Soft Accessories (socks, scarf)
+        6. Structured Accessories (bags, belts)
+        
+        RESTRICTIONS & FAILSAFE:
+        - Carefully observe the image! The response MUST be different for different images. If it's a denim jacket, talk about denim. If it's a leather bag, talk about leather.
+        - Never suggest unrealistic materials or mix incompatible materials.
+        - Always provide technical reasoning.
+        - Your output must feel like it is created by a professional factory R&D team.";
+        
+        $prompt = "Deeply analyze the visual features of the uploaded product image (color, silhouette, hardware, texture). Context: Type=" . $request->input('type') . " Market=" . $request->input('market') . " Note=" . $request->input('note') . ". Output the result according to the JSON schema provided.";
+
+        try {
+            $payload = [
+                'system_instruction' => [
+                    'parts' => [
+                        ['text' => $systemPrompt]
+                    ]
+                ],
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt],
+                            [
+                                'inline_data' => [
+                                    'mime_type' => $mimeType,
+                                    'data' => $base64Data
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'generationConfig' => [
+                    'temperature' => 0.4,
+                    'response_mime_type' => 'application/json',
+                    'response_schema' => [
+                        'type' => 'OBJECT',
+                        'properties' => [
+                            'classification' => [
+                                'type' => 'OBJECT',
+                                'properties' => [
+                                    'productType' => ['type' => 'STRING', 'description' => 'Suggested professional product name reflecting the actual visual details, e.g., Oversized Washed Denim Jacket'],
+                                    'categoryGroup' => ['type' => 'STRING', 'description' => 'The classified product group from the list'],
+                                ]
+                            ],
+                            'materialGeneration' => [
+                                'type' => 'OBJECT',
+                                'properties' => [
+                                    'primaryMaterial' => [
+                                        'type' => 'OBJECT',
+                                        'properties' => [
+                                            'mainFabric' => ['type' => 'STRING', 'description' => 'Primary material/fabric type, highly accurate to the visual appearance'],
+                                            'gsm' => ['type' => 'STRING', 'description' => 'Fabric weight/thickness appropriate for the visually observed material'],
+                                            'reason' => ['type' => 'STRING', 'description' => 'Professional technical reasoning for why this material fits the visually observed design']
+                                        ]
+                                    ],
+                                    'construction' => [
+                                        'type' => 'OBJECT',
+                                        'properties' => [
+                                            'structureNotes' => ['type' => 'STRING', 'description' => 'Detailed construction and sewing notes based on the visual features']
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            'bom' => [
+                                'type' => 'ARRAY',
+                                'description' => 'Bill of Materials based on the visible components in the image',
+                                'items' => [
+                                    'type' => 'OBJECT',
+                                    'properties' => [
+                                        'comp' => ['type' => 'STRING', 'description' => 'Component name (e.g. Main Body, Zipper)'],
+                                        'spec' => ['type' => 'STRING', 'description' => 'Specification (e.g. 100% Cotton Single Jersey)'],
+                                        'qty' => ['type' => 'STRING', 'description' => 'Quantity'],
+                                        'price' => ['type' => 'STRING', 'description' => 'Estimated price']
+                                    ]
+                                ]
+                            ],
+                            'packaging' => [
+                                'type' => 'OBJECT',
+                                'properties' => [
+                                    'polySz' => ['type' => 'STRING', 'description' => 'Packaging size recommendation, e.g., 35x45 cm'],
+                                    'polyTh' => ['type' => 'STRING', 'description' => 'Packaging thickness, e.g., 50 micron']
+                                ]
+                            ],
+                            'care' => [
+                                'type' => 'OBJECT',
+                                'properties' => [
+                                    'id' => ['type' => 'STRING', 'description' => 'Professional care instructions in Indonesian'],
+                                    'en' => ['type' => 'STRING', 'description' => 'Professional care instructions in English'],
+                                    'symbols' => [
+                                        'type' => 'ARRAY',
+                                        'items' => ['type' => 'STRING'],
+                                        'description' => 'Choose appropriate care symbols from exactly these values: handwash, no-bleach, iron-low, inside, no-dryer'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'required' => ['classification', 'materialGeneration', 'bom', 'packaging', 'care']
+                    ]
+                ]
+            ];
+
+            // Coba panggil Gemini API
+            $response = \Illuminate\Support\Facades\Http::withoutVerifying()
+                ->timeout(60)
+                ->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", $payload);
+
+            $json = null;
+
+            if ($response->successful()) {
+                $data = $response->json();
+                $content = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+                
+                // Bersihkan Markdown backticks jika AI bandel meskipun sudah diset response_mime_type
+                $content = preg_replace('/```json\s*/', '', $content);
+                $content = preg_replace('/```\s*/', '', $content);
+                $content = trim($content);
+                
+                // Parsing langsung
+                $structuredJson = json_decode($content, true);
+                
+                // Memetakan schema terstruktur yang baru ke format yang diharapkan frontend (visual.blade.php)
+                if ($structuredJson) {
+                    $json = [
+                        'pname' => $structuredJson['classification']['productType'] ?? null,
+                        'pclass' => $structuredJson['classification']['categoryGroup'] ?? null,
+                        'fabric' => $structuredJson['materialGeneration']['primaryMaterial']['mainFabric'] ?? null,
+                        'gsm' => $structuredJson['materialGeneration']['primaryMaterial']['gsm'] ?? null,
+                        'fabricReason' => $structuredJson['materialGeneration']['primaryMaterial']['reason'] ?? null,
+                        'construct' => $structuredJson['materialGeneration']['construction']['structureNotes'] ?? null,
+                        'bom' => $structuredJson['bom'] ?? [],
+                        'polySz' => $structuredJson['packaging']['polySz'] ?? null,
+                        'polyTh' => $structuredJson['packaging']['polyTh'] ?? null,
+                        'care_id' => $structuredJson['care']['id'] ?? null,
+                        'care_en' => $structuredJson['care']['en'] ?? null,
+                        'symbols' => $structuredJson['care']['symbols'] ?? []
+                    ];
+                }
+            }
+
+            // Log untuk debug jika terjadi fallback
+            if (!$json || !$response->successful()) {
+                \Illuminate\Support\Facades\Log::error('Gemini API Error / Fallback triggered.', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                    'parsed_json' => $json,
+                    'content_extracted' => $content ?? null
+                ]);
+            }
+
+            // FALLBACK: Jika API Gemini mengembalikan error atau JSON tidak valid, 
+            // kita gunakan mock data yang cerdas (berbasis konteks input) agar user tetap bisa lanjut.
+            if (!$json || !$response->successful()) {
+                $type = $request->input('type') ?: 'Apparel';
+                $market = $request->input('market') ?: 'Premium';
+                $note = $request->input('note') ?: '';
+                
+                $json = [
+                    'pname' => 'Clarity ' . ucfirst($type),
+                    'fabric' => stripos($market, 'premium') !== false ? 'Heavyweight Cotton 20s' : 'Cotton Combed 30s',
+                    'gsm' => stripos($market, 'premium') !== false ? '230 GSM' : '160 GSM',
+                    'pclass' => $type,
+                    'fabricReason' => "Berdasarkan konteks pasar '$market', material ini dipilih untuk memastikan durabilitas dan kenyamanan maksimal. " . $note,
+                    'polySz' => '35x45 cm',
+                    'polyTh' => '50 micron',
+                    'care_id' => 'Cuci dengan air dingin. Jangan gunakan pemutih. Setrika suhu rendah.',
+                    'care_en' => 'Wash cold. Do not bleach. Tumble dry low.',
+                    'bom' => [
+                        ['comp' => 'Main Fabric', 'spec' => 'Cotton', 'qty' => '1.2m', 'price' => 'Rp 45000']
+                    ],
+                    'symbols' => ['handwash', 'no-bleach', 'iron-low']
+                ];
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => $json,
+                'is_fallback' => !$response->successful() // Beri tahu frontend jika ini dari fallback
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Menampilkan daftar Visual Packs.
+     */
+    public function visualList()
+    {
+        $visuals = \App\Models\VisualPack::where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('business.visual_list', compact('visuals'));
+    }
+
+    /**
+     * Hapus Visual Pack
+     */
+    public function destroyVisual($id)
+    {
+        $visual = \App\Models\VisualPack::where('user_id', Auth::id())->findOrFail($id);
+        $visual->delete();
+        
+        return redirect()->route('visual.list')->with('success', 'Visual Pack berhasil dihapus.');
+    }
+
+    /**
      * Menampilkan halaman Visual Clarity Pack (VCP).
      */
-    public function clarityVisual()
+    public function clarityVisual($id = null)
     {
-        return view('business.visual');
+        $visual = null;
+        if ($id) {
+            $visual = \App\Models\VisualPack::where('user_id', Auth::id())->findOrFail($id);
+        }
+        $products = HppCalculation::where('user_id', Auth::id())->get();
+        return view('business.visual', compact('products', 'visual'));
     }
 
     /**
@@ -566,7 +857,46 @@ class BusinessController extends Controller
      */
     public function storeVisual(Request $request)
     {
-        // Logic untuk menyimpan data visual jika diperlukan di masa depan
-        return redirect()->back()->with('success', 'Data visual berhasil disimpan.');
+        $request->validate([
+            'name' => 'required|string',
+            'hpp_calculation_id' => 'nullable|exists:hpp_calculations,id',
+            'data' => 'nullable|array',
+            'images' => 'nullable|array'
+        ]);
+
+        $images = $request->input('images', []);
+        $savedImages = [];
+
+        foreach ($images as $key => $base64) {
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64, $type)) {
+                $base64 = substr($base64, strpos($base64, ',') + 1);
+                $type = strtolower($type[1]);
+                $base64 = str_replace(' ', '+', $base64);
+                $imageName = 'vcp_' . uniqid() . '.' . $type;
+                
+                \Illuminate\Support\Facades\Storage::disk('public')->put('visual/' . $imageName, base64_decode($base64));
+                $savedImages[$key] = '/storage/visual/' . $imageName;
+            } else {
+                // If it's already a URL/path, keep it
+                $savedImages[$key] = $base64;
+            }
+        }
+
+        $visual = \App\Models\VisualPack::updateOrCreate(
+            ['id' => $request->input('id')],
+            [
+                'user_id' => Auth::id(),
+                'hpp_calculation_id' => $request->input('hpp_calculation_id') ?: null,
+                'name' => $request->input('name'),
+                'data' => $request->input('data', []),
+                'images' => $savedImages
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Visual Pack saved successfully',
+            'id' => $visual->id
+        ]);
     }
 }

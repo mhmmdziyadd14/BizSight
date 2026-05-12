@@ -520,7 +520,7 @@
                 Analyzed by <strong>ClarityLabs System</strong> • HPP Precision Engine v2.0
             </div>
             <div class="footer-text" style="margin-top: 8px; letter-spacing: 1px;">
-                Developed by Muhammad Ziyad • Institut Teknologi Nasional Bandung
+                Developed by ClarityLabs • Business Intelligence Platform
             </div>
         </div>
     </div>

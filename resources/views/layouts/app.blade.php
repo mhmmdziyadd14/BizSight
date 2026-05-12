@@ -33,9 +33,32 @@
                     }
                 }
             });
+
+            if (window !== window.top) {
+                document.documentElement.classList.add('is-iframe');
+            }
         </script>
         
         <style>
+            html.is-iframe nav,
+            html.is-iframe footer,
+            html.is-iframe header.header-glow,
+            html.is-iframe .nav-container,
+            html.is-iframe #hppTabNav,
+            html.is-iframe .mb-8.flex.flex-col.md\:flex-row.md\:items-end,
+            html.is-iframe .mb-10.flex.flex-col.md\:flex-row.md\:items-end {
+                display: none !important;
+            }
+            html.is-iframe .pt-20 {
+                padding-top: 0 !important;
+            }
+            html.is-iframe .py-10 {
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }
+            html.is-iframe .min-h-screen {
+                min-height: auto !important;
+            }
             * {
                 font-family: 'Plus Jakarta Sans', sans-serif;
             }
@@ -99,7 +122,7 @@
         </style>
     </head>
     <body class="font-sans antialiased min-h-screen">
-        @php $isEmbed = request()->get('embed') == '1'; @endphp
+        @php $isEmbed = request()->get('embed') == '1' || request()->get('from') == 'hpp'; @endphp
         <div class="{{ $isEmbed ? '' : 'min-h-screen pt-20' }}">
             @if(!$isEmbed)
                 @include('layouts.navigation')
@@ -122,6 +145,7 @@
                     {{-- In embed mode: hide hpp_nav and top header section inside the content --}}
                     <style>
                         .nav-container, nav.mb-8, [id="hppTabNav"],
+                        .mb-8.flex.flex-col.md\:flex-row.md\:items-end,
                         .mb-10.flex.flex-col.md\:flex-row.md\:items-end { display: none !important; }
                         .py-10 { padding-top: 0.5rem !important; }
                     </style>
@@ -166,5 +190,73 @@
                 color: white;
             }
         </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Intercept all DELETE forms for smooth AJAX removal
+                const forms = document.querySelectorAll('form');
+                forms.forEach(form => {
+                    const methodInput = form.querySelector('input[name="_method"][value="DELETE"]');
+                    if (methodInput) {
+                        form.addEventListener('submit', async function(e) {
+                            // If the inline onsubmit (e.g. confirm) cancelled the event, do nothing
+                            if (e.defaultPrevented) return;
+                            
+                            e.preventDefault();
+                            
+                            const btn = form.querySelector('button[type="submit"]');
+                            const originalContent = btn ? btn.innerHTML : '';
+                            if (btn) {
+                                btn.disabled = true;
+                                btn.innerHTML = '<svg class="animate-spin h-4 w-4 text-current inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+                            }
+
+                            try {
+                                const response = await fetch(form.action, {
+                                    method: 'POST',
+                                    body: new FormData(form),
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    }
+                                });
+                                
+                                // Assume success if ok or redirected
+                                if (response.ok || response.redirected || response.status === 200 || response.status === 302) {
+                                    // Smoothly remove the row or card
+                                    const tr = form.closest('tr');
+                                    if (tr) {
+                                        tr.style.transition = 'all 0.4s ease';
+                                        tr.style.opacity = '0';
+                                        tr.style.transform = 'translateX(20px)';
+                                        setTimeout(() => tr.remove(), 400);
+                                    } else {
+                                        const card = form.closest('.bg-white, .bg-navy-900, .card');
+                                        if (card && card !== document.body) {
+                                            card.style.transition = 'all 0.4s ease';
+                                            card.style.opacity = '0';
+                                            card.style.transform = 'scale(0.95)';
+                                            setTimeout(() => card.remove(), 400);
+                                        } else {
+                                            window.location.reload();
+                                        }
+                                    }
+                                } else {
+                                    alert('Terjadi kesalahan saat menghapus data.');
+                                    if (btn) {
+                                        btn.disabled = false;
+                                        btn.innerHTML = originalContent;
+                                    }
+                                }
+                            } catch (error) {
+                                alert('Terjadi kesalahan jaringan.');
+                                if (btn) {
+                                    btn.disabled = false;
+                                    btn.innerHTML = originalContent;
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

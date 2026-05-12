@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'user',       // Set default sebagai user biasa
-            'is_approved' => false, // Set default sebagai belum di-approve
+            'is_approved' => true, // Auto-approve on registration
         ]);
 
         event(new Registered($user));

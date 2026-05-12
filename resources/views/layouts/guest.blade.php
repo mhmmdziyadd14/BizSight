@@ -24,6 +24,8 @@
             }
         </script>
         
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        
         <style>
             :root {
                 --ora: #F97316;
@@ -76,7 +78,7 @@
                 width: 40px; height: 40px; border-radius: 12px; 
                 background: rgba(249, 115, 22, 0.1); 
                 border: 1px solid rgba(249, 115, 22, 0.2);
-                display: flex; items-center; justify-content: center; color: var(--ora);
+                display: flex; align-items: center; justify-content: center; color: var(--ora);
                 flex-shrink: 0;
             }
             .benefit-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
@@ -122,8 +124,8 @@
                         </svg>
                     </div>
                     
-                    <h2 class="text-3xl font-black mb-4 leading-tight">Bisnis fashion yang jalan dengan data, bukan feeling.</h2>
-                    <p class="text-gray-400 mb-12 font-medium">Ribuan brand owner sudah menggunakan ClarityLab untuk mengambil keputusan yang lebih tajam.</p>
+                    <h2 class="text-3xl font-black mb-4 leading-tight">Decisions backed by clarity, not assumptions.</h2>
+                    <p class="text-gray-400 mb-12 font-medium">Dirancang dari pengalaman real di production &amp; product development — ClarityLab membantu lo melihat apa yang benar-benar terjadi di balik angka.</p>
 
                     <div class="benefit-item">
                         <div class="benefit-icon">
@@ -145,14 +147,71 @@
                         </div>
                     </div>
 
-                    <div class="testimonial">
-                        <p class="text-sm italic text-gray-300 leading-relaxed mb-4">"Sebelum pakai ClarityLab, saya nentuin harga dari feeling. Sekarang saya tahu persis berapa minimum price yang masih untung."</p>
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-500 font-bold text-xs">AR</div>
-                            <div>
-                                <p class="text-xs font-bold text-white">Andra R.</p>
-                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Brand Owner — Bandung</p>
-                            </div>
+                    <div x-data="{
+                        activeSlide: 0,
+                        slides: [
+                            {
+                                text: 'Menurut gue, sistem itu penting banget supaya kerjaan nggak bottleneck di owner.<br><br>Tanpa standar yang jelas, tim bakal terus nanya dan akhirnya semua tetap balik ke kita.',
+                                name: 'Lendra Radyan',
+                                role: 'Owner Auffan',
+                                initial: 'LR'
+                            },
+                            {
+                                text: 'Briefing yang ngasal itu efeknya ke mana-mana. Bisa buang waktu, buang bahan, bahkan jadi produk gagal yang akhirnya numpuk jadi stok mati.',
+                                name: 'Gegi',
+                                role: 'Owner Studiogegi & Ggoods',
+                                initial: 'G'
+                            },
+                            {
+                                text: 'Menurut gue kombinasi dua hal ini penting — data bikin performa bisnis jadi kelihatan, dan di saat yang sama bikin mental lebih ringan buat fokus ke strategi.',
+                                name: 'Gunantyo',
+                                role: 'Owner Portee',
+                                initial: 'G'
+                            },
+                            {
+                                text: 'Menurut gue, R&D yang matang itu harus sejalan sama hitungan biaya yang akurat sejak awal. Detail kecil yang sering dianggap sepele justru punya pengaruh ke hasil akhir.',
+                                name: 'Nanda Mareta',
+                                role: 'Owner Muna Mona',
+                                initial: 'NM'
+                            },
+                            {
+                                text: 'Lebih dari sekadar HPP, menurut gue setiap business owner memang harus paham keuangan secara utuh. Tapi pondasinya tetap mulai dari HPP — karena dari situ kita baru bisa bangun ke atas.',
+                                name: 'Artha Sanjaya',
+                                role: 'Owner Tusk Bag',
+                                initial: 'AS'
+                            }
+                        ],
+                        next() {
+                            this.activeSlide = this.activeSlide === this.slides.length - 1 ? 0 : this.activeSlide + 1;
+                        },
+                        init() {
+                            setInterval(() => this.next(), 5000);
+                        }
+                    }" class="testimonial relative overflow-hidden pb-8">
+                        <div class="relative w-full min-h-[160px]">
+                            <template x-for="(slide, index) in slides" :key="index">
+                                <div x-show="activeSlide === index" 
+                                     x-transition:enter="transition ease-out duration-500" 
+                                     x-transition:enter-start="opacity-0 translate-x-4" 
+                                     x-transition:enter-end="opacity-100 translate-x-0" 
+                                     x-transition:leave="transition ease-in duration-300 absolute inset-0" 
+                                     x-transition:leave-start="opacity-100 translate-x-0" 
+                                     x-transition:leave-end="opacity-0 -translate-x-4">
+                                    <p class="text-sm italic text-gray-300 leading-relaxed mb-4" x-html="'&quot;' + slide.text + '&quot;'"></p>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-500 font-bold text-xs" x-text="slide.initial"></div>
+                                        <div>
+                                            <p class="text-xs font-bold text-white" x-text="slide.name"></p>
+                                            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider" x-text="slide.role"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="absolute bottom-4 left-6 flex gap-1.5 z-10">
+                            <template x-for="(slide, index) in slides" :key="index">
+                                <button @click="activeSlide = index" :class="{'w-4 bg-orange-500': activeSlide === index, 'w-1.5 bg-gray-600': activeSlide !== index}" class="h-1.5 rounded-full transition-all duration-300"></button>
+                            </template>
                         </div>
                     </div>
                 </div>

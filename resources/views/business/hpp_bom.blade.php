@@ -211,7 +211,7 @@
                 @else
                     <div class="space-y-8 p-6">
                         @foreach($bomList as $index => $hpp)
-                            <div class="bom-card bg-white dark:bg-navy-900 border border-orange-100 dark:border-orange-500/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
+                            <div x-data="{ multiplier: 1, formatRp(num) { return 'Rp' + Math.round(num).toLocaleString('id-ID'); }, formatNum(num) { return Number(num).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}); } }" class="bom-card bg-white dark:bg-navy-900 border border-orange-100 dark:border-orange-500/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
                                 <!-- Card Header -->
                                 <div class="bg-orange-50 dark:bg-navy-950 px-8 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-orange-200/60 dark:border-orange-500/10 transition-colors">
                                     <div class="flex items-center gap-4">
@@ -226,7 +226,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-3">
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <!-- Multiplier Input -->
+                                        <div class="flex items-center gap-2 mr-2 bg-white dark:bg-navy-900 rounded-lg p-1.5 border border-orange-200 dark:border-orange-500/20 shadow-sm">
+                                            <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-2">Kuantitas</label>
+                                            <input type="number" x-model.number="multiplier" min="1" class="w-16 h-7 text-center text-xs font-bold text-navy-900 dark:text-white bg-orange-50 dark:bg-navy-950 border-none rounded focus:ring-0" style="padding: 0;">
+                                        </div>
+                                        
                                         <a href="{{ route('hpp.show', $hpp->id) }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider text-orange-600 dark:text-orange-300 hover:text-orange-700 dark:hover:text-orange-200 border border-orange-500/30 hover:border-orange-400 transition-all group">
                                             <span>Lihat Detail</span>
                                             <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,13 +289,13 @@
                                                         @endif
                                                     </td>
                                                     <td class="py-4 px-6 text-right font-mono font-bold text-navy-800 dark:text-slate-300">
-                                                        {{ number_format($item->usage_amount, 2, ',', '.') }}
+                                                        <span x-text="formatNum({{ $item->usage_amount }} * (multiplier || 1))">{{ number_format($item->usage_amount, 2, ',', '.') }}</span>
                                                     </td>
                                                     <td class="py-4 px-6 text-right font-mono font-bold text-navy-800 dark:text-slate-300">
                                                         Rp{{ number_format($item->material->price, 0, ',', '.') }}
                                                     </td>
                                                     <td class="py-4 px-6 text-right font-mono font-bold text-orange-600 dark:text-orange-400">
-                                                        Rp{{ number_format($item->subtotal_cost, 0, ',', '.') }}
+                                                        <span x-text="formatRp({{ $item->subtotal_cost }} * (multiplier || 1))">Rp{{ number_format($item->subtotal_cost, 0, ',', '.') }}</span>
                                                     </td>
                                                     <td class="py-4 px-6">
                                                         <span class="inline-flex px-2 py-1 rounded-lg bg-orange-50 dark:bg-navy-950 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider border border-orange-500/10">
@@ -309,7 +315,7 @@
                                                     Total Bahan Baku:
                                                 </td>
                                                 <td class="py-4 px-6 text-right font-black text-orange-600 dark:text-orange-400 text-base">
-                                                    Rp{{ number_format($totalCost, 0, ',', '.') }}
+                                                    <span x-text="formatRp({{ $totalCost }} * (multiplier || 1))">Rp{{ number_format($totalCost, 0, ',', '.') }}</span>
                                                 </td>
                                                 <td class="py-4 px-6"></td>
                                             </tr>

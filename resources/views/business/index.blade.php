@@ -255,11 +255,11 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:h-[calc(100vh-12rem)]">
 
                 <!-- Left Panel - Input Form -->
-                <div class="lg:col-span-4">
-                    <div class="bg-white dark:bg-navy-900 rounded-3xl shadow-xl border border-orange-100 dark:border-orange-500/20 overflow-hidden sticky top-8 card-hover transition-colors duration-300">
+                <div class="lg:col-span-4 min-h-0 h-full flex flex-col">
+                    <div class="bg-white dark:bg-navy-900 rounded-3xl shadow-xl border border-orange-100 dark:border-orange-500/20 overflow-hidden flex-1 overflow-y-auto custom-scrollbar transition-colors duration-300">
                         <form action="{{ route('calculate') }}" method="POST" class="space-y-0" id="decisionEngineForm">
                             @csrf
 
@@ -306,10 +306,10 @@
                                     <!-- Toggle: Manual vs Existing -->
                                     <div class="flex gap-2 mb-3">
                                         <button type="button" class="product-id-toggle active flex-1 py-2 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-white bg-gradient-orange transition-all" data-id-type="manual">
-                                            + Buat Baru
+                                            + New Produk
                                         </button>
                                         <button type="button" class="product-id-toggle flex-1 py-2 px-3 rounded-lg font-bold text-xs uppercase tracking-wider text-orange-600 bg-orange-100 hover:bg-orange-200 transition-all" data-id-type="existing">
-                                            📋 Pilih Existing
+                                            📋 Existing
                                         </button>
                                     </div>
                                     <input type="hidden" name="product_id_source" id="productIdSource" value="manual">
@@ -597,8 +597,8 @@
                 </div>
 
                 <!-- Right Panel - Results -->
-                <div class="lg:col-span-8">
-                    <div class="mb-8 bg-white dark:bg-navy-900 rounded-3xl p-6 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors fade-in-up">
+                <div class="lg:col-span-8 min-h-0 h-full flex flex-col overflow-y-auto custom-scrollbar pb-8">
+                    <div class="mb-8 bg-white dark:bg-navy-900 rounded-3xl p-6 shadow-sm border border-orange-100 dark:border-orange-500/20 transition-colors fade-in-up flex-shrink-0">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 bg-gradient-orange rounded-xl flex items-center justify-center">
@@ -643,15 +643,7 @@
         </div>
     </div>
 
-    <footer class="bg-white dark:bg-navy-950 border-t border-orange-100 dark:border-navy-800 transition-colors py-10 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="text-xl font-extrabold text-navy-800 dark:text-white mb-4 italic">
-                <span class="text-gradient-orange\">Clarity</span>Labs
-            </div>
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">© 2026 Developed by Muhammad Ziyad
-                • ITENAS Bandung</p>
-        </div>
-    </footer>
+
 
     <script>
         // ============= DECISION ENGINE CALCULATION (PDF 1) =============

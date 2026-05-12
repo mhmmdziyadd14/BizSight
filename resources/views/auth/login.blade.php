@@ -36,11 +36,11 @@
         <!-- Remember Me & Forgot Password -->
         <div class="flex items-center justify-between">
             <label class="flex items-center gap-2 cursor-pointer group">
-                <input type="checkbox" name="remember" class="rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500/50">
-                <span class="text-xs font-bold text-gray-400 group-hover:text-gray-200 transition-colors">Ingat saya</span>
+                <input type="checkbox" name="remember" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
+                <span class="text-xs font-bold text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">Ingat saya</span>
             </label>
             @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-xs font-bold text-orange-500 hover:text-orange-400 transition-colors">Lupa password?</a>
+                <a href="{{ route('password.request') }}" class="text-xs font-bold text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-400 transition-colors">Lupa password?</a>
             @endif
         </div>
 

@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'approved' => \App\Http\Middleware\CheckAppApproved::class,
+            'approved' => \App\Http\Middleware\DummyApproved::class,
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'feature' => \App\Http\Middleware\CheckFeatureAccess::class,
         ]);

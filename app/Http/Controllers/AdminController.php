@@ -14,7 +14,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $users = User::with('accesses')->orderBy('is_approved', 'asc')->get();
+        $users = User::with('accesses')->orderBy('created_at', 'desc')->get();
         $allCalculations = BusinessCalculation::with('user')->orderBy('created_at', 'desc')->get();
 
         // Hitung statistik per fitur
@@ -74,5 +74,14 @@ class AdminController extends Controller
     {
         $allCalculations = BusinessCalculation::with('user')->get();
         return view('admin.product', compact('allCalculations'));
+    }
+
+    /**
+     * Halaman daftar Product Notifications (Notify Me).
+     */
+    public function notifications()
+    {
+        $notifications = \App\Models\ProductNotification::latest()->get();
+        return view('admin.notifications', compact('notifications'));
     }
 }

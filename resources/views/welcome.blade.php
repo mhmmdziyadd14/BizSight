@@ -82,7 +82,7 @@
         @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } }
     </style>
 </head>
-<body x-data="{ checkoutModal: false, selectedProduct: null, selectedPrice: 0 }">
+<body x-data="{ checkoutModal: false, selectedProduct: null, selectedPrice: 0, notifyModal: false, notifyProduct: '' }">
 
     <!-- Navigation -->
     <nav class="glass-nav fixed top-0 left-0 right-0 z-50">
@@ -196,6 +196,66 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Segera Hadir Section -->
+            <div class="mt-16 pt-16 border-t border-gray-100 dark:border-gray-800">
+                <div class="mb-12">
+                    <h3 class="text-2xl font-extrabold dark:text-white mb-4">Segera Hadir</h3>
+                    <p class="text-gray-500 dark:text-gray-400">Tools baru yang sedang dalam tahap pengembangan untuk melengkapi ekosistem ClarityLab.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Card 1: ClarityLabs Control -->
+                    <div class="pcard relative">
+                        <div class="absolute top-6 right-6 text-xs font-bold text-gray-400">Coming soon</div>
+                        <div class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-center text-gray-500 mb-6 border border-gray-200 dark:border-gray-700">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                        </div>
+                        <h3 class="text-xl font-extrabold mb-4 dark:text-white">ClarityLabs Control</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Inventory control system — tau kapan restock, hindari dead stock, jaga cashflow tetap sehat.</p>
+                        
+                        <div class="mb-8">
+                            <div class="flex justify-between text-xs font-bold mb-2">
+                                <span class="text-gray-500 dark:text-gray-400">Dalam pengembangan</span>
+                                <span class="text-orange-500">65%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-orange-500 h-full rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
+                            <p class="text-sm font-bold text-gray-500 dark:text-gray-400">Harga menyusul</p>
+                            <button @click="notifyModal = true; notifyProduct = 'ClarityLabs Control'" class="text-sm font-bold text-gray-900 dark:text-white hover:text-orange-500 transition-colors">Notify me</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Mockup Design System -->
+                    <div class="pcard relative">
+                        <div class="absolute top-6 right-6 text-xs font-bold text-gray-400">Coming soon</div>
+                        <div class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-center text-gray-500 mb-6 border border-gray-200 dark:border-gray-700">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </div>
+                        <h3 class="text-xl font-extrabold mb-4 dark:text-white">Mockup Design System</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Visual produk fashion yang profesional tanpa sesi foto mahal. Tingkatkan perceived value, percepat konten.</p>
+                        
+                        <div class="mb-8">
+                            <div class="flex justify-between text-xs font-bold mb-2">
+                                <span class="text-gray-500 dark:text-gray-400">Dalam pengembangan</span>
+                                <span class="text-orange-400">40%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-orange-400 h-full rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
+                            <p class="text-sm font-bold text-gray-500 dark:text-gray-400">Harga menyusul</p>
+                            <button @click="notifyModal = true; notifyProduct = 'Mockup Design System'" class="text-sm font-bold text-gray-900 dark:text-white hover:text-orange-500 transition-colors">Notify me</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -270,6 +330,104 @@
         </div>
     </section>
 
+    <!-- Testimonials (Clarity Gap) -->
+    <section id="testimonials" class="py-24 px-6 bg-orange-50/30 dark:bg-navy-950/50 transition-colors border-t border-orange-100 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 max-w-2xl">
+                <p class="section-eyebrow">Clarity Gap</p>
+                <h2 class="section-title dark:text-white">From Real Operators</h2>
+                <p class="hero-sub">Unfiltered insights from business owners — tentang apa yang sebenarnya terjadi di balik angka, sistem, dan keputusan sehari-hari.</p>
+            </div>
+            
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="pcard break-inside-avoid mb-8">
+                    <div class="mb-6 text-orange-500 opacity-40">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        “Menurut gue, sistem itu penting banget supaya kerjaan nggak bottleneck di owner.<br><br>Tanpa standar yang jelas, tim bakal terus nanya dan akhirnya semua tetap balik ke kita. Di titik tertentu, kita sadar kalau bisnis ini nggak bisa jalan sendiri kalau semuanya masih bergantung ke owner.”
+                    </p>
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-orange flex items-center justify-center text-white font-bold text-sm">LR</div>
+                        <div>
+                            <p class="font-extrabold text-gray-900 dark:text-white text-sm">Lendra Radyan</p>
+                            <p class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-0.5">Owner Auffan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 (Long) -->
+                <div class="pcard break-inside-avoid mb-8">
+                    <div class="mb-6 text-orange-500 opacity-40">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        “Briefing yang ngasal itu efeknya ke mana-mana. Bisa buang waktu, buang bahan, bahkan jadi produk gagal yang akhirnya numpuk jadi stok mati.<br><br>Vendor itu eksekutor — kalau kita nggak kasih panduan yang jelas, mereka pasti jalan pakai asumsi. Dan di situ biasanya mulai muncul revisi bolak-balik yang nggak ada habisnya.<br><br>Ujungnya, semua jadi lambat. Kita nggak bisa scale kalau setiap detail harus dijelasin terus-terusan.”
+                    </p>
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-orange flex items-center justify-center text-white font-bold text-sm">G</div>
+                        <div>
+                            <p class="font-extrabold text-gray-900 dark:text-white text-sm">Gegi</p>
+                            <p class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-0.5">Owner Studiogegi & Ggoods</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="pcard break-inside-avoid mb-8">
+                    <div class="mb-6 text-orange-500 opacity-40">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        “Menurut gue kombinasi dua hal ini penting — data bikin performa bisnis jadi kelihatan, dan di saat yang sama bikin mental lebih ringan buat fokus ke strategi.<br><br>Kalau semuanya masih berceceran, kita bukan cuma susah ambil keputusan, tapi juga capek duluan mikirin hal-hal kecil.”
+                    </p>
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-orange flex items-center justify-center text-white font-bold text-sm">G</div>
+                        <div>
+                            <p class="font-extrabold text-gray-900 dark:text-white text-sm">Gunantyo</p>
+                            <p class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-0.5">Owner Portee</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 4 -->
+                <div class="pcard break-inside-avoid mb-8">
+                    <div class="mb-6 text-orange-500 opacity-40">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        “Menurut gue, R&D yang matang itu harus sejalan sama hitungan biaya yang akurat sejak awal.<br><br>Detail kecil yang sering dianggap sepele justru punya pengaruh ke hasil akhir. Kalau dari awal nggak dihitung dengan benar, efeknya bakal kerasa ke kualitas dan profit di belakang.”
+                    </p>
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-orange flex items-center justify-center text-white font-bold text-sm">NM</div>
+                        <div>
+                            <p class="font-extrabold text-gray-900 dark:text-white text-sm">Nanda Mareta</p>
+                            <p class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-0.5">Owner Muna Mona</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 5 (Long) -->
+                <div class="pcard break-inside-avoid mb-8">
+                    <div class="mb-6 text-orange-500 opacity-40">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        “Lebih dari sekadar HPP, menurut gue setiap business owner memang harus paham keuangan secara utuh. Tapi pondasinya tetap mulai dari HPP — karena dari situ kita baru bisa bangun ke HPP penjualan, laporan keuangan, sampai ke arah financial forecasting.<br><br>Tanpa dasar itu, semua keputusan di atasnya jadi nggak punya pijakan yang jelas.<br><br>Dan yang gue lihat, masalahnya bukan karena owner nggak mau ngerti — tapi karena nggak ada tools yang bantu nge-breakdown angka itu jadi sesuatu yang benar-benar keliatan dan bisa dipakai buat ambil keputusan.”
+                    </p>
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-orange flex items-center justify-center text-white font-bold text-sm">AS</div>
+                        <div>
+                            <p class="font-extrabold text-gray-900 dark:text-white text-sm">Artha Sanjaya</p>
+                            <p class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-0.5">Owner Tusk Bag</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="py-24 px-6 bg-gray-50 dark:bg-navy-950 transition-colors">
         <div class="max-w-7xl mx-auto">
@@ -338,6 +496,51 @@
             </form>
         </div>
     </div>
+
+    <!-- Notify Modal -->
+    <div x-show="notifyModal" class="fixed inset-0 z-[100] flex items-center justify-center px-4" x-cloak>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="notifyModal = false"></div>
+        <div class="bg-white dark:bg-navy-900 w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
+            <h2 class="text-2xl font-black mb-2 dark:text-white">Dapatkan Notifikasi</h2>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">Kami akan kabarin lo pas <span class="font-black text-orange-500" x-text="notifyProduct"></span> udah rilis.</p>
+            
+            <form action="{{ route('notify.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="product_name" :value="notifyProduct">
+                
+                <div class="space-y-4 mb-8">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-2">Nama</label>
+                        <input type="text" name="name" required class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-2">No Telepon (WhatsApp)</label>
+                        <input type="tel" name="phone" required class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-2">Username Social Media (Opsional)</label>
+                        <input type="text" name="social_media" placeholder="Contoh: @username" class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none dark:text-white">
+                    </div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button type="button" @click="notifyModal = false" class="btn-secondary flex-1">Batal</button>
+                    <button type="submit" class="btn-primary flex-1 justify-center">Kabari Saya</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Flash Message -->
+    @if(session('success'))
+    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="fixed bottom-4 right-4 z-[110] bg-green-500 text-white px-6 py-4 rounded-xl shadow-lg flex items-center gap-4 transition-all duration-500" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span class="font-medium">{{ session('success') }}</span>
+        <button @click="show = false" class="text-white hover:text-green-200 focus:outline-none">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+    @endif
 
 </body>
 </html>

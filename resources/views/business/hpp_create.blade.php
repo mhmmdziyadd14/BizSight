@@ -86,13 +86,18 @@
                                         placeholder="Contoh: Kemeja Tactical V1" value="{{ old('name') }}">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-2 ml-1">Kategori Bisnis</label>
+                                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-2 ml-1">Kategori</label>
                                     <select name="category"
                                         class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                        <option value="Fashion" {{ old('category') === 'Fashion' ? 'selected' : '' }}>Fashion & Apparel</option>
-                                        <option value="F&B" {{ old('category') === 'F&B' ? 'selected' : '' }}>Culinary / F&B</option>
-                                        <option value="Furniture" {{ old('category') === 'Furniture' ? 'selected' : '' }}>Furniture</option>
-                                        <option value="Digital" {{ old('category') === 'Digital' ? 'selected' : '' }}>Digital Product</option>
+                                        <option value="Apparel & Clothing" {{ old('category') === 'Apparel & Clothing' ? 'selected' : '' }}>Apparel & Clothing</option>
+                                        <option value="Bags & Carry Goods" {{ old('category') === 'Bags & Carry Goods' ? 'selected' : '' }}>Bags & Carry Goods</option>
+                                        <option value="Footwear & Headwear" {{ old('category') === 'Footwear & Headwear' ? 'selected' : '' }}>Footwear & Headwear</option>
+                                        <option value="Tectical Gear & Accesories" {{ old('category') === 'Tectical Gear & Accesories' ? 'selected' : '' }}>Tectical Gear & Accesories</option>
+                                        <option value="Home Textile" {{ old('category') === 'Home Textile' ? 'selected' : '' }}>Home Textile</option>
+                                        <option value="Outdoor Gear" {{ old('category') === 'Outdoor Gear' ? 'selected' : '' }}>Outdoor Gear</option>
+                                        <option value="Creative Services" {{ old('category') === 'Creative Services' ? 'selected' : '' }}>Creative Services</option>
+                                        <option value="Digital Goods" {{ old('category') === 'Digital Goods' ? 'selected' : '' }}>Digital Goods</option>
+                                        <option value="Custom order/ CMT" {{ old('category') === 'Custom order/ CMT' ? 'selected' : '' }}>Custom order/ CMT</option>
                                     </select>
                                 </div>
                             </div>
@@ -160,7 +165,7 @@
                                     <h3 class="text-sm font-black text-navy-800 dark:text-white uppercase tracking-widest">Kalkulator Kebutuhan Bahan</h3>
                                 </div>
                                 <button type="button" id="addCalcCard"
-                                    class="bg-navy dark:bg-orange-500 text-white inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider hover:shadow-lg transition-all">
+                                    class="bg-navy-900 dark:bg-orange-500 text-white inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider hover:shadow-lg transition-all">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
                                     </svg>
@@ -191,34 +196,27 @@
                                         </div>
                                     </div>
 
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full text-left calc-card-table">
-                                            <thead class="bg-gray-50 dark:bg-navy-950/50 border-b border-gray-100 dark:border-white/5">
-                                                <tr class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
-                                                    <th class="px-6 py-4 text-center w-12">No</th>
-                                                    <th class="px-6 py-4">Deskripsi</th>
-                                                    <th class="px-6 py-4">Bahan</th>
-                                                    <th class="px-6 py-4">Warna</th>
-                                                    <th class="px-6 py-4 text-center">Panjang (cm)</th>
-                                                    <th class="px-6 py-4 text-center">Lebar (cm)</th>
-                                                    <th class="px-6 py-4 text-center">QTY</th>
-                                                    <th class="px-6 py-4 text-right">Hasil</th>
-                                                    <th class="px-6 py-4 text-center">Luas Bahan</th>
-                                                    <th class="px-6 py-4 text-right">Kebutuhan</th>
-                                                    <th class="px-6 py-4">Satuan</th>
-                                                    <th class="px-6 py-4 text-center w-12">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="divide-y divide-gray-50 dark:divide-white/5 calc-card-tbody">
-                                                <tr class="calc-row table-row-hover transition-colors">
-                                                    <td class="px-6 py-4 text-center">
-                                                        <span class="calc-row-number text-xs font-black text-navy-700 dark:text-gray-400">1</span>
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <input type="text" class="calc-description-input w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="Deskripsi">
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <select class="calc-material-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                    <div class="calc-card-table px-8 py-6">
+                                        <div class="calc-card-tbody space-y-6">
+                                            <div class="calc-row bg-white dark:bg-navy-950 p-6 rounded-2xl border border-gray-100 dark:border-white/5 relative">
+                                                <!-- Delete Button -->
+                                                <button type="button" class="calc-remove-row absolute top-6 right-6 text-red-500 hover:text-red-700 font-bold text-2xl transition-colors leading-none" aria-label="Hapus baris">×</button>
+                                                
+                                                <!-- Row 1 -->
+                                                <div class="grid grid-cols-12 gap-4 mb-4 pr-10">
+                                                    <div class="col-span-1">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">No.</label>
+                                                        <div class="h-10 flex items-center justify-center bg-gray-50 dark:bg-navy-900 rounded-xl font-black text-navy-700 dark:text-gray-400">
+                                                            <span class="calc-row-number">1</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-4">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Deskripsi</label>
+                                                        <input type="text" class="calc-description-input w-full bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="Deskripsi">
+                                                    </div>
+                                                    <div class="col-span-4">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Bahan</label>
+                                                        <select class="calc-material-select w-full bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
                                                             <option value="">-- Pilih Bahan --</option>
                                                             @foreach($materialsByName as $material)
                                                                 <option value="{{ json_encode($material) }}" data-unit="{{ $material['unit'] }}" data-name="{{ $material['name'] }}">
@@ -226,32 +224,48 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <select class="calc-color-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" disabled>
+                                                    </div>
+                                                    <div class="col-span-3">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2">Warna</label>
+                                                        <select class="calc-color-select w-full bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" disabled>
                                                             <option value="">-- Pilih Warna --</option>
                                                         </select>
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <input type="number" class="calc-length w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <input type="number" class="calc-width w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                    </td>
-                                                    <td class="px-6 py-4 text-center">
-                                                        <input type="number" class="calc-qty-input w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                    </td>
-                                                    <td class="px-6 py-4 text-right">
-                                                        <span class="calc-hasil-display text-sm font-black text-orange-600 dark:text-orange-500">0</span>
-                                                    </td>
-                                                    <td class="px-6 py-4 text-center">
-                                                        <input type="number" class="calc-luas-bahan-input w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                    </td>
-                                                    <td class="px-6 py-4 text-right">
-                                                        <span class="calc-kebutuhan-display text-sm font-black text-navy-700 dark:text-gray-300">0</span>
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <select class="calc-unit w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" disabled>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Row 2 -->
+                                                <div class="grid grid-cols-12 gap-4 items-end pr-10">
+                                                    <div class="col-span-2">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Panjang</label>
+                                                        <input type="number" class="calc-length w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                    </div>
+                                                    <div class="col-span-2">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Lebar</label>
+                                                        <input type="number" class="calc-width w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                    </div>
+                                                    <div class="col-span-1">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Qty</label>
+                                                        <input type="number" class="calc-qty-input w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                    </div>
+                                                    <div class="col-span-2">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Hasil</label>
+                                                        <div class="h-10 flex items-center justify-center bg-gray-50 dark:bg-navy-900 rounded-xl">
+                                                            <span class="calc-hasil-display text-sm font-black text-orange-600 dark:text-orange-500">0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-2">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Luas Bahan</label>
+                                                        <input type="number" class="calc-luas-bahan-input w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                    </div>
+                                                    <div class="col-span-2">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Kebutuhan</label>
+                                                        <div class="h-10 flex items-center justify-center bg-gray-50 dark:bg-navy-900 rounded-xl">
+                                                            <span class="calc-kebutuhan-display text-sm font-black text-navy-700 dark:text-gray-300">0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-1">
+                                                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Satuan</label>
+                                                        <select class="calc-unit w-full bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-1 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all text-center" disabled>
                                                             <option value="">-</option>
                                                             <option value="mL">mL</option>
                                                             <option value="L">L</option>
@@ -260,25 +274,22 @@
                                                             <option value="buah">buah</option>
                                                             <option value="pcs">pcs</option>
                                                             <option value="lembar">lembar</option>
-                                                            <option value="meter">meter</option>
+                                                            <option value="meter">m</option>
                                                             <option value="cm">cm</option>
                                                             <option value="roll">roll</option>
                                                             <option value="yard">yard</option>
                                                         </select>
-                                                    </td>
-                                                    <td class="px-6 py-4 text-center">
-                                                        <button type="button" class="calc-remove-row text-red-500 hover:text-red-700 font-bold text-2xl transition-colors" aria-label="Hapus baris">×</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Total Requirement Summary -->
                                     <div class="border-t border-gray-100 dark:border-white/5 px-8 py-5 bg-orange-50/50 dark:bg-orange-500/5 transition-colors">
                                         <div class="flex items-center justify-between">
                                             <span class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Estimasi Total Bahan Card Ini</span>
-                                            <span class="calc-card-total-kebutuhan text-xl font-black text-orange-600 dark:text-orange-500">Rp 0</span>
+                                            <span class="calc-card-total-kebutuhan text-xl font-black text-orange-600 dark:text-orange-500">0.00</span>
                                         </div>
                                     </div>
                                 </div>
@@ -327,7 +338,7 @@
                                                 <span class="row-number text-xs font-black text-navy-700 dark:text-gray-400">1</span>
                                             </td>
                                             <td class="px-6 py-5">
-                                                <span class="type-display text-[10px] font-black text-gray-500 bg-gray-100 dark:bg-navy-950 px-2 py-1 rounded-lg uppercase tracking-wider">-</span>
+                                                <span class="type-display text-[10px] font-black text-gray-500 bg-gray-100 dark:bg-navy-950 px-2 py-1 rounded-lg uppercase tracking-wider whitespace-nowrap">-</span>
                                             </td>
                                             <td class="px-6 py-5">
                                                 <select class="material-name-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
@@ -344,6 +355,10 @@
                                                 </select>
                                             </td>
                                             <td class="px-6 py-5">
+                                                <select class="source-card-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-1 mb-2 text-[9px] font-bold text-navy-800 dark:text-gray-400 focus:border-orange-500 focus:ring-0 transition-all">
+                                                    <option value="">- Manual -</option>
+                                                    <option value="0">Bahan #1</option>
+                                                </select>
                                                 <input type="number" step="0.01" name="usage_amounts[]"
                                                     class="usage-input w-20 text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
                                                     value="0">
@@ -373,7 +388,7 @@
                             <!-- Summary & Pricing Section -->
                             <div class="border-t border-gray-100 dark:border-white/5 px-8 py-8 bg-gray-50 dark:bg-navy-950/50 transition-colors">
                                 <div class="flex items-center gap-3 mb-8">
-                                    <div class="w-8 h-8 bg-navy dark:bg-orange-500 rounded-lg flex items-center justify-center shadow-md">
+                                    <div class="w-8 h-8 bg-navy-900 dark:bg-orange-500 rounded-lg flex items-center justify-center shadow-md">
                                         <span class="text-white text-xs font-bold">04</span>
                                     </div>
                                     <h3 class="text-sm font-black text-navy-800 dark:text-white uppercase tracking-widest">Perhitungan HPP & Harga Jual</h3>
@@ -402,14 +417,50 @@
                                                         value="{{ old('sewing_fee', 0) }}" min="0" placeholder="0">
                                                 </div>
                                             </div>
-                                            <div class="md:col-span-2">
-                                                <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Lainnya (Aksesoris/Kancing/dll)</label>
-                                                <div class="relative">
-                                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 text-xs font-bold">Rp</span>
-                                                    <input type="number" name="other_fees"
-                                                        class="fee-input w-full pl-10 bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
-                                                        value="{{ old('other_fees', 0) }}" min="0" placeholder="0">
+                                            <div class="md:col-span-2 mt-4 border-t border-gray-100 dark:border-white/5 pt-6">
+                                                <div class="flex items-center gap-2 mb-2">
+                                                    <div class="w-5 h-5 bg-navy-800 dark:bg-gray-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold">2</div>
+                                                    <label class="text-xs font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest">OVERHEAD INTELLIGENCE</label>
                                                 </div>
+                                                <p class="text-[10px] text-gray-500 mb-4">Pilih estimasi overhead per unit</p>
+                                                
+                                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                                                    <button type="button" class="overhead-btn border border-gray-200 dark:border-white/5 rounded-xl p-3 text-center transition-all bg-white dark:bg-navy-950" data-pct="0.10">
+                                                        <div class="flex justify-center mb-1"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+                                                        <div class="text-lg font-black text-navy-800 dark:text-white overhead-pct-text">10%</div>
+                                                        <div class="text-[9px] text-gray-500 overhead-desc-text">High Efficiency<br>(High Volume)</div>
+                                                    </button>
+                                                    <button type="button" class="overhead-btn border border-gray-200 dark:border-white/5 rounded-xl p-3 text-center transition-all bg-white dark:bg-navy-950" data-pct="0.15">
+                                                        <div class="flex justify-center mb-1"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></div>
+                                                        <div class="text-lg font-black text-navy-800 dark:text-white overhead-pct-text">15%</div>
+                                                        <div class="text-[9px] text-gray-500 overhead-desc-text">Lean<br>Operation</div>
+                                                    </button>
+                                                    <button type="button" class="overhead-btn border border-orange-500 rounded-xl p-3 text-center transition-all bg-orange-50 dark:bg-orange-500/10 active-overhead relative" data-pct="0.25">
+                                                        <div class="text-lg font-black text-orange-600 dark:text-orange-500 overhead-pct-text">25%</div>
+                                                        <div class="text-[9px] text-orange-500 overhead-desc-text">Recommended</div>
+                                                    </button>
+                                                    <button type="button" class="overhead-btn border border-gray-200 dark:border-white/5 rounded-xl p-3 text-center transition-all bg-white dark:bg-navy-950" data-pct="0.35">
+                                                        <div class="flex justify-center mb-1"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+                                                        <div class="text-lg font-black text-navy-800 dark:text-white overhead-pct-text">35%</div>
+                                                        <div class="text-[9px] text-gray-500 overhead-desc-text">Early Stage<br>(Inefficiencies)</div>
+                                                    </button>
+                                                </div>
+
+                                                <div class="bg-orange-50 dark:bg-orange-500/5 rounded-xl p-3 mb-4 flex gap-3 items-start border border-orange-100 dark:border-orange-500/20">
+                                                    <svg class="w-4 h-4 text-orange-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    <p class="text-[9px] text-gray-600 dark:text-gray-400">Overhead mencakup biaya listrik, bahan pendukung kecil, tenaga kerja tidak langsung, maintenance, dll.</p>
+                                                </div>
+
+                                                <div class="flex justify-between items-center border-t border-gray-100 dark:border-white/5 pt-4">
+                                                    <span class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest">OVERHEAD PER UNIT</span>
+                                                    <div class="text-right">
+                                                        <div class="text-xl font-black text-orange-600 dark:text-orange-500" id="overheadAmountDisplay">Rp 0</div>
+                                                        <div class="text-[10px] font-bold text-gray-400 mt-1" id="overheadCalculationDetail">(25% × Rp 0)</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <input type="hidden" name="other_fees" id="overheadInput" value="0" class="fee-input">
+                                                <input type="hidden" id="overheadPctInput" value="0.25">
                                             </div>
                                         </div>
                                     </div>
@@ -418,9 +469,11 @@
                                     <div class="bg-white dark:bg-navy-900 p-8 rounded-[32px] border border-gray-100 dark:border-white/5 shadow-sm space-y-6">
                                         <div class="flex justify-between items-center">
                                             <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em]">Target Margin (%)</label>
-                                            <span class="px-3 py-1 bg-orange-500/10 text-orange-600 dark:text-orange-500 rounded-lg text-lg font-black" id="currentMarginText">50%</span>
                                         </div>
-                                        <input type="range" id="targetMarginInput" min="5" max="90" step="5" value="50" class="w-full h-2 bg-gray-200 dark:bg-navy-950 rounded-lg appearance-none cursor-pointer accent-orange-500">
+                                        <div class="relative">
+                                            <input type="number" id="targetMarginInput" min="0" max="100" step="1" value="50" class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-lg font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all text-center">
+                                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">%</span>
+                                        </div>
                                         <input type="hidden" name="target_margin_percent" id="targetMarginValueInput" value="50">
                                         
                                         <div class="pt-6 border-t border-gray-100 dark:border-white/5 grid grid-cols-2 gap-4">
@@ -456,7 +509,7 @@
                                 </div>
                             </div>
 
-                            <div class="mt-10 flex flex-col md:flex-row items-center justify-between gap-6 bg-navy dark:bg-navy-900 p-8 rounded-[32px] transition-colors">
+                            <div class="mt-10 flex flex-col md:flex-row items-center justify-between gap-6 bg-navy-900 dark:bg-navy-900 p-8 rounded-[32px] transition-colors">
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
                                         <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
@@ -530,6 +583,25 @@
                 });
 
                 let totalFees = 0;
+                
+                const sablonFee = parseFloat(document.querySelector('input[name="screen_printing_fee"]').value) || 0;
+                const sewingFee = parseFloat(document.querySelector('input[name="sewing_fee"]').value) || 0;
+                const baseHpp = totalMaterials + sablonFee + sewingFee;
+                
+                const overheadPctInput = document.getElementById('overheadPctInput');
+                if (overheadPctInput) {
+                    const overheadPct = parseFloat(overheadPctInput.value) || 0;
+                    const overheadAmount = baseHpp * overheadPct;
+                    const overheadInput = document.getElementById('overheadInput');
+                    if (overheadInput) overheadInput.value = overheadAmount;
+                    
+                    const overheadDisplay = document.getElementById('overheadAmountDisplay');
+                    if (overheadDisplay) overheadDisplay.innerText = formatRupiah(overheadAmount);
+                    
+                    const overheadDetail = document.getElementById('overheadCalculationDetail');
+                    if (overheadDetail) overheadDetail.innerText = `(${(overheadPct * 100)}% × ${formatRupiah(baseHpp)})`;
+                }
+
                 feeInputs.forEach(input => { totalFees += parseFloat(input.value) || 0; });
 
                 const grandTotal = totalMaterials + totalFees;
@@ -557,7 +629,9 @@
 
                 if (targetMarginAmountDisplay) targetMarginAmountDisplay.innerText = formatRupiah(targetMarginAmount);
                 if (finalPriceDisplay) finalPriceDisplay.innerText = formatRupiah(finalPrice);
-                if (document.getElementById('currentMarginText')) document.getElementById('currentMarginText').innerText = (targetMarginInput?.value || 50) + '%';
+                
+                const targetMarginValueInput = document.getElementById('targetMarginValueInput');
+                if (targetMarginValueInput) targetMarginValueInput.value = targetMarginInput?.value || 50;
                 
                 const targetSellingPriceInput = document.getElementById('targetSellingPriceInput');
                 if (targetSellingPriceInput) targetSellingPriceInput.value = finalPrice;
@@ -636,6 +710,79 @@
 
             const targetMarginInput = document.getElementById('targetMarginInput');
             if (targetMarginInput) targetMarginInput.addEventListener('input', calculateTotals);
+
+            document.querySelectorAll('.overhead-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const target = e.currentTarget;
+                    document.querySelectorAll('.overhead-btn').forEach(b => {
+                        b.classList.remove('border-orange-500', 'bg-orange-50', 'dark:bg-orange-500/10', 'active-overhead');
+                        b.classList.add('border-gray-200', 'dark:border-white/5', 'bg-white', 'dark:bg-navy-950');
+                        
+                        const pctText = b.querySelector('.overhead-pct-text');
+                        if(pctText) {
+                            pctText.classList.remove('text-orange-600', 'dark:text-orange-500');
+                            pctText.classList.add('text-navy-800', 'dark:text-white');
+                        }
+                        
+                        const descText = b.querySelector('.overhead-desc-text');
+                        if(descText) {
+                            descText.classList.remove('text-orange-500');
+                            descText.classList.add('text-gray-500');
+                        }
+                    });
+                    
+                    target.classList.remove('border-gray-200', 'dark:border-white/5', 'bg-white', 'dark:bg-navy-950');
+                    target.classList.add('border-orange-500', 'bg-orange-50', 'dark:bg-orange-500/10', 'active-overhead');
+                    
+                    const tgtPctText = target.querySelector('.overhead-pct-text');
+                    if(tgtPctText) {
+                        tgtPctText.classList.remove('text-navy-800', 'dark:text-white');
+                        tgtPctText.classList.add('text-orange-600', 'dark:text-orange-500');
+                    }
+                    
+                    const tgtDescText = target.querySelector('.overhead-desc-text');
+                    if(tgtDescText) {
+                        tgtDescText.classList.remove('text-gray-500');
+                        tgtDescText.classList.add('text-orange-500');
+                    }
+                    
+                    document.getElementById('overheadPctInput').value = target.dataset.pct;
+                    calculateTotals();
+                });
+            });
+
+            function refreshCardSelects() {
+                const cards = document.querySelectorAll('.calc-card');
+                document.querySelectorAll('.source-card-select').forEach(select => {
+                    const currentVal = select.value;
+                    select.innerHTML = '<option value="">- Manual -</option>';
+                    cards.forEach((card, idx) => {
+                        const opt = document.createElement('option');
+                        opt.value = idx;
+                        opt.text = 'Bahan #' + (idx + 1);
+                        select.appendChild(opt);
+                    });
+                    if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) {
+                        select.value = currentVal;
+                    }
+                });
+            }
+
+            tableBody.addEventListener('change', (e) => {
+                if (e.target.classList.contains('source-card-select')) {
+                    const cardIndex = e.target.value;
+                    if (cardIndex !== "") {
+                        const card = document.querySelectorAll('.calc-card')[cardIndex];
+                        if (card) {
+                            const totalEl = card.querySelector('.calc-card-total-kebutuhan');
+                            const val = parseFloat(totalEl.innerText) || 0;
+                            const row = e.target.closest('.material-row');
+                            row.querySelector('.usage-input').value = val.toFixed(2);
+                            calculateTotals();
+                        }
+                    }
+                }
+            });
 
             function attachRemoveHandler(row) {
                 const btn = row.querySelector('.remove-row');
@@ -742,14 +889,24 @@
                     const selectedColor = colorSelect.selectedOptions[0];
                     if (selectedColor && selectedColor.value) {
                         const usage = parseFloat(row.querySelector('.calc-kebutuhan-display').innerText) || 0;
-                        const price = parseFloat(selectedColor.dataset.price) || 0;
-                        const vol = parseFloat(selectedColor.dataset.purchaseVolume) || 1;
-                        totalKebutuhan += (price / vol) * usage;
+                        totalKebutuhan += usage;
                         unit = unitSelect.value || '';
                     }
                 });
                 const totalEl = card.querySelector('.calc-card-total-kebutuhan');
-                if (totalEl) totalEl.innerText = formatRupiah(totalKebutuhan);
+                if (totalEl) totalEl.innerText = totalKebutuhan.toFixed(2);
+
+                const cardIndex = Array.from(document.querySelectorAll('.calc-card')).indexOf(card);
+                document.querySelectorAll('.material-row').forEach(row => {
+                    const sourceSelect = row.querySelector('.source-card-select');
+                    if (sourceSelect && sourceSelect.value === String(cardIndex)) {
+                        const usageInput = row.querySelector('.usage-input');
+                        if (usageInput) {
+                            usageInput.value = totalKebutuhan.toFixed(2);
+                            calculateTotals();
+                        }
+                    }
+                });
             }
 
             calcCardsContainer.addEventListener('input', (e) => {
@@ -789,7 +946,7 @@
 
             function attachCalcRowHandlers(row) {
                 row.querySelector('.calc-remove-row').addEventListener('click', () => {
-                    const tbody = row.closest('tbody');
+                    const tbody = row.closest('.calc-card-tbody');
                     const card = row.closest('.calc-card');
                     if (tbody.querySelectorAll('.calc-row').length > 1) {
                         row.remove();
@@ -804,7 +961,7 @@
             calcCardsContainer.addEventListener('click', (e) => {
                 if (e.target.closest('.add-calc-row-btn')) {
                     const card = e.target.closest('.calc-card');
-                    const tbody = card.querySelector('tbody');
+                    const tbody = card.querySelector('.calc-card-tbody');
                     const firstRow = tbody.querySelector('.calc-row');
                     const newRow = firstRow.cloneNode(true);
                     newRow.querySelectorAll('input').forEach(i => i.value = '');
@@ -828,10 +985,10 @@
             document.getElementById('addCalcCard').addEventListener('click', () => {
                 const firstCard = calcCardsContainer.querySelector('.calc-card');
                 const newCard = firstCard.cloneNode(true);
-                const tbody = newCard.querySelector('tbody');
+                const tbody = newCard.querySelector('.calc-card-tbody');
                 while (tbody.children.length > 1) tbody.removeChild(tbody.lastChild);
                 tbody.querySelectorAll('input').forEach(i => i.value = '');
-                newCard.querySelector('.calc-card-total-kebutuhan').innerText = 'Rp 0';
+                newCard.querySelector('.calc-card-total-kebutuhan').innerText = '0.00';
                 newCard.querySelector('.calc-hasil-display').innerText = '0';
                 newCard.querySelector('.calc-kebutuhan-display').innerText = '0';
                 newCard.querySelector('.calc-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
@@ -840,6 +997,7 @@
                 newCard.querySelectorAll('.calc-row').forEach(row => attachCalcRowHandlers(row));
                 calcCardsContainer.appendChild(newCard);
                 refreshCalcCardLabels();
+                refreshCardSelects();
             });
 
             // =============================================

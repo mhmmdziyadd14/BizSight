@@ -12,12 +12,15 @@ Route::get('/', function () {
     return view('welcome', compact('products'));
 })->name('welcome');
 
+// Product Notification
+Route::post('/notify', [\App\Http\Controllers\ProductNotificationController::class, 'store'])->name('notify.store');
+
 // Midtrans Webhook (No CSRF)
 Route::post('/api/midtrans/callback', [PaymentController::class, 'callback'])->name('midtrans.callback')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 // Middleware Auth
-Route::middleware(['auth', 'verified', 'approved'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
 
@@ -34,6 +37,9 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
         // Rute untuk Approve User (WAJIB ADA untuk tombol Grant Access)
         Route::patch('/users/{id}/approve', [AdminController::class, 'approve'])->name('admin.users.approve');
         Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+
+        // Product Notifications
+        Route::get('/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');
     });
 
     // --- FITUR BUSINESS & HPP (Profit Clarity Calculator - PCC) ---
@@ -73,8 +79,11 @@ Route::middleware(['auth', 'verified', 'approved'])->group(function () {
 
     // --- FITUR VISUAL CLARITY PACK (VCP) ---
     Route::middleware('feature:VCP')->group(function () {
-        Route::get('/clarity-visual', [BusinessController::class, 'clarityVisual'])->name('clarity.visual');
+        Route::get('/clarity-visual/list', [BusinessController::class, 'visualList'])->name('visual.list');
+        Route::get('/clarity-visual/{id?}', [BusinessController::class, 'clarityVisual'])->name('clarity.visual');
         Route::post('/business/visual', [BusinessController::class, 'storeVisual'])->name('business.store-visual');
+        Route::post('/clarity-visual/analyze', [BusinessController::class, 'analyzeImage'])->name('visual.analyze');
+        Route::delete('/business/visual/{id}', [BusinessController::class, 'destroyVisual'])->name('visual.destroy');
         Route::get('/download-template', function () {
             return response()->json(['status' => 'success', 'message' => 'Resource siap']);
         })->name('download.template');

@@ -1,590 +1,465 @@
-{{-- File: business-viability-report-print.blade.php --}}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Business Report #{{ $calc->id }}</title>
+    <title>Decision Engine Report #{{ $calc->id }}</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
-        
-        * {
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            background: #ffffff;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            color: #1E293B;
+            font-size: 13px;
         }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #FEF3C7 0%, #FFFFFF 50%, #F1F5F9 100%);
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
-        
-        .report-container {
-            max-width: 900px;
+        .container {
+            width: 100%;
             margin: 0 auto;
-            background: white;
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            border: 1px solid rgba(249, 115, 22, 0.2);
         }
-        
-        /* Header Section */
-        .report-header {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-            padding: 32px 40px;
-            border-bottom: 4px solid #F97316;
+        /* Header */
+        table.header-table {
+            width: 100%;
+            background-color: #0F172A;
+            color: #ffffff;
+            padding: 40px 30px;
+            border-bottom: 5px solid #F97316;
         }
-        
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        
-        .logo-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
-        }
-        
-        .logo-icon svg {
-            width: 32px;
-            height: 32px;
-            color: white;
-        }
-        
-        .logo-text h1 {
-            font-size: 28px;
+        .header-title {
+            font-size: 32px;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            color: white;
         }
-        
-        .logo-text h1 span {
-            background: linear-gradient(135deg, #F97316, #F59E0B);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .header-title span {
+            color: #F97316;
         }
-        
-        .logo-text p {
-            font-size: 11px;
-            font-weight: 600;
+        .header-subtitle {
+            font-size: 13px;
             color: #F59E0B;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-        
-        .report-title {
-            border-top: 1px solid rgba(249, 115, 22, 0.3);
-            padding-top: 20px;
             margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
         }
-        
-        .report-title h2 {
-            font-size: 24px;
-            font-weight: 800;
-            color: white;
-            letter-spacing: -0.3px;
+        .report-info {
+            text-align: right;
         }
-        
-        .report-title p {
+        .report-info h2 {
+            font-size: 22px;
+            margin: 0;
+            color: #ffffff;
+        }
+        .report-info p {
             font-size: 13px;
             color: #94A3B8;
             margin-top: 8px;
         }
         
-        /* Product Info Cards */
-        .product-info {
-            padding: 24px 40px;
-            background: #F8FAFC;
+        /* Info Cards */
+        table.info-table {
+            width: 100%;
+            background-color: #F8FAFC;
             border-bottom: 1px solid #E2E8F0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
         }
-        
-        .info-item {
-            flex: 1;
-            min-width: 200px;
+        table.info-table td {
+            padding: 20px 30px;
+            width: 33.33%;
+            vertical-align: top;
+            border-right: 1px solid #E2E8F0;
         }
-        
+        table.info-table td:last-child {
+            border-right: none;
+        }
         .info-label {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 800;
             color: #F97316;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            display: block;
         }
-        
         .info-value {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: bold;
             color: #0F172A;
+            display: block;
+        }
+
+        /* Content section */
+        .content-section {
+            padding: 30px;
         }
         
-        /* Status Badge */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            border-radius: 60px;
-            font-weight: 800;
-            font-size: 14px;
+        .section-header {
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #F97316;
+            display: block;
         }
-        
-        .status-healthy {
-            background: linear-gradient(135deg, #10B98110 0%, #05966920 100%);
-            color: #059669;
-            border: 1px solid #10B98130;
-        }
-        
-        .status-fragile {
-            background: linear-gradient(135deg, #F59E0B10 0%, #F9731620 100%);
-            color: #F59E0B;
-            border: 1px solid #F9731630;
-        }
-        
-        .status-critical {
-            background: linear-gradient(135deg, #EF444410 0%, #DC262620 100%);
-            color: #DC2626;
-            border: 1px solid #EF444430;
-        }
-        
-        /* Table Section */
-        .table-section {
-            padding: 32px 40px;
-        }
-        
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        
-        .section-title .badge {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #F97316, #F59E0B);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .section-badge {
+            background-color: #F97316;
             color: white;
-            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 8px;
         }
-        
-        .section-title h3 {
-            font-size: 18px;
-            font-weight: 800;
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
             color: #0F172A;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Panels */
+        .panel {
+            background-color: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            page-break-inside: avoid;
         }
         
-        table {
+        /* Hero */
+        .hero-panel {
+            background-color: #F97316;
+            color: white;
+            border: none;
+        }
+        .hero-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        .hero-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Status colors */
+        .color-critical { color: #DC2626; }
+        .color-fragile { color: #D97706; }
+        .color-healthy { color: #10B981; }
+
+        /* Tables inside panels */
+        table.grid-table {
             width: 100%;
             border-collapse: collapse;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-        
-        th {
-            background: linear-gradient(135deg, #FEF3C7 0%, #FFEDD5 100%);
-            padding: 14px 20px;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #F97316;
-            border-bottom: 2px solid #F97316;
-            text-align: left;
+        table.grid-table td {
+            vertical-align: top;
+            padding: 10px;
         }
-        
-        td {
-            padding: 14px 20px;
-            font-size: 14px;
-            color: #1E293B;
-            border-bottom: 1px solid #F1F5F9;
+        table.cost-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        
-        tr:last-child td {
-            border-bottom: none;
+        table.cost-table td {
+            padding: 8px 0;
+            font-size: 13px;
         }
-        
-        tr:hover td {
-            background: #FEF3C7;
-        }
-        
-        .text-right {
-            text-align: right;
-        }
-        
-        .field-name {
-            font-weight: 700;
-            color: #0F172A;
-        }
-        
-        .value-positive {
-            color: #10B981;
-            font-weight: 800;
-        }
-        
-        .value-negative {
-            color: #EF4444;
-            font-weight: 800;
-        }
-        
-        /* Analysis Cards */
-        .analysis-section {
-            margin: 0 40px 32px 40px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        
-        .analysis-card {
-            background: linear-gradient(135deg, #FEF3C7 0%, #FFEDD5 100%);
-            border-radius: 20px;
-            padding: 24px;
-        }
-        
-        .analysis-card h4 {
-            font-size: 11px;
-            font-weight: 800;
-            color: #F97316;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-        
-        .analysis-card p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #1E293B;
-            font-weight: 500;
-        }
-        
-        .action-card {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-            border-radius: 20px;
-            padding: 24px;
-        }
-        
-        .action-card h4 {
-            font-size: 11px;
-            font-weight: 800;
-            color: #F97316;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-        
-        .action-card p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: white;
-            font-weight: 500;
-        }
-        
-        /* Profit Summary */
-        .profit-summary {
-            margin: 0 40px 32px 40px;
-            background: linear-gradient(135deg, #F97316 0%, #F59E0B 100%);
-            border-radius: 20px;
-            padding: 20px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        
-        .profit-item {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .profit-label {
-            font-size: 10px;
-            font-weight: 800;
-            color: rgba(255, 255, 255, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        
-        .profit-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: white;
-        }
-        
-        /* Footer */
-        .report-footer {
-            padding: 24px 40px;
-            background: #F8FAFC;
+        .border-t {
             border-top: 1px solid #E2E8F0;
-            text-align: center;
         }
         
-        .footer-text {
+        /* Lists */
+        .list-item {
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .list-risk {
+            background-color: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            border-left: 4px solid #DC2626;
+        }
+        .list-action {
+            background-color: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            color: #065F46;
+            border-left: 4px solid #10B981;
+        }
+        .list-driver {
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            color: #1E293B;
+        }
+
+        .snapshot-panel {
+            background-color: #0F172A;
+            color: white;
+        }
+        table.snapshot-grid {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table.snapshot-grid td {
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            width: 50%;
+        }
+        .snap-label {
+            font-size: 11px;
+            color: #FDBA74;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .snap-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            padding: 24px 30px;
+            text-align: center;
             font-size: 11px;
             color: #64748B;
-            font-weight: 500;
+            border-top: 1px solid #E2E8F0;
+            background-color: #F8FAFC;
         }
-        
-        .footer-text strong {
+        .footer strong {
             color: #F97316;
-            font-weight: 700;
-        }
-        
-        /* Print Styles */
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            
-            .report-container {
-                box-shadow: none;
-                border-radius: 0;
-            }
-            
-            tr:hover td {
-                background: none;
-            }
-            
-            .analysis-card, .action-card, .profit-summary {
-                break-inside: avoid;
-            }
-            
-            @page {
-                size: A4;
-                margin: 2cm;
-            }
-        }
-        
-        /* Responsive */
-        @media (max-width: 640px) {
-            .report-header {
-                padding: 24px;
-            }
-            
-            .product-info {
-                padding: 20px;
-                flex-direction: column;
-                gap: 16px;
-            }
-            
-            .table-section {
-                padding: 24px;
-            }
-            
-            .analysis-section {
-                margin: 0 20px 24px 20px;
-                grid-template-columns: 1fr;
-            }
-            
-            .profit-summary {
-                margin: 0 20px 24px 20px;
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .report-footer {
-                padding: 20px;
-            }
-            
-            th, td {
-                padding: 10px 12px;
-                font-size: 12px;
-            }
-            
-            .profit-value {
-                font-size: 20px;
-            }
+            font-weight: 800;
         }
     </style>
 </head>
 <body>
-    <div class="report-container">
+    @php
+        $margin = $calc->net_margin_percent;
+        $statusColor = $calc->status_label === 'CRITICAL' ? 'color-critical' : ($calc->status_label === 'FRAGILE' ? 'color-fragile' : 'color-healthy');
+    @endphp
+
+    <div class="container">
         <!-- Header -->
-        <div class="report-header">
-            <div class="logo-section">
-                <div class="logo-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                    </svg>
-                </div>
-                <div class="logo-text">
-                    <h1><span>Clarity</span>Labs</h1>
-                    <p>Business Viability Report</p>
-                </div>
-            </div>
-            <div class="report-title">
-                <h2>Business Viability Report</h2>
-                <p>Generated on {{ now()->format('d F Y, H:i') }}</p>
-            </div>
-        </div>
-        
-        <!-- Product Info -->
-        <div class="product-info">
-            <div class="info-item">
-                <div class="info-label">Product Name</div>
-                <div class="info-value">{{ $calc->product_name }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Analysis Date</div>
-                <div class="info-value">{{ $calc->created_at->format('d M Y, H:i') }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Report ID</div>
-                <div class="info-value">#{{ $calc->id }}</div>
-            </div>
-        </div>
-        
-        <!-- Financial Details Table -->
-        <div class="table-section">
-            <div class="section-title">
-                <div class="badge">01</div>
-                <h3>Financial Analysis</h3>
-            </div>
+        <table class="header-table" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="50%">
+                    <div class="header-title"><span>Clarity</span>Labs</div>
+                    <div class="header-subtitle">Business Viability Engine</div>
+                </td>
+                <td width="50%" class="report-info">
+                    <h2>Analysis Results</h2>
+                    <p>Generated on {{ now()->format('d F Y, H:i') }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Info Cards -->
+        <table class="info-table" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <span class="info-label">Product Name</span>
+                    <span class="info-value">{{ $calc->product_name }}</span>
+                </td>
+                <td>
+                    <span class="info-label">Report ID</span>
+                    <span class="info-value">#{{ $calc->id }}</span>
+                </td>
+                <td>
+                    <span class="info-label">Analysis Date</span>
+                    <span class="info-value">{{ $calc->created_at->format('d M Y') }}</span>
+                </td>
+            </tr>
+        </table>
+
+        <div class="content-section">
             
-            <table>
-                <thead>
+            <!-- 1. Hero Section -->
+            <div class="panel hero-panel">
+                <div style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:10px; color:#FFEDD5;">1. Hero Section</div>
+                <div class="hero-title">➜ {{ $calc->status_label == 'CRITICAL' ? 'Critical - Optimization Needed' : ($calc->status_label == 'FRAGILE' ? 'Proceed with Caution' : 'Green Light to Scale') }}</div>
+                <div class="hero-desc">{{ $calc->logic_reason }}</div>
+            </div>
+
+            <!-- 2. Profit Reality -->
+            <div class="section-header">
+                <span class="section-badge">2</span>
+                <span class="section-title">Profit Reality</span>
+            </div>
+            <div class="panel">
+                <table class="grid-table">
                     <tr>
-                        <th>Parameter</th>
-                        <th class="text-right">Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="field-name">HPP (Cost of Goods Sold)</td>
-                        <td class="text-right">Rp{{ number_format($calc->hpp, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Selling Price</td>
-                        <td class="text-right">Rp{{ number_format($calc->selling_price, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Ads Cost per Unit</td>
-                        <td class="text-right">Rp{{ number_format($calc->ads_per_unit, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Batch Quantity</td>
-                        <td class="text-right">{{ number_format($calc->est_batch_quantity, 0, ',', '.') }} pcs</td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Total Ads Cost</td>
-                        <td class="text-right">Rp{{ number_format($calc->ads_per_unit * $calc->est_batch_quantity, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Gross Profit per Unit</td>
-                        <td class="text-right">Rp{{ number_format($calc->selling_price - $calc->hpp, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Net Profit per Unit</td>
-                        <td class="text-right {{ $calc->net_profit >= 0 ? 'value-positive' : 'value-negative' }}">
-                            Rp{{ number_format($calc->net_profit, 0, ',', '.') }}
+                        <td width="40%">
+                            <div style="font-size:13px; color:#64748B; font-weight:bold; margin-bottom:5px;">Net Margin</div>
+                            <div style="font-size:42px; font-weight:900;" class="{{ $statusColor }}">{{ number_format($margin, 1, ',', '.') }}%</div>
+                            <div style="font-size:14px; font-weight:bold; margin-top:5px; text-transform:uppercase;" class="{{ $statusColor }}">{{ $calc->status_label }}</div>
+                        </td>
+                        <td width="60%">
+                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#94A3B8; margin-bottom:10px;">Cost Breakdown</div>
+                            <table class="grid-table">
+                                <tr>
+                                    <td width="50%" style="padding:0 10px 0 0;">
+                                        <table class="cost-table">
+                                            <tr><td style="color:#64748B;">Revenue</td><td align="right"><b>100%</b></td></tr>
+                                            <tr><td style="color:#64748B;">HPP</td><td align="right"><b>{{ number_format($hppPct ?? 0, 1, ',', '.') }}%</b></td></tr>
+                                            <tr><td style="color:#64748B;">Admin Fee</td><td align="right"><b>{{ number_format($calc->admin_fee_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
+                                            <tr><td style="color:#64748B;">Ads</td><td align="right"><b>{{ number_format($calc->ads_per_unit ?? 0, 1, ',', '.') }}%</b></td></tr>
+                                            <tr><td style="color:#64748B;">Affiliate</td><td align="right"><b>{{ number_format($calc->affiliate_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
+                                        </table>
+                                    </td>
+                                    <td width="50%" style="padding:0 0 0 10px;">
+                                        <table class="cost-table">
+                                            <tr><td style="color:#64748B;">Promo</td><td align="right"><b>{{ number_format($calc->promo_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
+                                            <tr><td style="color:#64748B;">Overhead</td><td align="right"><b>{{ number_format($calc->overhead_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
+                                            <tr><td style="color:#64748B;">Tax</td><td align="right"><b>{{ number_format($calc->tax_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
+                                            <tr><td colspan="2" class="border-t"></td></tr>
+                                            <tr><td style="color:#0F172A; font-weight:bold;">Total Cost</td><td align="right" style="color:#0F172A; font-weight:bold;">{{ number_format($totalCostPct ?? 0, 1, ',', '.') }}%</td></tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="field-name">Net Margin</td>
-                        <td class="text-right {{ $calc->net_margin_percent >= 20 ? 'value-positive' : ($calc->net_margin_percent >= 10 ? '' : 'value-negative') }}">
-                            {{ number_format($calc->net_margin_percent, 1) }}%
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Break Even Point (BEP)</td>
-                        <td class="text-right">{{ number_format($calc->bep_unit, 0, ',', '.') }} pcs</td>
-                    </tr>
-                    <tr>
-                        <td class="field-name">Business Status</td>
-                        <td class="text-right">
-                            @php
-                                $statusClass = 'status-healthy';
-                                $statusLabel = $calc->status_label;
-                                if (strtoupper($calc->status_label) === 'HEALTHY') {
-                                    $statusClass = 'status-healthy';
-                                } elseif (strtoupper($calc->status_label) === 'FRAGILE') {
-                                    $statusClass = 'status-fragile';
-                                } else {
-                                    $statusClass = 'status-critical';
-                                }
-                            @endphp
-                            <span class="status-badge {{ $statusClass }}">
-                                @if(strtoupper($calc->status_label) === 'HEALTHY')
-                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                @elseif(strtoupper($calc->status_label) === 'FRAGILE')
-                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                                    </svg>
-                                @else
-                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                                    </svg>
-                                @endif
-                                {{ $calc->status_label }}
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
+                </table>
+            </div>
+
+            <!-- 3. Cost Pressure & 4. Risk -->
+            <table class="grid-table" style="margin-bottom: 0;">
+                <tr>
+                    <td width="50%" style="padding: 0 10px 0 0;">
+                        <div class="section-header">
+                            <span class="section-badge">3</span>
+                            <span class="section-title">Cost Pressure</span>
+                        </div>
+                        <div class="panel" style="padding:20px;">
+                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#94A3B8; margin-bottom:10px;">Biggest Cost Drivers</div>
+                            @if(isset($topCosts))
+                                @foreach($topCosts as $idx => $cost)
+                                    <div class="list-item list-driver" style="display:table; width:100%; box-sizing:border-box;">
+                                        <div style="display:table-cell; width:20px; color:#F97316;">{{ $idx + 1 }}.</div>
+                                        <div style="display:table-cell; text-transform:capitalize;">{{ $cost[0] }}</div>
+                                        <div style="display:table-cell; text-align:right;">{{ number_format($cost[1], 1, ',', '.') }}%</div>
+                                    </div>
+                                @endforeach
+                            @endif
+                            <div style="margin-top:15px; padding-top:15px; border-top:1px solid #E2E8F0; font-size:12px; color:#334155;">
+                                <strong style="color:#1E3A8A;">Insight:</strong> {{ $insight ?? '' }}
+                            </div>
+                        </div>
+                    </td>
+                    <td width="50%" style="padding: 0 0 0 10px;">
+                        <div class="section-header">
+                            <span class="section-badge">4</span>
+                            <span class="section-title">Risk Analysis</span>
+                        </div>
+                        <div class="panel" style="padding:20px;">
+                            @if(isset($risks) && count($risks) > 0)
+                                @foreach($risks as $risk)
+                                    <div class="list-item list-risk">• {{ $risk }}</div>
+                                @endforeach
+                            @else
+                                <p style="color:#64748B;">No significant risks identified.</p>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
             </table>
+
+            <!-- 5. Strategy & 6. Production -->
+            <table class="grid-table" style="margin-bottom: 0;">
+                <tr>
+                    <td width="50%" style="padding: 0 10px 0 0;">
+                        <div class="section-header">
+                            <span class="section-badge">5</span>
+                            <span class="section-title">Strategy Direction</span>
+                        </div>
+                        <div class="panel" style="padding:20px;">
+                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#EA580C; margin-bottom:5px;">Operating Mode</div>
+                            <div style="font-size:24px; font-weight:900; color:#F97316; margin-bottom:10px;">{{ $strategy ?? '' }}</div>
+                            <div style="font-size:13px; font-weight:bold; color:#475569;">Focus: {{ $focus ?? '' }}</div>
+                        </div>
+                    </td>
+                    <td width="50%" style="padding: 0 0 0 10px;">
+                        <div class="section-header">
+                            <span class="section-badge">6</span>
+                            <span class="section-title">Production Decision</span>
+                        </div>
+                        <div class="panel" style="padding:20px;">
+                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#EA580C; margin-bottom:5px;">Recommended Batch</div>
+                            <div style="font-size:24px; font-weight:900; color:#F97316; margin-bottom:10px;">{{ number_format($calc->est_batch_quantity, 0, ',', '.') }} <span style="font-size:14px;">pcs</span></div>
+                            <div style="font-size:13px; font-weight:bold; color:#475569;">Model: Batch Limited</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 7. Ads & 8. Action Plan -->
+            <table class="grid-table" style="margin-bottom: 0;">
+                <tr>
+                    <td width="40%" style="padding: 0 10px 0 0;">
+                        <div class="section-header">
+                            <span class="section-badge">7</span>
+                            <span class="section-title">Ads Insight</span>
+                        </div>
+                        <div class="panel" style="padding:20px;">
+                            <div style="font-size:14px; font-weight:bold; margin-bottom:10px;">Ads Cost: <span style="color:#F97316;">{{ number_format($calc->ads_per_unit ?? 0, 1, ',', '.') }}%</span></div>
+                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; margin-bottom:5px;">Status: {{ $adsStatus ?? '' }}</div>
+                            <div style="font-size:13px; color:#475569;">{{ $adsMessage ?? '' }}</div>
+                        </div>
+                    </td>
+                    <td width="60%" style="padding: 0 0 0 10px;">
+                        <div class="section-header">
+                            <span class="section-badge">8</span>
+                            <span class="section-title">Action Plan</span>
+                        </div>
+                        <div class="panel" style="padding:20px;">
+                            @if(isset($actionPlan))
+                                @foreach($actionPlan as $action)
+                                    <div class="list-item list-action">✓ {{ $action }}</div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 9. Final Snapshot -->
+            <div class="section-header" style="margin-top: 10px;">
+                <span class="section-badge" style="background:#0F172A;">9</span>
+                <span class="section-title">Final Snapshot</span>
+            </div>
+            <div class="panel snapshot-panel" style="padding:0; overflow:hidden;">
+                <table class="snapshot-grid">
+                    <tr>
+                        <td>
+                            <div class="snap-label">Status</div>
+                            <div class="snap-value">{{ $calc->status_label }}</div>
+                        </td>
+                        <td>
+                            <div class="snap-label">Mode</div>
+                            <div class="snap-value">{{ $strategy ?? '' }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="snap-label">Net Margin</div>
+                            <div class="snap-value">{{ number_format($margin, 1, ',', '.') }}%</div>
+                        </td>
+                        <td>
+                            <div class="snap-label">Risk Level</div>
+                            <div class="snap-value">{{ $calc->status_label === 'CRITICAL' ? 'Extreme' : ($calc->status_label === 'FRAGILE' ? 'Medium - High' : 'Controlled') }}</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
-        
-        <!-- Analysis Cards -->
-        <div class="analysis-section">
-            <div class="analysis-card">
-                <h4>📊 Logic Reasoning</h4>
-                <p>{{ $calc->logic_reason }}</p>
-            </div>
-            <div class="action-card">
-                <h4>⚡ Action Required</h4>
-                <p>{{ $calc->action_required }}</p>
-            </div>
-        </div>
-        
-        <!-- Profit Summary -->
-        @php
-            $profit = $calc->selling_price - $calc->hpp;
-            $profitMargin = $calc->selling_price > 0 ? ($profit / $calc->selling_price) * 100 : 0;
-        @endphp
-        <div class="profit-summary">
-            <div class="profit-item">
-                <div class="profit-label">Gross Profit / Unit</div>
-                <div class="profit-value">Rp{{ number_format($profit, 0, ',', '.') }}</div>
-            </div>
-            <div class="profit-item">
-                <div class="profit-label">Gross Margin</div>
-                <div class="profit-value">{{ number_format($profitMargin, 1) }}%</div>
-            </div>
-            <div class="profit-item">
-                <div class="profit-label">Net Profit / Unit</div>
-                <div class="profit-value">Rp{{ number_format($calc->net_profit, 0, ',', '.') }}</div>
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="report-footer">
-            <p class="footer-text">
-                This report was generated by <strong>ClarityLabs</strong> • Business Viability Engine v2.0<br>
-                {{ now()->format('d/m/Y H:i:s') }} • AVS Store Business Intelligence Platform
-            </p>
+
+        <div class="footer">
+            This report was generated by <strong>ClarityLabs</strong> • Business Viability Engine v2.0<br>
+            {{ now()->format('d/m/Y H:i:s') }}
         </div>
     </div>
 </body>

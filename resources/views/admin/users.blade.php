@@ -60,8 +60,7 @@
                             <tr>
                                 <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Profile</th>
                                 <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Purchased Tools</th>
-                                <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Access Status</th>
-                                <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Management</th>
+                                <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-50 dark:divide-white/5 bg-white dark:bg-navy-900 transition-colors">
@@ -92,20 +91,7 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="px-8 py-6 whitespace-nowrap">
-                                    @if($user->is_approved)
-                                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest status-approved">Approved</span>
-                                    @else
-                                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest status-pending">Pending</span>
-                                    @endif
-                                </td>
                                 <td class="px-8 py-6 text-right space-x-2">
-                                    @if(!$user->is_approved)
-                                        <form action="{{ route('admin.users.approve', $user->id) }}" method="POST" class="inline">
-                                            @csrf @method('PATCH')
-                                            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all shadow-md">Grant Access</button>
-                                        </form>
-                                    @endif
                                     <button @click="selectedUser = {id: {{ $user->id }}, name: '{{ $user->name }}', email: '{{ $user->email }}'}; editModal = true" 
                                             class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                         Edit

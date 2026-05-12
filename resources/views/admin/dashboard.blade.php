@@ -69,7 +69,7 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 fade-in-up">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 fade-in-up">
                 <div class="stat-card bg-white dark:bg-navy-900 rounded-[24px] shadow-sm border border-gray-100 dark:border-white/5 p-6 relative overflow-hidden group">
                     <div class="absolute -right-4 -top-4 w-20 h-20 bg-orange-50 dark:bg-orange-500/5 rounded-full opacity-50 group-hover:scale-150 transition-all duration-700"></div>
                     <div class="relative z-10">
@@ -89,20 +89,6 @@
                     <div class="relative z-10">
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-8 h-8 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Pending Approval</div>
-                        </div>
-                        <div class="text-4xl font-black text-orange-500">{{ $users->where('is_approved', false)->count() }}</div>
-                        <p class="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Waiting for authorization</p>
-                    </div>
-                </div>
-
-                <div class="stat-card bg-white dark:bg-navy-900 rounded-[24px] shadow-sm border border-gray-100 dark:border-white/5 p-6 relative overflow-hidden group">
-                    <div class="absolute -right-4 -top-4 w-20 h-20 bg-orange-50 dark:bg-orange-500/5 rounded-full opacity-50 group-hover:scale-150 transition-all duration-700"></div>
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-2 mb-3">
-                            <div class="w-8 h-8 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                             </div>
                             <div class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Registered</div>
@@ -113,7 +99,7 @@
                 </div>
             </div>
 
-            <!-- User Access Management -->
+            <!-- User Monitoring -->
             <div class="mb-12 fade-in-up">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
@@ -122,7 +108,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                         </div>
-                        <h2 class="text-xl font-black text-navy dark:text-white uppercase tracking-tight">User Access Management</h2>
+                        <h2 class="text-xl font-black text-navy dark:text-white uppercase tracking-tight">Recent User Activity</h2>
                     </div>
                     <a href="{{ route('admin.users') }}" class="text-[10px] font-black text-orange-500 uppercase tracking-widest hover:underline">View All Users &rarr;</a>
                 </div>
@@ -134,7 +120,6 @@
                                 <tr class="bg-gray-50 dark:bg-navy-950 border-b border-gray-100 dark:border-white/5 transition-colors">
                                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Profile</th>
                                     <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Purchased Tools</th>
-                                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Status</th>
                                     <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Action</th>
                                 </tr>
                             </thead>
@@ -166,20 +151,7 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="px-8 py-6">
-                                        @if($user->is_approved)
-                                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest status-approved">Approved</span>
-                                        @else
-                                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest status-pending">Pending</span>
-                                        @endif
-                                    </td>
                                     <td class="px-8 py-6 text-right space-x-2">
-                                        @if(!$user->is_approved)
-                                            <form action="{{ route('admin.users.approve', $user->id) }}" method="POST" class="inline">
-                                                @csrf @method('PATCH')
-                                                <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all shadow-md">Grant Access</button>
-                                            </form>
-                                        @endif
                                         <button @click="selectedUser = {id: {{ $user->id }}, name: '{{ $user->name }}', email: '{{ $user->email }}'}; editModal = true" 
                                                 class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                             Edit

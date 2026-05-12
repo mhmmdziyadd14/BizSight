@@ -9,14 +9,13 @@
             <!-- Branding -->
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-orange rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                        </svg>
-                    </div>
                     <div>
-                        <div class="text-2xl font-black text-navy-900 dark:text-white tracking-tighter">
-                            <span class="text-gradient-orange">Clarity</span>Profit
+                        <div class="flex items-center gap-2">
+                            <img src="{{ asset('images/ClarityLabs_Light.svg') }}" alt="ClarityLabs" class="h-8 w-auto dark:hidden">
+                            <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="ClarityLabs" class="h-8 w-auto hidden dark:block">
+                            <div class="text-2xl font-black text-navy-900 dark:text-white tracking-tighter">
+                                <span class="text-gradient-orange">Clarity</span>Labs
+                            </div>
                         </div>
                         <div class="text-[9px] font-black text-orange-500/60 uppercase tracking-widest leading-none mt-1">Intelligence Platform</div>
                     </div>
@@ -51,8 +50,8 @@
         <!-- Bottom Section -->
         <div class="flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="flex flex-col items-center md:items-start">
-                <span class="text-[9px] text-slate-500 dark:text-slate-500 font-bold uppercase tracking-[0.2em] leading-none mb-1">Created by Muhammad Ziyad</span>
-                <span class="text-[9px] text-slate-400 dark:text-slate-600 font-medium uppercase tracking-widest leading-none">Informatics Engineering • ITENAS Bandung</span>
+                <span class="text-[9px] text-slate-500 dark:text-slate-500 font-bold uppercase tracking-[0.2em] leading-none mb-1">Created by ClarityLabs</span>
+                <span class="text-[9px] text-slate-400 dark:text-slate-600 font-medium uppercase tracking-widest leading-none">Business Intelligence Platform</span>
             </div>
             
             <div class="flex items-center gap-6">

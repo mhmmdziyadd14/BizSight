@@ -342,7 +342,7 @@
             <!-- Footer Note -->
             <div class="text-center pt-4 border-t border-orange-500/30 mt-6">
                 <p class="text-[9px] text-orange-300/50 font-medium uppercase tracking-wider">
-                    AVS Store • Secure Password Reset
+                    ClarityLabs • Secure Password Reset
                 </p>
             </div>
         </div>

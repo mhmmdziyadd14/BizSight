@@ -348,7 +348,13 @@
                                         </td>
                                         <td class="py-4 px-6 text-center">
                                             <div class="flex items-center justify-center gap-3">
-                                                <form action="{{ route('materials.destroy', $material->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus bahan ini?');">
+                                                <a href="{{ route('materials.edit', $material->id) }}?from=hpp" class="inline-flex items-center gap-1 text-xs font-black uppercase tracking-wider text-orange-500 hover:text-orange-600 transition-colors group">
+                                                    <svg class="w-3.5 h-3.5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                                    </svg>
+                                                    Edit
+                                                </a>
+                                                <form action="{{ route('materials.destroy', $material->id) }}?from=hpp" method="POST" class="inline" onsubmit="return confirm('Yakin hapus bahan ini?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="inline-flex items-center gap-1 text-xs font-black uppercase tracking-wider text-red-500 hover:text-red-600 transition-colors group">

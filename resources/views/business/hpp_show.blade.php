@@ -133,7 +133,7 @@
         }
     </style>
 
-    <div class="py-10 bg-gradient-to-br from-orange-50 via-white to-orange-100/20 dark:from-navy-800 dark:via-navy-900 dark:to-navy-950 min-h-screen transition-colors duration-500">
+    <div x-data="{ multiplier: 1, formatRp(num) { return 'Rp' + Math.round(num).toLocaleString('id-ID'); }, formatNum(num) { return Number(num).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2}); } }" class="py-10 bg-gradient-to-br from-orange-50 via-white to-orange-100/20 dark:from-navy-800 dark:via-navy-900 dark:to-navy-950 min-h-screen transition-colors duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 fade-in-up">
             
             @include('business.partials.hpp_nav')
@@ -185,13 +185,13 @@
                             </svg>
                             Dicetak: {{ $hpp->printed_at->format('d M Y H:i') }}
                         </div>
-                        <a href="{{ route('hpp.print', $hpp->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-orange-600 transition-all shadow-md">
+                        <a :href="`{{ route('hpp.print', $hpp->id) }}?qty=${multiplier}`" class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-orange-600 transition-all shadow-md">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                             </svg>
                             Cetak HPP
                         </a>
-                        <a href="{{ route('hpp.bom.print', $hpp->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-600 transition-all shadow-md">
+                        <a :href="`{{ route('hpp.bom.print', $hpp->id) }}?qty=${multiplier}`" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-600 transition-all shadow-md">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                             </svg>
@@ -199,13 +199,13 @@
                         </a>
                         
                     @else
-                        <a href="{{ route('hpp.print', $hpp->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-orange text-white rounded-xl font-black text-xs uppercase tracking-wider hover:shadow-lg transition-all">
+                        <a :href="`{{ route('hpp.print', $hpp->id) }}?qty=${multiplier}`" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-orange text-white rounded-xl font-black text-xs uppercase tracking-wider hover:shadow-lg transition-all">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                             </svg>
                             Cetak HPP
                         </a>
-                        <a href="{{ route('hpp.bom.print', $hpp->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-600 transition-all">
+                        <a :href="`{{ route('hpp.bom.print', $hpp->id) }}?qty=${multiplier}`" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-blue-600 transition-all">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                             </svg>
@@ -348,11 +348,15 @@
 
             <!-- Materials Table Card -->
             <div class="bg-white dark:bg-navy-900 rounded-3xl shadow-xl border border-orange-500/10 dark:border-orange-500/20 overflow-hidden mb-8 transition-all">
-                <div class="bg-orange-50/50 dark:bg-navy-950 px-6 py-4 border-b border-orange-500/10">
+                <div class="bg-orange-50/50 dark:bg-navy-950 px-6 py-4 flex justify-between items-center border-b border-orange-500/10">
                     <h3 class="font-bold text-navy-900 dark:text-white text-base tracking-wide flex items-center gap-2">
                         <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        Rincian Bahan Baku
+                        Detail Bill of Material
                     </h3>
+                    <div class="flex items-center gap-2 bg-white dark:bg-navy-900 rounded-lg p-1.5 border border-orange-200 dark:border-orange-500/20 shadow-sm">
+                        <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest pl-2">Kuantitas Cetak</label>
+                        <input type="number" x-model.number="multiplier" min="1" class="w-16 h-7 text-center text-xs font-bold text-navy-900 dark:text-white bg-orange-50 dark:bg-navy-950 border-none rounded focus:ring-0" style="padding: 0;">
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
@@ -377,14 +381,16 @@
                                         <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ $material->material->unit ?? 'Tanpa Warna' }}</p>
                                     </td>
                                     <td class="py-4 px-6 text-center">
-                                        <span class="font-mono font-bold text-navy-900 dark:text-white">{{ number_format($usageAmount, 2, ',', '.') }}</span>
+                                        <span class="font-mono font-bold text-navy-900 dark:text-white">
+                                            <span x-text="formatNum({{ $usageAmount }} * (multiplier || 1))">{{ number_format($usageAmount, 2, ',', '.') }}</span>
+                                        </span>
                                         <span class="text-[10px] text-slate-500 ml-0.5">{{ $material->material->unit }}</span>
                                     </td>
                                     <td class="py-4 px-6 text-right font-mono text-slate-500 dark:text-slate-400">
                                         Rp{{ number_format($unitPrice, 2, ',', '.') }}
                                     </td>
                                     <td class="py-4 px-6 text-right font-mono font-black text-navy-900 dark:text-white">
-                                        Rp{{ number_format($totalCost, 0, ',', '.') }}
+                                        <span x-text="formatRp({{ $totalCost }} * (multiplier || 1))">Rp{{ number_format($totalCost, 0, ',', '.') }}</span>
                                     </td>
                                 </tr>
                             @endforeach
@@ -393,7 +399,7 @@
                             <tr>
                                 <td colspan="3" class="py-4 px-6 text-right text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Subtotal Bahan</td>
                                 <td class="py-4 px-6 text-right font-mono font-black text-orange-600 dark:text-orange-500">
-                                    Rp{{ number_format($hpp->total_raw_material_cost, 0, ',', '.') }}
+                                    <span x-text="formatRp({{ $hpp->total_raw_material_cost }} * (multiplier || 1))">Rp{{ number_format($hpp->total_raw_material_cost, 0, ',', '.') }}</span>
                                 </td>
                             </tr>
                         </tfoot>

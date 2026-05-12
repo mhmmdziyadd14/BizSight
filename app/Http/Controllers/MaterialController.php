@@ -104,25 +104,31 @@ class MaterialController extends Controller
             'color' => $data['color'] ?? null,
         ]);
 
+        if ($request->query('from') === 'hpp') {
+            return redirect()->route('hpp.bahan', ['embed' => 1])->with('success', 'Bahan baku berhasil diperbarui.');
+        }
         return redirect()->route('materials.index')->with('success', 'Bahan baku berhasil diperbarui.');
     }
 
     /**
      * Hapus bahan baku.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $material = Material::where('user_id', Auth::id())->findOrFail($id);
 
         if (HppMaterialItem::where('material_id', $id)->exists()) {
-            return redirect()->route('materials.index')->with('error', 'Bahan tidak dapat dihapus karena digunakan pada perhitungan HPP. Hapus terlebih dahulu penggunaan pada HPP terkait.');
+            $redirect = $request->query('from') === 'hpp' ? redirect()->route('hpp.bahan', ['embed' => 1]) : redirect()->route('materials.index');
+            return $redirect->with('error', 'Bahan tidak dapat dihapus karena digunakan pada perhitungan HPP. Hapus terlebih dahulu penggunaan pada HPP terkait.');
         }
 
         try {
             $material->delete();
-            return redirect()->route('materials.index')->with('success', 'Bahan baku berhasil dihapus.');
+            $redirect = $request->query('from') === 'hpp' ? redirect()->route('hpp.bahan', ['embed' => 1]) : redirect()->route('materials.index');
+            return $redirect->with('success', 'Bahan baku berhasil dihapus.');
         } catch (QueryException $exception) {
-            return redirect()->route('materials.index')->with('error', 'Terjadi error saat menghapus bahan. Pastikan tidak terkait data lain.');
+            $redirect = $request->query('from') === 'hpp' ? redirect()->route('hpp.bahan', ['embed' => 1]) : redirect()->route('materials.index');
+            return $redirect->with('error', 'Terjadi error saat menghapus bahan. Pastikan tidak terkait data lain.');
         }
     }
 }
