@@ -109,8 +109,8 @@ Route::get('/test-sync', function () {
             }
         }
         
-        // Extract all keys and values related to product/id/slug/variant
-        $product_related = [];
+        // Extract all keys and values
+        $all_fields = [];
         if ($found_order) {
             $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($found_order));
             foreach ($iterator as $key => $value) {
@@ -121,9 +121,7 @@ Route::get('/test-sync', function () {
                 }
                 $pathStr = implode('.', $path);
                 
-                if (preg_match('/product|variant|item|slug|id|name/i', $key)) {
-                    $product_related[$pathStr] = $value;
-                }
+                $all_fields[$pathStr] = $value;
             }
         }
         
@@ -132,7 +130,7 @@ Route::get('/test-sync', function () {
             'email' => $email,
             'pages_scanned' => $pages_scanned,
             'found' => !is_null($found_order),
-            'product_related_fields' => $product_related
+            'order_fields' => $all_fields
         ]);
     } catch (\Exception $e) {
         return response()->json([
