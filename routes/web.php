@@ -109,13 +109,30 @@ Route::get('/test-sync', function () {
             }
         }
         
+        // Extract all keys and values related to product/id/slug/variant
+        $product_related = [];
+        if ($found_order) {
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($found_order));
+            foreach ($iterator as $key => $value) {
+                // Get path to this key
+                $path = [];
+                foreach (range(0, $iterator->getDepth()) as $depth) {
+                    $path[] = $iterator->getSubIterator($depth)->key();
+                }
+                $pathStr = implode('.', $path);
+                
+                if (preg_match('/product|variant|item|slug|id|name/i', $key)) {
+                    $product_related[$pathStr] = $value;
+                }
+            }
+        }
+        
         return response()->json([
             'status' => 'success',
             'email' => $email,
             'pages_scanned' => $pages_scanned,
-            'total_emails_scanned_count' => count($all_scanned_emails),
             'found' => !is_null($found_order),
-            'found_order_details' => $found_order
+            'product_related_fields' => $product_related
         ]);
     } catch (\Exception $e) {
         return response()->json([
