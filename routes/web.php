@@ -55,7 +55,7 @@ Route::get('/test-sync', function () {
         
         $base = env('SCALEV_API_BASE');
         $key = env('SCALEV_API_KEY');
-        $email = 'muhammadziyad810@gmail.com';
+        $orderId = '019e4472-be18-782d-8ee5-a6c10835299f'; // User's order UUID
         
         $headers = [
             'Accept' => 'application/json',
@@ -64,73 +64,33 @@ Route::get('/test-sync', function () {
             $headers['Authorization'] = 'Bearer ' . $key;
         }
         
-        $found_order = null;
-        $pages_scanned = 0;
-        $last_id = null;
-        $has_next = true;
-        
-        $all_scanned_emails = [];
-        
-        while ($has_next && $pages_scanned < 15) {
-            $pages_scanned++;
-            $url = rtrim($base, '/') . '/v2/order';
+        $url = rtrim($base, '/') . '/v2/order/' . $orderId;
+        $resp = \Illuminate\Support\Facades\Http::withHeaders($headers)
+            ->timeout(10)
+            ->get($url);
             
-            $query = [];
-            if ($last_id) {
-                $query['last_id'] = $last_id;
-            }
-            
-            $resp = \Illuminate\Support\Facades\Http::withHeaders($headers)
-                ->timeout(10)
-                ->get($url, $query);
-            
-            if (!$resp->ok()) {
-                throw new \Exception("Scalev API error on page {$pages_scanned}: " . $resp->status());
-            }
-            
-            $json = $resp->json();
-            $data = $json['data'] ?? [];
-            $results = $data['results'] ?? [];
-            $has_next = $data['has_next'] ?? false;
-            $last_id = $data['last_id'] ?? null;
-            
-            foreach ($results as $order) {
-                $custEmail = $order['customer']['email'] ?? '';
-                $all_scanned_emails[] = $custEmail;
-                
-                if (strtolower($custEmail) === strtolower($email)) {
-                    $found_order = $order;
-                    break 2; // break out of both foreach and while
-                }
-            }
-            
-            if (!$last_id) {
-                $has_next = false;
-            }
+        if (!$resp->ok()) {
+            throw new \Exception("Scalev API error fetching order details: " . $resp->status());
         }
         
-        // Extract all keys and values
+        $json = $resp->json();
+        
+        // Extract all keys and values from the single order details response
         $all_fields = [];
-        if ($found_order) {
-            $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($found_order));
-            foreach ($iterator as $key => $value) {
-                // Get path to this key
-                $path = [];
-                foreach (range(0, $iterator->getDepth()) as $depth) {
-                    $path[] = $iterator->getSubIterator($depth)->key();
-                }
-                $pathStr = implode('.', $path);
-                
-                $all_fields[$pathStr] = $value;
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($json));
+        foreach ($iterator as $key => $value) {
+            $path = [];
+            foreach (range(0, $iterator->getDepth()) as $depth) {
+                $path[] = $iterator->getSubIterator($depth)->key();
             }
+            $pathStr = implode('.', $path);
+            $all_fields[$pathStr] = $value;
         }
         
         return response()->json([
             'status' => 'success',
-            'email' => $email,
-            'pages_scanned' => $pages_scanned,
-            'found' => !is_null($found_order),
-            'order_fields' => $all_fields
+            'order_id' => $orderId,
+            'order_details_fields' => $all_fields
         ]);
     } catch (\Exception $e) {
         return response()->json([
