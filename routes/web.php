@@ -65,13 +65,12 @@ Route::get('/test-sync', function () {
         }
         
         $params_to_test = [
-            'email' => ['email' => $email],
             'customer_email' => ['customer_email' => $email],
-            'search' => ['search' => $email],
-            'query' => ['query' => $email],
-            'q' => ['q' => $email],
-            'customer' => ['customer' => $email],
-            'no_filter' => [],
+            'customer.email' => ['customer.email' => $email],
+            'search_name' => ['search' => 'Muhammad Ziyad'],
+            'search_email' => ['search' => $email],
+            'search_partial' => ['search' => 'ziyad'],
+            'nested_customer_email' => ['customer' => ['email' => $email]],
         ];
         
         $debug = [];
@@ -86,14 +85,17 @@ Route::get('/test-sync', function () {
                 $results = $json['data']['results'] ?? [];
                 
                 $emails_found = [];
+                $names_found = [];
                 foreach ($results as $r) {
                     $emails_found[] = $r['customer']['email'] ?? 'no-email';
+                    $names_found[] = $r['customer']['name'] ?? 'no-name';
                 }
                 
                 $debug[$name] = [
                     'status' => $resp->status(),
                     'result_count' => count($results),
                     'emails_found' => $emails_found,
+                    'names_found' => $names_found,
                 ];
             } catch (\Exception $ex) {
                 $debug[$name] = [
