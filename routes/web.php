@@ -55,25 +55,59 @@ Route::get('/test-sync', function () {
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         
-        $client = new \App\Services\ScalevClient();
-        $purchases = $client->getPurchasesByEmail($email);
+        $base = env('SCALEV_API_BASE');
+        $key = env('SCALEV_API_KEY');
         
-        $user = \App\Models\User::where('email', $email)->first();
+        $endpoints = [
+            '/api/orders',
+            '/v1/orders',
+            '/api/v1/orders',
+            '/orders',
+            '/api/v2/orders',
+            '/v2/orders',
+            '/v2/order',
+            '/api/v2/order',
+        ];
+        
+        $debug = [];
+        $headers = [
+            'Accept' => 'application/json',
+        ];
+        if ($key) {
+            $headers['Authorization'] = 'Bearer ' . $key;
+        }
+        
+        foreach ($endpoints as $ep) {
+            $url = rtrim($base, '/') . $ep;
+            try {
+                $resp = \Illuminate\Support\Facades\Http::withHeaders($headers)
+                    ->timeout(10)
+                    ->get($url, ['email' => $email]);
+                
+                $debug[$ep] = [
+                    'status' => $resp->status(),
+                    'json' => $resp->json(),
+                ];
+            } catch (\Exception $ex) {
+                $debug[$ep] = [
+                    'error' => $ex->getMessage()
+                ];
+            }
+        }
         
         return response()->json([
             'status' => 'success',
-            'user' => $user,
-            'purchases_from_scalev' => $purchases,
+            'email' => $email,
+            'debug_endpoints' => $debug,
             'env_keys' => [
-                'base' => env('SCALEV_API_BASE'),
-                'has_key' => !empty(env('SCALEV_API_KEY')),
+                'base' => $base,
+                'has_key' => !empty($key),
             ]
         ]);
     } catch (\Exception $e) {
         return response()->json([
             'status' => 'error',
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
+            'message' => $e->getMessage()
         ], 500);
     }
 });
