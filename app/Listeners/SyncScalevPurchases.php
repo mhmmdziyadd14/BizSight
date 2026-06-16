@@ -29,8 +29,8 @@ class SyncScalevPurchases
                 $pid = $it['product_id'] ?? null;
                 if (! $pid) continue;
 
-                // Try to find a Product by slug or variant id
-                $product = Product::where('slug', $pid)->orWhere('external_id', $pid)->first();
+                // Try to find a Product by slug (which stores the variant ID)
+                $product = Product::where('slug', $pid)->first();
                 if (! $product) {
                     // try numeric id mapping
                     $product = Product::where('id', $pid)->first();

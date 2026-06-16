@@ -55,42 +55,52 @@ Route::get('/test-sync', function () {
         
         $base = env('SCALEV_API_BASE');
         $key = env('SCALEV_API_KEY');
-        $orderId = '019e4472-be18-782d-8ee5-a6c10835299f'; // User's order UUID
+        $email = 'muhammadziyad810@gmail.com';
         
-        $headers = [
-            'Accept' => 'application/json',
-        ];
-        if ($key) {
-            $headers['Authorization'] = 'Bearer ' . $key;
+        $user = \App\Models\User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found in ClarityLab database.'
+            ], 404);
         }
         
-        $url = rtrim($base, '/') . '/v2/order/' . $orderId;
-        $resp = \Illuminate\Support\Facades\Http::withHeaders($headers)
-            ->timeout(10)
-            ->get($url);
-            
-        if (!$resp->ok()) {
-            throw new \Exception("Scalev API error fetching order details: " . $resp->status());
-        }
+        $client = new \App\Services\ScalevClient();
+        $purchases = $client->getPurchasesByEmail($email);
         
-        $json = $resp->json();
+        $synced_features = [];
+        $matched_products = [];
         
-        // Extract all keys and values from the single order details response
-        $all_fields = [];
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($json));
-        foreach ($iterator as $key => $value) {
-            $path = [];
-            foreach (range(0, $iterator->getDepth()) as $depth) {
-                $path[] = $iterator->getSubIterator($depth)->key();
+        foreach ($purchases as $it) {
+            $pid = $it['product_id'];
+            $product = \App\Models\Product::where('slug', $pid)->first();
+            if ($product) {
+                $matched_products[] = $product->name;
+                $features = $product->features ?? [];
+                foreach ($features as $featureCode) {
+                    $has = $user->accesses()->where('feature_code', $featureCode)->exists();
+                    if (!$has) {
+                        $user->accesses()->create([
+                            'feature_code' => $featureCode,
+                            'order_id' => null
+                        ]);
+                        $synced_features[] = $featureCode;
+                    }
+                }
             }
-            $pathStr = implode('.', $path);
-            $all_fields[$pathStr] = $value;
         }
         
         return response()->json([
             'status' => 'success',
-            'order_id' => $orderId,
-            'order_details_fields' => $all_fields
+            'message' => 'Sync executed successfully!',
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+            'purchases_found_count' => count($purchases),
+            'matched_products' => $matched_products,
+            'new_synced_features' => $synced_features,
+            'all_user_accesses' => $user->accesses()->get()
         ]);
     } catch (\Exception $e) {
         return response()->json([
