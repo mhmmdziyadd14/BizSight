@@ -327,7 +327,7 @@
 @php
     $user = auth()->user();
     $isAdmin = $user->isAdmin();
-    $accesses = $isAdmin ? [] : \App\Models\UserAccess::where('user_id', $user->id)->pluck('feature_code')->toArray();
+    $accesses = $isAdmin ? [] : \App\Models\UserAccess::where('user_id', $user->id)->pluck('feature_code')->map(fn($val) => strtolower($val))->toArray();
     $hasVCP = $isAdmin || in_array('vcp', $accesses);
     $hasPCC = $isAdmin || in_array('pcc', $accesses);
     $hasDE = $isAdmin || in_array('de', $accesses);
