@@ -51,6 +51,10 @@ Route::get('/migrasi-db', function () {
 Route::get('/test-sync', function () {
     $email = 'muhammadziyad810@gmail.com';
     try {
+        // Clear configuration cache to force loading fresh .env values
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        
         $client = new \App\Services\ScalevClient();
         $purchases = $client->getPurchasesByEmail($email);
         
