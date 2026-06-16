@@ -47,6 +47,33 @@ Route::get('/migrasi-db', function () {
     }
 });
 
+// Temporary Route to test Scalev API Sync
+Route::get('/test-sync', function () {
+    $email = 'muhammadziyad810@gmail.com';
+    try {
+        $client = new \App\Services\ScalevClient();
+        $purchases = $client->getPurchasesByEmail($email);
+        
+        $user = \App\Models\User::where('email', $email)->first();
+        
+        return response()->json([
+            'status' => 'success',
+            'user' => $user,
+            'purchases_from_scalev' => $purchases,
+            'env_keys' => [
+                'base' => env('SCALEV_API_BASE'),
+                'has_key' => !empty(env('SCALEV_API_KEY')),
+            ]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+});
+
 // Middleware Auth
 Route::middleware(['auth', 'verified'])->group(function () {
 
