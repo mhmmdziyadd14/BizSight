@@ -64,49 +64,63 @@ Route::get('/test-sync', function () {
             $headers['Authorization'] = 'Bearer ' . $key;
         }
         
-        $params_to_test = [
-            'customer_email' => ['customer_email' => $email],
-            'customer.email' => ['customer.email' => $email],
-            'search_name' => ['search' => 'Muhammad Ziyad'],
-            'search_email' => ['search' => $email],
-            'search_partial' => ['search' => 'ziyad'],
-            'nested_customer_email' => ['customer' => ['email' => $email]],
-        ];
+        $found_order = null;
+        $pages_scanned = 0;
+        $last_id = null;
+        $has_next = true;
         
-        $debug = [];
-        foreach ($params_to_test as $name => $query) {
+        $all_scanned_emails = [];
+        
+        while ($has_next && $pages_scanned < 15) {
+            $pages_scanned++;
             $url = rtrim($base, '/') . '/v2/order';
-            try {
-                $resp = \Illuminate\Support\Facades\Http::withHeaders($headers)
-                    ->timeout(10)
-                    ->get($url, $query);
+            
+            $query = [];
+            if ($last_id) {
+                $query['last_id'] = $last_id;
+            }
+            
+            $resp = \Illuminate\Support\Facades\Http::withHeaders($headers)
+                ->timeout(10)
+                ->get($url, $query);
+            
+            if (!$resp->ok()) {
+                throw new \Exception("Scalev API error on page {$pages_scanned}: " . $resp->status());
+            }
+            
+            $json = $resp->json();
+            $data = $json['data'] ?? [];
+            $results = $data['results'] ?? [];
+            $has_next = $data['has_next'] ?? false;
+            $last_id = $data['last_id'] ?? null;
+            
+            foreach ($results as $order) {
+                $custEmail = $order['customer']['email'] ?? '';
+                $all_scanned_emails[] = $custEmail;
                 
-                $json = $resp->json();
-                $results = $json['data']['results'] ?? [];
-                
-                $emails_found = [];
-                $names_found = [];
-                foreach ($results as $r) {
-                    $emails_found[] = $r['customer']['email'] ?? 'no-email';
-                    $names_found[] = $r['customer']['name'] ?? 'no-name';
+                if (strtolower($custEmail) === strtolower($email)) {
+                    $found_order = $order;
+                    break 2; // break out of both foreach and while
                 }
-                
-                $debug[$name] = [
-                    'status' => $resp->status(),
-                    'result_count' => count($results),
-                    'emails_found' => $emails_found,
-                    'names_found' => $names_found,
-                ];
-            } catch (\Exception $ex) {
-                $debug[$name] = [
-                    'error' => $ex->getMessage()
-                ];
+            }
+            
+            if (!$last_id) {
+                $has_next = false;
             }
         }
         
         return response()->json([
             'status' => 'success',
-            'debug' => $debug
+            'email' => $email,
+            'pages_scanned' => $pages_scanned,
+            'total_emails_scanned_count' => count($all_scanned_emails),
+            'found' => !is_null($found_order),
+            'found_order_details' => $found_order ? [
+                'order_id' => $found_order['order_id'] ?? null,
+                'status' => $found_order['status'] ?? null,
+                'products' => $found_order['products'] ?? null,
+                'product_id' => $found_order['product_id'] ?? null,
+            ] : null,
         ]);
     } catch (\Exception $e) {
         return response()->json([
