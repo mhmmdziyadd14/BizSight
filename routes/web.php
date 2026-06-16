@@ -115,12 +115,7 @@ Route::get('/test-sync', function () {
             'pages_scanned' => $pages_scanned,
             'total_emails_scanned_count' => count($all_scanned_emails),
             'found' => !is_null($found_order),
-            'found_order_details' => $found_order ? [
-                'order_id' => $found_order['order_id'] ?? null,
-                'status' => $found_order['status'] ?? null,
-                'products' => $found_order['products'] ?? null,
-                'product_id' => $found_order['product_id'] ?? null,
-            ] : null,
+            'found_order_details' => $found_order
         ]);
     } catch (\Exception $e) {
         return response()->json([
