@@ -49,27 +49,14 @@ Route::get('/migrasi-db', function () {
 
 // Temporary Route to test Scalev API Sync
 Route::get('/test-sync', function () {
-    $email = 'muhammadziyad810@gmail.com';
     try {
-        // Clear configuration cache to force loading fresh .env values
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         
         $base = env('SCALEV_API_BASE');
         $key = env('SCALEV_API_KEY');
+        $email = 'muhammadziyad810@gmail.com';
         
-        $endpoints = [
-            '/api/orders',
-            '/v1/orders',
-            '/api/v1/orders',
-            '/orders',
-            '/api/v2/orders',
-            '/v2/orders',
-            '/v2/order',
-            '/api/v2/order',
-        ];
-        
-        $debug = [];
         $headers = [
             'Accept' => 'application/json',
         ];
@@ -77,19 +64,39 @@ Route::get('/test-sync', function () {
             $headers['Authorization'] = 'Bearer ' . $key;
         }
         
-        foreach ($endpoints as $ep) {
-            $url = rtrim($base, '/') . $ep;
+        $params_to_test = [
+            'email' => ['email' => $email],
+            'customer_email' => ['customer_email' => $email],
+            'search' => ['search' => $email],
+            'query' => ['query' => $email],
+            'q' => ['q' => $email],
+            'customer' => ['customer' => $email],
+            'no_filter' => [],
+        ];
+        
+        $debug = [];
+        foreach ($params_to_test as $name => $query) {
+            $url = rtrim($base, '/') . '/v2/order';
             try {
                 $resp = \Illuminate\Support\Facades\Http::withHeaders($headers)
                     ->timeout(10)
-                    ->get($url, ['email' => $email]);
+                    ->get($url, $query);
                 
-                $debug[$ep] = [
+                $json = $resp->json();
+                $results = $json['data']['results'] ?? [];
+                
+                $emails_found = [];
+                foreach ($results as $r) {
+                    $emails_found[] = $r['customer']['email'] ?? 'no-email';
+                }
+                
+                $debug[$name] = [
                     'status' => $resp->status(),
-                    'json' => $resp->json(),
+                    'result_count' => count($results),
+                    'emails_found' => $emails_found,
                 ];
             } catch (\Exception $ex) {
-                $debug[$ep] = [
+                $debug[$name] = [
                     'error' => $ex->getMessage()
                 ];
             }
@@ -97,12 +104,7 @@ Route::get('/test-sync', function () {
         
         return response()->json([
             'status' => 'success',
-            'email' => $email,
-            'debug_endpoints' => $debug,
-            'env_keys' => [
-                'base' => $base,
-                'has_key' => !empty($key),
-            ]
+            'debug' => $debug
         ]);
     } catch (\Exception $e) {
         return response()->json([
