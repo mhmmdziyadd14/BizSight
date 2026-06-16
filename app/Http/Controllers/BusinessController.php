@@ -137,6 +137,30 @@ class BusinessController extends Controller
     }
 
     /**
+     * API: Return HPP list for realtime polling
+     */
+    public function apiHppList()
+    {
+        $items = HppCalculation::where('user_id', Auth::id())
+                    ->orderBy('created_at', 'desc')
+                    ->get(['id', 'hpp_id', 'name', 'total_hpp_per_unit']);
+
+        return response()->json(['success' => true, 'data' => $items]);
+    }
+
+    /**
+     * API: Return Material list for realtime polling
+     */
+    public function apiMaterialsList()
+    {
+        $items = Material::where('user_id', Auth::id())
+                    ->orderBy('name')
+                    ->get(['id', 'name', 'price', 'unit']);
+
+        return response()->json(['success' => true, 'data' => $items]);
+    }
+
+    /**
      * Menampilkan data persediaan bahan (Inventory).
      */
     public function inventory()
@@ -622,6 +646,22 @@ class BusinessController extends Controller
         // Menggunakan model yang valid dan langsung di-hardcode agar tidak terpengaruh cache .env
         $model = 'gemini-3.1-flash-lite';
         
+        $care_categories = ['wash', 'bleaching', 'ironing', 'dry_cleaning', 'drying'];
+        $available_symbols = [];
+        foreach ($care_categories as $cat) {
+            $files = glob(public_path("images/care_symbols/{$cat}/*.*"));
+            if ($files) {
+                foreach ($files as $f) {
+                    $name = pathinfo($f, PATHINFO_FILENAME);
+                    if (!str_contains($name, '_logo')) {
+                        $available_symbols[] = $name;
+                    }
+                }
+            }
+        }
+        $symbolsListStr = implode(', ', $available_symbols);
+        $symbolsListStr = $symbolsListStr ?: 'handwash, no-bleach, iron-low, inside, no-dryer';
+        
         $systemPrompt = "SYSTEM PROMPT (CORE AI BRAIN):
         You are a Senior Fashion Product Developer and Technical Designer with expertise in apparel, bags, footwear, and fashion accessories.
         You are part of an advanced R&D system that generates accurate, production-ready techpack material recommendations based on product images.
@@ -713,7 +753,9 @@ class BusinessController extends Controller
                                 'type' => 'OBJECT',
                                 'properties' => [
                                     'polySz' => ['type' => 'STRING', 'description' => 'Packaging size recommendation, e.g., 35x45 cm'],
-                                    'polyTh' => ['type' => 'STRING', 'description' => 'Packaging thickness, e.g., 50 micron']
+                                    'polyTh' => ['type' => 'STRING', 'description' => 'Packaging thickness, e.g., 50 micron'],
+                                    'polyType' => ['type' => 'STRING', 'description' => 'Polybag type or material, e.g., OPP, PE, Ziplock'],
+                                    'polyWhy' => ['type' => 'STRING', 'description' => 'Professional AI insight explaining why this packaging is recommended for the product, including protection rationale']
                                 ]
                             ],
                             'care' => [
@@ -724,7 +766,7 @@ class BusinessController extends Controller
                                     'symbols' => [
                                         'type' => 'ARRAY',
                                         'items' => ['type' => 'STRING'],
-                                        'description' => 'Choose appropriate care symbols from exactly these values: handwash, no-bleach, iron-low, inside, no-dryer'
+                                        'description' => 'Choose 1 appropriate care symbol for EACH category. Available symbols are: ' . $symbolsListStr
                                     ]
                                 ]
                             ]
@@ -743,16 +785,45 @@ class BusinessController extends Controller
 
             if ($response->successful()) {
                 $data = $response->json();
-                $content = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
-                
+
+                // Attempt multiple common paths to extract text payload from Gemini response
+                $content = '';
+                if (!empty($data['candidates'][0]['content'])) {
+                    $c0 = $data['candidates'][0]['content'];
+                    // Try nested parts structure
+                    if (isset($c0[0]['parts'][0]['text'])) {
+                        $content = $c0[0]['parts'][0]['text'];
+                    } elseif (isset($c0[0]['text'])) {
+                        $content = $c0[0]['text'];
+                    } else {
+                        // fallback: iterate to find first text part
+                        foreach ($c0 as $block) {
+                            if (is_array($block) && isset($block['parts']) && is_array($block['parts'])) {
+                                foreach ($block['parts'] as $part) {
+                                    if (isset($part['text'])) { $content = $part['text']; break 2; }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Additional fallbacks for other response shapes
+                $content = $content ?: ($data['candidates'][0]['content']['parts'][0]['text'] ?? ($data['candidates'][0]['content'][0]['text'] ?? ($data['candidates'][0]['output'][0]['content'][0]['text'] ?? '')));
+
                 // Bersihkan Markdown backticks jika AI bandel meskipun sudah diset response_mime_type
                 $content = preg_replace('/```json\s*/', '', $content);
                 $content = preg_replace('/```\s*/', '', $content);
                 $content = trim($content);
-                
+
                 // Parsing langsung
                 $structuredJson = json_decode($content, true);
-                
+
+                // Jika parsing gagal, coba ekstrak JSON substring dari teks (robust fallback)
+                if (!$structuredJson && is_string($content) && preg_match('/(\{.*\})/s', $content, $m)) {
+                    $maybe = trim($m[1]);
+                    $structuredJson = json_decode($maybe, true);
+                }
+
                 // Memetakan schema terstruktur yang baru ke format yang diharapkan frontend (visual.blade.php)
                 if ($structuredJson) {
                     $json = [
@@ -765,6 +836,8 @@ class BusinessController extends Controller
                         'bom' => $structuredJson['bom'] ?? [],
                         'polySz' => $structuredJson['packaging']['polySz'] ?? null,
                         'polyTh' => $structuredJson['packaging']['polyTh'] ?? null,
+                        'polyType' => $structuredJson['packaging']['polyType'] ?? null,
+                        'polyWhy' => $structuredJson['packaging']['polyWhy'] ?? null,
                         'care_id' => $structuredJson['care']['id'] ?? null,
                         'care_en' => $structuredJson['care']['en'] ?? null,
                         'symbols' => $structuredJson['care']['symbols'] ?? []
@@ -797,12 +870,14 @@ class BusinessController extends Controller
                     'fabricReason' => "Berdasarkan konteks pasar '$market', material ini dipilih untuk memastikan durabilitas dan kenyamanan maksimal. " . $note,
                     'polySz' => '35x45 cm',
                     'polyTh' => '50 micron',
+                    'polyType' => 'OPP Polybag',
+                    'polyWhy' => "Polybag OPP 50 micron dengan ukuran 35x45 cm direkomendasikan untuk produk ini karena memberikan perlindungan optimal terhadap debu dan kelembaban selama penyimpanan dan pengiriman, sesuai untuk segmen pasar $market.",
                     'care_id' => 'Cuci dengan air dingin. Jangan gunakan pemutih. Setrika suhu rendah.',
                     'care_en' => 'Wash cold. Do not bleach. Tumble dry low.',
                     'bom' => [
                         ['comp' => 'Main Fabric', 'spec' => 'Cotton', 'qty' => '1.2m', 'price' => 'Rp 45000']
                     ],
-                    'symbols' => ['handwash', 'no-bleach', 'iron-low']
+                    'symbols' => count($available_symbols) >= 3 ? array_slice($available_symbols, 0, 3) : ['handwash', 'no-bleach', 'iron-low']
                 ];
             }
             

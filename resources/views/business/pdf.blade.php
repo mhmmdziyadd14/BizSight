@@ -4,304 +4,206 @@
     <meta charset="utf-8">
     <title>Decision Engine Report #{{ $calc->id }}</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: Helvetica, Arial, sans-serif;
             background: #ffffff;
-            margin: 0;
-            padding: 0;
             color: #1E293B;
-            font-size: 13px;
+            font-size: 12px;
+            line-height: 1.5;
         }
-        .container {
+
+        /* ============ HEADER ============ */
+        .header-wrap {
+            background: #0F172A;
             width: 100%;
-            margin: 0 auto;
-        }
-        /* Header */
-        table.header-table {
-            width: 100%;
-            background-color: #0F172A;
-            color: #ffffff;
-            padding: 40px 30px;
+            padding: 28px 30px;
             border-bottom: 5px solid #F97316;
         }
-        .header-title {
-            font-size: 32px;
-            font-weight: 800;
-        }
-        .header-title span {
-            color: #F97316;
-        }
-        .header-subtitle {
-            font-size: 13px;
-            color: #F59E0B;
-            margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-        .report-info {
-            text-align: right;
-        }
-        .report-info h2 {
-            font-size: 22px;
-            margin: 0;
-            color: #ffffff;
-        }
-        .report-info p {
-            font-size: 13px;
-            color: #94A3B8;
-            margin-top: 8px;
-        }
-        
-        /* Info Cards */
-        table.info-table {
+        .header-inner {
             width: 100%;
-            background-color: #F8FAFC;
+        }
+        .header-left { display: inline-block; width: 50%; vertical-align: top; }
+        .header-right { display: inline-block; width: 49%; vertical-align: top; text-align: right; }
+        .brand-title { font-size: 30px; font-weight: 800; color: #ffffff; }
+        .brand-title .accent { color: #F97316; }
+        .brand-sub { font-size: 11px; color: #F59E0B; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-top: 6px; }
+        .rep-label { font-size: 20px; color: #ffffff; font-weight: 800; }
+        .rep-date { font-size: 11px; color: #94A3B8; margin-top: 6px; }
+
+        /* ============ META BAR ============ */
+        table.meta-bar {
+            width: 100%;
+            border-collapse: collapse;
+            background: #F8FAFC;
             border-bottom: 1px solid #E2E8F0;
         }
-        table.info-table td {
-            padding: 20px 30px;
+        table.meta-bar td {
             width: 33.33%;
+            padding: 16px 24px;
             vertical-align: top;
             border-right: 1px solid #E2E8F0;
         }
-        table.info-table td:last-child {
-            border-right: none;
-        }
-        .info-label {
-            font-size: 11px;
-            font-weight: 800;
-            color: #F97316;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            display: block;
-        }
-        .info-value {
-            font-size: 15px;
-            font-weight: bold;
-            color: #0F172A;
-            display: block;
-        }
+        table.meta-bar td:last-child { border-right: none; }
+        .ml { font-size: 10px; font-weight: 800; color: #F97316; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .mv { font-size: 14px; font-weight: 800; color: #0F172A; }
 
-        /* Content section */
-        .content-section {
-            padding: 30px;
-        }
-        
-        .section-header {
+        /* ============ CONTENT ============ */
+        .content { padding: 24px 30px; }
+
+        /* ============ HERO ============ */
+        .hero-box {
+            background: #F97316;
+            padding: 20px 24px;
             margin-bottom: 20px;
-            padding-bottom: 8px;
-            border-bottom: 3px solid #F97316;
-            display: block;
+            width: 100%;
         }
-        .section-badge {
-            background-color: #F97316;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            display: inline-block;
-            margin-right: 8px;
-        }
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #0F172A;
-            display: inline-block;
-            vertical-align: middle;
-        }
+        .hero-tag { font-size: 10px; font-weight: 800; color: #FFEDD5; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .hero-title { font-size: 20px; font-weight: 900; color: #ffffff; margin-bottom: 8px; }
+        .hero-desc { font-size: 12px; color: rgba(255,255,255,0.9); line-height: 1.6; }
 
-        /* Panels */
+        /* ============ SECTION HEADER ============ */
+        .sec-hdr { margin-bottom: 12px; margin-top: 20px; padding-bottom: 6px; border-bottom: 3px solid #F97316; }
+        .sec-badge {
+            background: #F97316; color: #fff;
+            padding: 3px 10px; font-size: 12px; font-weight: 800;
+            display: inline-block; margin-right: 6px;
+        }
+        .sec-title { font-size: 16px; font-weight: 800; color: #0F172A; display: inline; vertical-align: middle; }
+
+        /* ============ PANEL ============ */
         .panel {
-            background-color: #F8FAFC;
+            background: #F8FAFC;
             border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-            page-break-inside: avoid;
-        }
-        
-        /* Hero */
-        .hero-panel {
-            background-color: #F97316;
-            color: white;
-            border: none;
-        }
-        .hero-title {
-            font-size: 24px;
-            font-weight: 900;
-            margin-bottom: 15px;
-        }
-        .hero-desc {
-            font-size: 14px;
-            line-height: 1.6;
-            margin: 0;
-            color: rgba(255,255,255,0.9);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
-        /* Status colors */
-        .color-critical { color: #DC2626; }
-        .color-fragile { color: #D97706; }
-        .color-healthy { color: #10B981; }
+        /* ============ GRID TABLE ============ */
+        table.g2 { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        table.g2 td { width: 50%; vertical-align: top; padding: 0; }
+        table.g2 td.pad-r { padding-right: 10px; }
+        table.g2 td.pad-l { padding-left: 10px; }
 
-        /* Tables inside panels */
-        table.grid-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* ============ COST TABLE ============ */
+        table.cost-tbl { width: 100%; border-collapse: collapse; }
+        table.cost-tbl td { padding: 5px 2px; font-size: 12px; }
+        .bd-t { border-top: 1px solid #E2E8F0; }
+
+        /* ============ BIG METRIC ============ */
+        .big-num { font-size: 38px; font-weight: 900; line-height: 1; }
+        .big-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+        /* ============ LIST ITEMS ============ */
+        .li-risk {
+            background: #FEF2F2; border: 1px solid #FECACA;
+            border-left: 4px solid #DC2626; color: #991B1B;
+            padding: 10px 14px; margin-bottom: 8px; font-size: 12px; font-weight: bold; width: 100%;
         }
-        table.grid-table td {
-            vertical-align: top;
-            padding: 10px;
+        .li-act {
+            background: #ECFDF5; border: 1px solid #A7F3D0;
+            border-left: 4px solid #10B981; color: #065F46;
+            padding: 10px 14px; margin-bottom: 8px; font-size: 12px; font-weight: bold; width: 100%;
         }
-        table.cost-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table.cost-table td {
-            padding: 8px 0;
-            font-size: 13px;
-        }
-        .border-t {
-            border-top: 1px solid #E2E8F0;
-        }
-        
-        /* Lists */
-        .list-item {
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .list-risk {
-            background-color: #FEF2F2;
-            border: 1px solid #FECACA;
-            color: #991B1B;
-            border-left: 4px solid #DC2626;
-        }
-        .list-action {
-            background-color: #ECFDF5;
-            border: 1px solid #A7F3D0;
-            color: #065F46;
-            border-left: 4px solid #10B981;
-        }
-        .list-driver {
-            background-color: #ffffff;
-            border: 1px solid #E2E8F0;
-            color: #1E293B;
+        .li-drv {
+            background: #ffffff; border: 1px solid #E2E8F0;
+            padding: 10px 14px; margin-bottom: 8px; font-size: 12px; width: 100%;
         }
 
-        .snapshot-panel {
-            background-color: #0F172A;
-            color: white;
-        }
-        table.snapshot-grid {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table.snapshot-grid td {
-            padding: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
+        /* ============ STATUS COLORS ============ */
+        .c-crit { color: #DC2626; }
+        .c-frag { color: #D97706; }
+        .c-hlth { color: #10B981; }
+
+        /* ============ INSIGHT BOX ============ */
+        .insight-box { margin-top: 12px; padding-top: 12px; border-top: 1px solid #E2E8F0; font-size: 11px; color: #334155; }
+        .insight-box strong { color: #1E3A8A; }
+
+        /* ============ SNAPSHOT (dark) ============ */
+        table.snap { width: 100%; border-collapse: collapse; background: #0F172A; margin-bottom: 20px; }
+        table.snap td {
+            width: 25%; padding: 16px 20px; border: 1px solid rgba(255,255,255,0.1);
             background: rgba(255,255,255,0.05);
-            width: 50%;
         }
-        .snap-label {
-            font-size: 11px;
-            color: #FDBA74;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .snap-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-        }
-        
+        .snap-lbl { font-size: 10px; color: #FDBA74; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
+        .snap-val { font-size: 16px; font-weight: 800; color: #ffffff; }
+
+        /* ============ FOOTER ============ */
         .footer {
-            margin-top: 20px;
-            padding: 24px 30px;
-            text-align: center;
-            font-size: 11px;
-            color: #64748B;
-            border-top: 1px solid #E2E8F0;
-            background-color: #F8FAFC;
+            margin-top: 16px; padding: 18px 30px;
+            text-align: center; font-size: 10px; color: #64748B;
+            border-top: 1px solid #E2E8F0; background: #F8FAFC;
         }
-        .footer strong {
-            color: #F97316;
-            font-weight: 800;
-        }
+        .footer strong { color: #F97316; font-weight: 800; }
+
+        /* ============ PAGE BREAK ============ */
+        .pb-avoid { page-break-inside: avoid; }
+        .pb { page-break-after: always; }
     </style>
 </head>
 <body>
-    @php
-        $margin = $calc->net_margin_percent;
-        $statusColor = $calc->status_label === 'CRITICAL' ? 'color-critical' : ($calc->status_label === 'FRAGILE' ? 'color-fragile' : 'color-healthy');
-    @endphp
+@php
+    $margin = $calc->net_margin_percent;
+    $sc = $calc->status_label === 'CRITICAL' ? 'c-crit' : ($calc->status_label === 'FRAGILE' ? 'c-frag' : 'c-hlth');
+@endphp
 
-    <div class="container">
-        <!-- Header -->
-        <table class="header-table" cellspacing="0" cellpadding="0">
-            <tr>
-                <td width="50%">
-                    <div class="header-title"><span>Clarity</span>Labs</div>
-                    <div class="header-subtitle">Business Viability Engine</div>
-                </td>
-                <td width="50%" class="report-info">
-                    <h2>Analysis Results</h2>
-                    <p>Generated on {{ now()->format('d F Y, H:i') }}</p>
-                </td>
-            </tr>
-        </table>
+    <!-- ===== HEADER ===== -->
+    <div class="header-wrap">
+        <div class="header-inner">
+            <span class="header-left">
+                <div class="brand-title"><span class="accent">Clarity</span>Labs</div>
+                <div class="brand-sub">Business Viability Engine</div>
+            </span>
+            <span class="header-right">
+                <div class="rep-label">Analysis Results</div>
+                <div class="rep-date">Generated on {{ now()->format('d F Y, H:i') }}</div>
+            </span>
+        </div>
+    </div>
 
-        <!-- Info Cards -->
-        <table class="info-table" cellspacing="0" cellpadding="0">
-            <tr>
-                <td>
-                    <span class="info-label">Product Name</span>
-                    <span class="info-value">{{ $calc->product_name }}</span>
-                </td>
-                <td>
-                    <span class="info-label">Report ID</span>
-                    <span class="info-value">#{{ $calc->id }}</span>
-                </td>
-                <td>
-                    <span class="info-label">Analysis Date</span>
-                    <span class="info-value">{{ $calc->created_at->format('d M Y') }}</span>
-                </td>
-            </tr>
-        </table>
+    <!-- ===== META BAR ===== -->
+    <table class="meta-bar" cellspacing="0" cellpadding="0">
+        <tr>
+            <td><div class="ml">Product Name</div><div class="mv">{{ $calc->product_name }}</div></td>
+            <td><div class="ml">Report ID</div><div class="mv">#{{ $calc->id }}</div></td>
+            <td><div class="ml">Analysis Date</div><div class="mv">{{ $calc->created_at->format('d M Y') }}</div></td>
+        </tr>
+    </table>
 
-        <div class="content-section">
-            
-            <!-- 1. Hero Section -->
-            <div class="panel hero-panel">
-                <div style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:10px; color:#FFEDD5;">1. Hero Section</div>
-                <div class="hero-title">➜ {{ $calc->status_label == 'CRITICAL' ? 'Critical - Optimization Needed' : ($calc->status_label == 'FRAGILE' ? 'Proceed with Caution' : 'Green Light to Scale') }}</div>
+    <div class="content">
+
+        <!-- ===== 1. HERO ===== -->
+        <div class="pb-avoid">
+            <div class="hero-box">
+                <div class="hero-tag">1. Executive Summary</div>
+                <div class="hero-title">
+                    ➜ {{ $calc->status_label == 'CRITICAL' ? 'Critical - Optimization Needed' : ($calc->status_label == 'FRAGILE' ? 'Proceed with Caution' : 'Green Light to Scale') }}
+                </div>
                 <div class="hero-desc">{{ $calc->logic_reason }}</div>
             </div>
+        </div>
 
-            <!-- 2. Profit Reality -->
-            <div class="section-header">
-                <span class="section-badge">2</span>
-                <span class="section-title">Profit Reality</span>
+        <!-- ===== 2. PROFIT REALITY ===== -->
+        <div class="pb-avoid">
+            <div class="sec-hdr">
+                <span class="sec-badge">2</span>
+                <span class="sec-title">Profit Reality</span>
             </div>
             <div class="panel">
-                <table class="grid-table">
+                <table class="g2">
                     <tr>
-                        <td width="40%">
-                            <div style="font-size:13px; color:#64748B; font-weight:bold; margin-bottom:5px;">Net Margin</div>
-                            <div style="font-size:42px; font-weight:900;" class="{{ $statusColor }}">{{ number_format($margin, 1, ',', '.') }}%</div>
-                            <div style="font-size:14px; font-weight:bold; margin-top:5px; text-transform:uppercase;" class="{{ $statusColor }}">{{ $calc->status_label }}</div>
+                        <td class="pad-r" style="width:38%;">
+                            <div style="font-size:11px; color:#64748B; font-weight:bold; margin-bottom:4px;">Net Margin</div>
+                            <div class="big-num {{ $sc }}">{{ number_format($margin, 1, ',', '.') }}%</div>
+                            <div class="big-lbl {{ $sc }}">{{ $calc->status_label }}</div>
                         </td>
-                        <td width="60%">
-                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#94A3B8; margin-bottom:10px;">Cost Breakdown</div>
-                            <table class="grid-table">
+                        <td class="pad-l" style="width:62%;">
+                            <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:#94A3B8; margin-bottom:8px;">Cost Breakdown</div>
+                            <table class="g2">
                                 <tr>
-                                    <td width="50%" style="padding:0 10px 0 0;">
-                                        <table class="cost-table">
+                                    <td class="pad-r">
+                                        <table class="cost-tbl">
                                             <tr><td style="color:#64748B;">Revenue</td><td align="right"><b>100%</b></td></tr>
                                             <tr><td style="color:#64748B;">HPP</td><td align="right"><b>{{ number_format($hppPct ?? 0, 1, ',', '.') }}%</b></td></tr>
                                             <tr><td style="color:#64748B;">Admin Fee</td><td align="right"><b>{{ number_format($calc->admin_fee_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
@@ -309,12 +211,12 @@
                                             <tr><td style="color:#64748B;">Affiliate</td><td align="right"><b>{{ number_format($calc->affiliate_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
                                         </table>
                                     </td>
-                                    <td width="50%" style="padding:0 0 0 10px;">
-                                        <table class="cost-table">
+                                    <td class="pad-l">
+                                        <table class="cost-tbl">
                                             <tr><td style="color:#64748B;">Promo</td><td align="right"><b>{{ number_format($calc->promo_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
                                             <tr><td style="color:#64748B;">Overhead</td><td align="right"><b>{{ number_format($calc->overhead_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
                                             <tr><td style="color:#64748B;">Tax</td><td align="right"><b>{{ number_format($calc->tax_percent ?? 0, 1, ',', '.') }}%</b></td></tr>
-                                            <tr><td colspan="2" class="border-t"></td></tr>
+                                            <tr><td colspan="2" class="bd-t" style="padding-top:6px;"></td></tr>
                                             <tr><td style="color:#0F172A; font-weight:bold;">Total Cost</td><td align="right" style="color:#0F172A; font-weight:bold;">{{ number_format($totalCostPct ?? 0, 1, ',', '.') }}%</td></tr>
                                         </table>
                                     </td>
@@ -324,40 +226,42 @@
                     </tr>
                 </table>
             </div>
+        </div>
 
-            <!-- 3. Cost Pressure & 4. Risk -->
-            <table class="grid-table" style="margin-bottom: 0;">
+        <!-- ===== 3 & 4: COST PRESSURE + RISK ===== -->
+        <div class="pb-avoid">
+            <table class="g2">
                 <tr>
-                    <td width="50%" style="padding: 0 10px 0 0;">
-                        <div class="section-header">
-                            <span class="section-badge">3</span>
-                            <span class="section-title">Cost Pressure</span>
+                    <td class="pad-r">
+                        <div class="sec-hdr">
+                            <span class="sec-badge">3</span>
+                            <span class="sec-title">Cost Pressure</span>
                         </div>
-                        <div class="panel" style="padding:20px;">
-                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#94A3B8; margin-bottom:10px;">Biggest Cost Drivers</div>
+                        <div class="panel">
+                            <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:#94A3B8; margin-bottom:10px;">Biggest Cost Drivers</div>
                             @if(isset($topCosts))
                                 @foreach($topCosts as $idx => $cost)
-                                    <div class="list-item list-driver" style="display:table; width:100%; box-sizing:border-box;">
-                                        <div style="display:table-cell; width:20px; color:#F97316;">{{ $idx + 1 }}.</div>
-                                        <div style="display:table-cell; text-transform:capitalize;">{{ $cost[0] }}</div>
-                                        <div style="display:table-cell; text-align:right;">{{ number_format($cost[1], 1, ',', '.') }}%</div>
+                                    <div class="li-drv">
+                                        <span style="color:#F97316; font-weight:800;">{{ $idx + 1 }}.</span>
+                                        <span style="text-transform:capitalize; margin-left:4px;">{{ $cost[0] }}</span>
+                                        <span style="float:right; font-weight:800;">{{ number_format($cost[1], 1, ',', '.') }}%</span>
                                     </div>
                                 @endforeach
                             @endif
-                            <div style="margin-top:15px; padding-top:15px; border-top:1px solid #E2E8F0; font-size:12px; color:#334155;">
-                                <strong style="color:#1E3A8A;">Insight:</strong> {{ $insight ?? '' }}
+                            <div class="insight-box">
+                                <strong>Insight:</strong> {{ $insight ?? '' }}
                             </div>
                         </div>
                     </td>
-                    <td width="50%" style="padding: 0 0 0 10px;">
-                        <div class="section-header">
-                            <span class="section-badge">4</span>
-                            <span class="section-title">Risk Analysis</span>
+                    <td class="pad-l">
+                        <div class="sec-hdr">
+                            <span class="sec-badge">4</span>
+                            <span class="sec-title">Risk Analysis</span>
                         </div>
-                        <div class="panel" style="padding:20px;">
+                        <div class="panel">
                             @if(isset($risks) && count($risks) > 0)
                                 @foreach($risks as $risk)
-                                    <div class="list-item list-risk">• {{ $risk }}</div>
+                                    <div class="li-risk">• {{ $risk }}</div>
                                 @endforeach
                             @else
                                 <p style="color:#64748B;">No significant risks identified.</p>
@@ -366,101 +270,105 @@
                     </td>
                 </tr>
             </table>
+        </div>
 
-            <!-- 5. Strategy & 6. Production -->
-            <table class="grid-table" style="margin-bottom: 0;">
+        <!-- ===== 5 & 6: STRATEGY + PRODUCTION ===== -->
+        <div class="pb-avoid">
+            <table class="g2">
                 <tr>
-                    <td width="50%" style="padding: 0 10px 0 0;">
-                        <div class="section-header">
-                            <span class="section-badge">5</span>
-                            <span class="section-title">Strategy Direction</span>
+                    <td class="pad-r">
+                        <div class="sec-hdr">
+                            <span class="sec-badge">5</span>
+                            <span class="sec-title">Strategy Direction</span>
                         </div>
-                        <div class="panel" style="padding:20px;">
-                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#EA580C; margin-bottom:5px;">Operating Mode</div>
-                            <div style="font-size:24px; font-weight:900; color:#F97316; margin-bottom:10px;">{{ $strategy ?? '' }}</div>
-                            <div style="font-size:13px; font-weight:bold; color:#475569;">Focus: {{ $focus ?? '' }}</div>
+                        <div class="panel">
+                            <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:#EA580C; margin-bottom:4px;">Operating Mode</div>
+                            <div style="font-size:22px; font-weight:900; color:#F97316; margin-bottom:8px;">{{ $strategy ?? '' }}</div>
+                            <div style="font-size:12px; font-weight:bold; color:#475569;">Focus: {{ $focus ?? '' }}</div>
                         </div>
                     </td>
-                    <td width="50%" style="padding: 0 0 0 10px;">
-                        <div class="section-header">
-                            <span class="section-badge">6</span>
-                            <span class="section-title">Production Decision</span>
+                    <td class="pad-l">
+                        <div class="sec-hdr">
+                            <span class="sec-badge">6</span>
+                            <span class="sec-title">Production Decision</span>
                         </div>
-                        <div class="panel" style="padding:20px;">
-                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#EA580C; margin-bottom:5px;">Recommended Batch</div>
-                            <div style="font-size:24px; font-weight:900; color:#F97316; margin-bottom:10px;">{{ number_format($calc->est_batch_quantity, 0, ',', '.') }} <span style="font-size:14px;">pcs</span></div>
-                            <div style="font-size:13px; font-weight:bold; color:#475569;">Model: Batch Limited</div>
+                        <div class="panel">
+                            <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:#EA580C; margin-bottom:4px;">Recommended Batch</div>
+                            <div style="font-size:22px; font-weight:900; color:#F97316; margin-bottom:8px;">{{ number_format($calc->est_batch_quantity, 0, ',', '.') }} <span style="font-size:12px;">pcs</span></div>
+                            <div style="font-size:12px; font-weight:bold; color:#475569;">Model: Batch Limited</div>
                         </div>
                     </td>
                 </tr>
             </table>
+        </div>
 
-            <!-- 7. Ads & 8. Action Plan -->
-            <table class="grid-table" style="margin-bottom: 0;">
+        <!-- ===== 7 & 8: ADS + ACTION PLAN ===== -->
+        <div class="pb-avoid">
+            <table class="g2">
                 <tr>
-                    <td width="40%" style="padding: 0 10px 0 0;">
-                        <div class="section-header">
-                            <span class="section-badge">7</span>
-                            <span class="section-title">Ads Insight</span>
+                    <td class="pad-r" style="width:38%;">
+                        <div class="sec-hdr">
+                            <span class="sec-badge">7</span>
+                            <span class="sec-title">Ads Insight</span>
                         </div>
-                        <div class="panel" style="padding:20px;">
-                            <div style="font-size:14px; font-weight:bold; margin-bottom:10px;">Ads Cost: <span style="color:#F97316;">{{ number_format($calc->ads_per_unit ?? 0, 1, ',', '.') }}%</span></div>
-                            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; margin-bottom:5px;">Status: {{ $adsStatus ?? '' }}</div>
-                            <div style="font-size:13px; color:#475569;">{{ $adsMessage ?? '' }}</div>
+                        <div class="panel">
+                            <div style="font-size:13px; font-weight:bold; margin-bottom:8px;">Ads Cost: <span style="color:#F97316;">{{ number_format($calc->ads_per_unit ?? 0, 1, ',', '.') }}%</span></div>
+                            <div style="font-size:10px; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Status: {{ $adsStatus ?? '' }}</div>
+                            <div style="font-size:12px; color:#475569;">{{ $adsMessage ?? '' }}</div>
                         </div>
                     </td>
-                    <td width="60%" style="padding: 0 0 0 10px;">
-                        <div class="section-header">
-                            <span class="section-badge">8</span>
-                            <span class="section-title">Action Plan</span>
+                    <td class="pad-l" style="width:62%;">
+                        <div class="sec-hdr">
+                            <span class="sec-badge">8</span>
+                            <span class="sec-title">Action Plan</span>
                         </div>
-                        <div class="panel" style="padding:20px;">
+                        <div class="panel">
                             @if(isset($actionPlan))
                                 @foreach($actionPlan as $action)
-                                    <div class="list-item list-action">✓ {{ $action }}</div>
+                                    <div class="li-act">✓ {{ $action }}</div>
                                 @endforeach
                             @endif
                         </div>
                     </td>
                 </tr>
             </table>
-
-            <!-- 9. Final Snapshot -->
-            <div class="section-header" style="margin-top: 10px;">
-                <span class="section-badge" style="background:#0F172A;">9</span>
-                <span class="section-title">Final Snapshot</span>
-            </div>
-            <div class="panel snapshot-panel" style="padding:0; overflow:hidden;">
-                <table class="snapshot-grid">
-                    <tr>
-                        <td>
-                            <div class="snap-label">Status</div>
-                            <div class="snap-value">{{ $calc->status_label }}</div>
-                        </td>
-                        <td>
-                            <div class="snap-label">Mode</div>
-                            <div class="snap-value">{{ $strategy ?? '' }}</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="snap-label">Net Margin</div>
-                            <div class="snap-value">{{ number_format($margin, 1, ',', '.') }}%</div>
-                        </td>
-                        <td>
-                            <div class="snap-label">Risk Level</div>
-                            <div class="snap-value">{{ $calc->status_label === 'CRITICAL' ? 'Extreme' : ($calc->status_label === 'FRAGILE' ? 'Medium - High' : 'Controlled') }}</div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
         </div>
 
-        <div class="footer">
-            This report was generated by <strong>ClarityLabs</strong> • Business Viability Engine v2.0<br>
-            {{ now()->format('d/m/Y H:i:s') }}
+        <!-- ===== 9. FINAL SNAPSHOT ===== -->
+        <div class="pb-avoid">
+            <div class="sec-hdr" style="margin-top:8px;">
+                <span class="sec-badge" style="background:#0F172A;">9</span>
+                <span class="sec-title">Final Snapshot</span>
+            </div>
+            <table class="snap" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <div class="snap-lbl">Status</div>
+                        <div class="snap-val">{{ $calc->status_label }}</div>
+                    </td>
+                    <td>
+                        <div class="snap-lbl">Operating Mode</div>
+                        <div class="snap-val">{{ $strategy ?? '' }}</div>
+                    </td>
+                    <td>
+                        <div class="snap-lbl">Net Margin</div>
+                        <div class="snap-val">{{ number_format($margin, 1, ',', '.') }}%</div>
+                    </td>
+                    <td>
+                        <div class="snap-lbl">Risk Level</div>
+                        <div class="snap-val">{{ $calc->status_label === 'CRITICAL' ? 'Extreme' : ($calc->status_label === 'FRAGILE' ? 'Medium - High' : 'Controlled') }}</div>
+                    </td>
+                </tr>
+            </table>
         </div>
+
     </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        This report was generated by <strong>ClarityLabs</strong> • Business Viability Engine v2.0<br>
+        {{ now()->format('d/m/Y H:i:s') }}
+    </div>
+
 </body>
 </html>

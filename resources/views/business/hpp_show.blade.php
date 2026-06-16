@@ -183,7 +183,7 @@
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                             </svg>
-                            Dicetak: {{ $hpp->printed_at->format('d M Y H:i') }}
+                            Dicetak: <span class="local-time" data-utc="{{ $hpp->printed_at->toIso8601String() }}" data-format="d M Y H:i">{{ $hpp->printed_at->format('d M Y H:i') }}</span>
                         </div>
                         <a :href="`{{ route('hpp.print', $hpp->id) }}?qty=${multiplier}`" class="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-xl font-black text-xs uppercase tracking-wider hover:bg-orange-600 transition-all shadow-md">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

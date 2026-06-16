@@ -17,11 +17,23 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
         <script>
-            if (localStorage.theme === 'dark') {
+            // Theme initialization
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');
             }
+
+            // Cross-tab theme synchronization
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'theme') {
+                    if (e.newValue === 'dark') {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                }
+            });
 
             // Listen for theme changes from parent window (for iframes)
             window.addEventListener('message', function(event) {
@@ -256,7 +268,116 @@
                         });
                     }
                 });
+
+                // Local time formatter
+                document.querySelectorAll('.local-time').forEach(function(el) {
+                    const utcDate = el.getAttribute('data-utc');
+                    const format = el.getAttribute('data-format') || 'd M Y';
+                    if (utcDate) {
+                        const date = new Date(utcDate);
+                        const options = {};
+                        
+                        if (format.includes('d') || format.includes('M') || format.includes('Y')) {
+                            options.day = '2-digit';
+                            options.month = 'short';
+                            options.year = 'numeric';
+                        }
+                        
+                        if (format.includes('H:i') || format.includes('h:i')) {
+                            options.hour = '2-digit';
+                            options.minute = '2-digit';
+                        }
+                        
+                        // Default to date if empty
+                        if (Object.keys(options).length === 0) {
+                            options.day = '2-digit';
+                            options.month = 'short';
+                            options.year = 'numeric';
+                        }
+                        
+                        el.textContent = date.toLocaleString('id-ID', options).replace(/,/g, '');
+                    }
+                });
             });
+        </script>
+        <script>
+            // Realtime polling (simple fallback) to keep HPP and Material selects up-to-date.
+            (function() {
+                const intervalMs = 3000; // polling interval (ms)
+
+                async function fetchLists() {
+                    try {
+                        const [hppRes, matRes] = await Promise.all([
+                            fetch('/api/hpp/list', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }),
+                            fetch('/api/materials/list', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                        ]);
+
+                        if (hppRes.ok) {
+                            const h = await hppRes.json();
+                            if (h && h.success) updateHppSelects(h.data);
+                        }
+                        if (matRes.ok) {
+                            const m = await matRes.json();
+                            if (m && m.success) updateMaterialSelects(m.data);
+                        }
+                    } catch (e) {
+                        console.debug('Realtime poll error', e);
+                    }
+                }
+
+                function updateHppSelects(items) {
+                    const ids = ['vp-product', 'hppSelect', 'existingIdSelect'];
+                    ids.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (!el) return;
+                        const cur = el.value;
+                        // Clear
+                        while (el.firstChild) el.removeChild(el.firstChild);
+                        // Default option
+                        const defaultOpt = document.createElement('option');
+                        defaultOpt.value = '';
+                        defaultOpt.textContent = id === 'hppSelect' ? 'HPP Manual' : '-- Pilih --';
+                        el.appendChild(defaultOpt);
+
+                        items.forEach(item => {
+                            const opt = document.createElement('option');
+                            if (id === 'hppSelect') {
+                                opt.value = item.total_hpp_per_unit;
+                                opt.textContent = item.hpp_id + ' • ' + item.name + ' • Rp' + Number(item.total_hpp_per_unit).toLocaleString('id-ID');
+                            } else if (id === 'existingIdSelect') {
+                                opt.value = item.hpp_id;
+                                opt.textContent = item.hpp_id + ' • ' + item.name;
+                            } else {
+                                opt.value = item.id;
+                                opt.textContent = item.hpp_id + ' • ' + item.name;
+                            }
+                            el.appendChild(opt);
+                        });
+
+                        try { el.value = cur; } catch (e) {}
+                    });
+                }
+
+                function updateMaterialSelects(items) {
+                    // Update selects that store material ids
+                    const selects = Array.from(document.querySelectorAll('select[name="material_ids[]"], select.material-live, select[data-live="materials"]'));
+                    selects.forEach(el => {
+                        const cur = el.value;
+                        while (el.firstChild) el.removeChild(el.firstChild);
+                        const defaultOpt = document.createElement('option'); defaultOpt.value = ''; defaultOpt.textContent = '-- Pilih Bahan --'; el.appendChild(defaultOpt);
+                        items.forEach(item => {
+                            const opt = document.createElement('option');
+                            opt.value = item.id;
+                            opt.textContent = item.name + ' • Rp' + Number(item.price).toLocaleString('id-ID') + ' / ' + (item.unit || 'unit');
+                            el.appendChild(opt);
+                        });
+                        try { el.value = cur; } catch (e) {}
+                    });
+                }
+
+                // Start polling shortly after load
+                setTimeout(() => { fetchLists(); setInterval(fetchLists, intervalMs); }, 1500);
+            })();
         </script>
     </body>
 </html>

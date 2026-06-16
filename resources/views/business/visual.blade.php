@@ -135,8 +135,8 @@
         .ai-result-box { background: var(--grn-lt); border: 1px solid var(--grn-bd); border-radius: var(--radlg); padding: 32px; margin-top: 24px; color: var(--grn); }
         
         .care-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-        .ci { padding: 16px; border: 1px solid var(--bd); border-radius: var(--rad); text-align: center; cursor: pointer; transition: 0.2s; position: relative; }
-        .ci.on { border-color: var(--ora); background: var(--ora-lt); }
+        .ci { padding: 16px; border: 2px solid var(--bd); border-radius: var(--rad); text-align: center; cursor: pointer; transition: 0.2s; position: relative; }
+        .ci.on { border-color: var(--ora); background: var(--ora-lt); box-shadow: 0 0 0 2px var(--ora); }
         .ci-ic { font-size: 24px; margin-bottom: 8px; opacity: 0.4; }
         .ci.on .ci-ic { opacity: 1; color: var(--ora); }
         .ci-nm { font-size: 11px; font-weight: 800; color: var(--t2); }
@@ -246,7 +246,7 @@
                                 <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                             <p class="text-lg font-bold text-slate-800">Klik untuk upload foto produk</p>
-                            <p class="text-sm text-slate-400">Mendukung format JPG, PNG, WEBP</p>
+                            <p class="text-sm text-slate-400">Mendukung format JPG, PNG, WEBP (Max 2MB)</p>
                         </div>
                     </label>
                 </div>
@@ -311,7 +311,10 @@
                             <label class="fl">Logo Brand</label>
                             <div class="img-upload-wrap">
                                 <input type="file" accept="image/*" onchange="handleLogoUpload(event)">
-                                <div class="img-upload-box py-6" id="logo-box"><p class="text-xs font-bold text-slate-400">UPLOAD LOGO</p></div>
+                                <div class="img-upload-box py-6 flex flex-col items-center justify-center" id="logo-box">
+                                    <p class="text-xs font-bold text-slate-400">UPLOAD LOGO</p>
+                                    <p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -322,6 +325,7 @@
                                 <div class="tg on" onclick="t1(this,'c-recip')">Client</div>
                                 <div class="tg" onclick="t1(this,'c-recip')">Vendor</div>
                                 <div class="tg" onclick="t1(this,'c-recip')">Supplier</div>
+                                <div class="tg" onclick="t1(this,'c-recip')">Brand</div>
                             </div>
                         </div>
                         <div class="fg"><label class="fl">Entity Name</label><input type="text" class="fi" id="c-recip-name" placeholder="Company Name" oninput="updateCoverPreview()"></div>
@@ -363,18 +367,19 @@
                             <div class="w-1/4">
                                 <div class="img-upload-wrap h-full min-h-[140px]">
                                     <input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-mat-1')">
-                                    <div class="img-upload-box h-full flex items-center justify-center" id="img-mat-1">
+                                    <div class="img-upload-box h-full flex flex-col items-center justify-center" id="img-mat-1">
                                         <p class="text-[10px] font-bold text-slate-400 uppercase">UPLOAD PHOTO</p>
+                                        <p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="w-3/4 flex flex-col justify-between">
-                                <div class="g4 mb-4">
+                                <div class="g3 mb-4">
                                     <div class="fg mb-0"><label class="fl">Fabric</label><input type="text" class="fi" id="f-fabric"></div>
-                                    <div class="fg mb-0"><label class="fl">Construction</label><input type="text" class="fi" id="f-construct"></div>
                                     <div class="fg mb-0"><label class="fl">GSM</label><input type="text" class="fi" id="f-gsm"></div>
                                     <div class="fg mb-0"><label class="fl">Color</label><input type="text" class="fi" id="f-color"></div>
                                 </div>
+                                <div class="fg mb-4"><label class="fl">Construction</label><textarea class="fta" id="f-construct" rows="2"></textarea></div>
                                 <div class="fg mb-0"><label class="fl">AI Analysis Reasoning</label><textarea class="fta" id="f-fabric-reason" rows="2"></textarea></div>
                             </div>
                         </div>
@@ -384,12 +389,12 @@
                 <div class="card">
                     <div class="ct"><div class="cd"></div> Visual Viewpoints</div>
                     <div class="g2">
-                        <div class="fg"><label class="fl">Front View</label><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-front')"><div class="img-upload-box" id="img-front"><p class="text-xs font-bold text-slate-400 uppercase">FRONT VIEW</p></div></div></div>
-                        <div class="fg"><label class="fl">Back View</label><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-back')"><div class="img-upload-box" id="img-back"><p class="text-xs font-bold text-slate-400 uppercase">BACK VIEW</p></div></div></div>
+                        <div class="fg"><label class="fl">Front View</label><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-front')"><div class="img-upload-box flex flex-col items-center justify-center" id="img-front"><p class="text-xs font-bold text-slate-400 uppercase">FRONT VIEW</p><p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p></div></div></div>
+                        <div class="fg"><label class="fl">Back View</label><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-back')"><div class="img-upload-box flex flex-col items-center justify-center" id="img-back"><p class="text-xs font-bold text-slate-400 uppercase">BACK VIEW</p><p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p></div></div></div>
                     </div>
                     <div class="g2 mt-4" id="detail-views-container">
-                        <div class="fg"><label class="fl">Detail 1</label><input type="text" class="fi mb-2" id="d1-label" placeholder="Detail Label"><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-d1')"><div class="img-upload-box" id="img-d1"><p class="text-xs font-bold text-slate-400 uppercase">UPLOAD DETAIL</p></div></div></div>
-                        <div class="fg"><label class="fl">Detail 2</label><input type="text" class="fi mb-2" id="d2-label" placeholder="Detail Label"><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-d2')"><div class="img-upload-box" id="img-d2"><p class="text-xs font-bold text-slate-400 uppercase">UPLOAD DETAIL</p></div></div></div>
+                        <div class="fg"><label class="fl">Detail 1</label><input type="text" class="fi mb-2" id="d1-label" placeholder="Detail Label"><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-d1')"><div class="img-upload-box flex flex-col items-center justify-center" id="img-d1"><p class="text-xs font-bold text-slate-400 uppercase">UPLOAD DETAIL</p><p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p></div></div></div>
+                        <div class="fg"><label class="fl">Detail 2</label><input type="text" class="fi mb-2" id="d2-label" placeholder="Detail Label"><div class="img-upload-wrap"><input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-d2')"><div class="img-upload-box flex flex-col items-center justify-center" id="img-d2"><p class="text-xs font-bold text-slate-400 uppercase">UPLOAD DETAIL</p><p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p></div></div></div>
                     </div>
                     <button class="mt-2 text-orange-600 font-bold text-sm uppercase" onclick="addDetailView()">+ ADD MORE DETAIL</button>
                 </div>
@@ -453,15 +458,32 @@
             <div class="pg" id="pg-5">
                 <span class="eyebrow ey-ora">Page 5 / 8</span>
                 <h1 class="ph1">Packaging Spec</h1>
-                <div class="card">
-                    <div class="g3">
-                        <div class="fg"><label class="fl">Polybag Type</label><input type="text" class="fi" id="f-poly"></div>
-                        <div class="fg"><label class="fl">Size (cm)</label><input type="text" class="fi" id="f-poly-sz"></div>
-                        <div class="fg"><label class="fl">Thickness</label><input type="text" class="fi" id="f-poly-th"></div>
+                <div id="packaging-specs-container">
+                    <div class="card">
+                        <div class="flex gap-6">
+                            <div class="w-1/4">
+                                <div class="img-upload-wrap h-full min-h-[140px]">
+                                    <input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-packaging-1')">
+                                    <div class="img-upload-box h-full flex flex-col items-center justify-center" id="img-packaging-1">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase">UPLOAD PHOTO</p>
+                                        <p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-3/4 flex flex-col justify-between">
+                                <div class="g4 mb-4">
+                                    <div class="fg mb-0"><label class="fl">Packaging Spec</label><input type="text" class="fi" id="f-poly-spec-1"></div>
+                                    <div class="fg mb-0"><label class="fl">Polybag Type</label><input type="text" class="fi" id="f-poly-1"></div>
+                                    <div class="fg mb-0"><label class="fl">Size (cm)</label><input type="text" class="fi" id="f-poly-sz-1"></div>
+                                    <div class="fg mb-0"><label class="fl">Thickness</label><input type="text" class="fi" id="f-poly-th-1"></div>
+                                </div>
+                                <div class="fg mb-4"><label class="fl">Folding Method</label><div class="tg-grp" id="f-fold-1"><div class="tg" onclick="this.classList.toggle('on')">Flat Fold</div><div class="tg" onclick="this.classList.toggle('on')">Roll</div><div class="tg" onclick="this.classList.toggle('on')">Hanger</div></div></div>
+                                <div class="fg mb-0"><label class="fl">AI Packaging Insight</label><textarea class="fta" id="f-poly-why-1" rows="2"></textarea></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="fg"><label class="fl">Folding Method</label><div class="tg-grp" id="f-fold"><div class="tg" onclick="this.classList.toggle('on')">Flat Fold</div><div class="tg" onclick="this.classList.toggle('on')">Roll</div><div class="tg" onclick="this.classList.toggle('on')">Hanger</div></div></div>
-                    <div class="fg"><label class="fl">AI Packaging Insight</label><textarea class="fta" id="f-poly-why" rows="2"></textarea></div>
                 </div>
+                <button class="mb-8 mt-[-16px] text-orange-600 font-bold text-sm uppercase" onclick="addPackagingSpec()">+ ADD PACKAGING</button>
                 <div class="card">
                     <div class="ct"><div class="cd"></div> Master Carton</div>
                     <div class="g4">
@@ -480,12 +502,42 @@
                 <h1 class="ph1">Care Instruction</h1>
                 <div class="card">
                     <div class="ct"><div class="cd"></div> Selected Care Symbols</div>
-                    <div class="care-grid" id="care-grid">
-                        <div class="ci" data-c="handwash" onclick="tglCi(this)"><div class="ci-ic">🧺</div><div class="ci-nm">Hand Wash</div></div>
-                        <div class="ci" data-c="no-bleach" onclick="tglCi(this)"><div class="ci-ic">🚫</div><div class="ci-nm">No Bleach</div></div>
-                        <div class="ci" data-c="no-dryer" onclick="tglCi(this)"><div class="ci-ic">❌</div><div class="ci-nm">No Dryer</div></div>
-                        <div class="ci" data-c="iron-low" onclick="tglCi(this)"><div class="ci-ic">🔥</div><div class="ci-nm">Iron Low</div></div>
-                        <div class="ci" data-c="inside" onclick="tglCi(this)"><div class="ci-ic">🔄</div><div class="ci-nm">Inside Out</div></div>
+                    <div id="care-symbols-container">
+                        @php
+                            $care_categories = ['wash', 'bleaching', 'ironing', 'dry_cleaning', 'drying'];
+                            $care_symbols = [];
+                            foreach ($care_categories as $cat) {
+                                $files = glob(public_path("images/care_symbols/{$cat}/*.*"));
+                                $care_symbols[$cat] = [];
+                                if ($files) {
+                                    foreach ($files as $f) {
+                                        $name = pathinfo($f, PATHINFO_FILENAME);
+                                        // Abaikan file yang berakhiran _logo
+                                        if (!str_contains(strtolower($name), '_logo')) {
+                                            $care_symbols[$cat][] = [
+                                                'name' => $name,
+                                                'path' => "images/care_symbols/{$cat}/" . basename($f)
+                                            ];
+                                        }
+                                    }
+                                }
+                            }
+                        @endphp
+
+                        @foreach($care_categories as $cat)
+                            <div class="mt-6 mb-3 flex items-center border-b border-slate-100 pb-2">
+                                <strong class="uppercase text-slate-700 text-xs font-black">{{ str_replace('_', ' ', $cat) }}</strong>
+                            </div>
+                            <div class="care-grid mb-4" id="cg-{{ $cat }}">
+                                @forelse($care_symbols[$cat] as $sym)
+                                    <div class="ci !p-0 overflow-hidden bg-white flex items-center justify-center" data-c="{{ $sym['name'] }}" data-nm="{{ ucwords(str_replace(['-', '_'], ' ', $sym['name'])) }}" data-cat="{{ $cat }}" onclick="tglCi(this, 'cg-{{ $cat }}')">
+                                        <img src="{{ asset($sym['path']) }}" class="w-full h-auto aspect-square object-contain care-img">
+                                    </div>
+                                @empty
+                                    <p class="text-xs text-slate-400 italic col-span-5">Belum ada foto pilihan di folder {{ $cat }}.</p>
+                                @endforelse
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="card">
@@ -601,8 +653,13 @@
                     'f-color': existingData.color, 'f-fabric-reason': existingData.fabricReason,
                     'f-care-id': existingData.care_id, 'f-care-en': existingData.care_en, 'f-comp': existingData.comp,
                     'f-origin': existingData.origin, 'bom-hpp': existingData.hpp, 'bom-mat': existingData.bomMat,
-                    'bom-trim': existingData.bomTrim, 'f-cmt': existingData.cmt, 'f-poly': existingData.polyType,
-                    'f-poly-sz': existingData.polySz, 'f-poly-th': existingData.polyTh, 'f-poly-why': existingData.polyWhy,
+                    'bom-trim': existingData.bomTrim, 'f-cmt': existingData.cmt,
+                    // Packaging spec fields use -1 suffix
+                    'f-poly-spec-1': existingData.polySpec || (existingData.packagingSpecs && existingData.packagingSpecs[0] ? existingData.packagingSpecs[0].spec : null),
+                    'f-poly-1': existingData.polyType || (existingData.packagingSpecs && existingData.packagingSpecs[0] ? existingData.packagingSpecs[0].polyType : null),
+                    'f-poly-sz-1': existingData.polySz || (existingData.packagingSpecs && existingData.packagingSpecs[0] ? existingData.packagingSpecs[0].polySz : null),
+                    'f-poly-th-1': existingData.polyTh || (existingData.packagingSpecs && existingData.packagingSpecs[0] ? existingData.packagingSpecs[0].polyTh : null),
+                    'f-poly-why-1': existingData.polyWhy || (existingData.packagingSpecs && existingData.packagingSpecs[0] ? existingData.packagingSpecs[0].polyWhy : null),
                     'f-ctn-qty': existingData.ctnQty, 'f-ctn-sz': existingData.ctnSz, 'f-ctn-wt': existingData.ctnWt,
                     'f-ctn-st': existingData.ctnSt
                 };
@@ -615,15 +672,21 @@
                 
                 // Care symbols
                 if(existingData.careSymbols) {
-                    document.querySelectorAll('#care-grid .ci').forEach(el => {
-                        const nm = el.querySelector('.ci-nm').textContent;
-                        if(existingData.careSymbols.includes(nm)) el.classList.add('on');
+                    document.querySelectorAll('.care-grid .ci').forEach(el => {
+                        const nm = el.getAttribute('data-nm');
+                        const found = existingData.careSymbols.find(c => {
+                            if(typeof c === 'string') return c === nm;
+                            return c.name === nm;
+                        });
+                        if(found) el.classList.add('on');
                     });
                 }
                 
                 // Toggle Groups
-                if(existingData.fold) {
-                    document.querySelectorAll('#f-fold .tg').forEach(t => { if(existingData.fold.includes(t.textContent.trim())) t.classList.add('on'); });
+                // Restore fold toggle for first packaging card
+                const foldVal = existingData.fold || (existingData.packagingSpecs && existingData.packagingSpecs[0] ? existingData.packagingSpecs[0].fold : null);
+                if(foldVal) {
+                    document.querySelectorAll('#f-fold-1 .tg').forEach(t => { if(foldVal.includes(t.textContent.trim())) t.classList.add('on'); });
                 }
                 if(existingData.recipType) {
                     document.querySelectorAll('#c-recip .tg').forEach(t => { if(existingData.recipType.includes(t.textContent.trim())) t.classList.add('on'); });
@@ -656,7 +719,22 @@
                     const b = document.getElementById('bom-f');
                     b.innerHTML = '';
                     existingData.bomF.forEach(r => {
-                        b.innerHTML += `<tr><td><input type="text" class="fi" value="${r.comp||''}"></td><td><input type="text" class="fi" value="${r.spec||''}"></td><td><input type="text" class="fi" value="${r.qty||''}"></td><td><input type="text" class="fi" value="${r.price||''}"></td></tr>`;
+                        const uid = Math.random().toString(36).substr(2,9);
+                        const imgId = r.imgId || `img-bomf-${uid}`;
+                        b.innerHTML += `<tr>
+                            <td>
+                                <div class="img-upload-wrap min-w-[60px] min-h-[60px]">
+                                    <input type="file" accept="image/*" onchange="handleVisualUpload(event, '${imgId}')">
+                                    <div class="img-upload-box !p-2 flex items-center justify-center h-full w-full border-dashed" id="${imgId}">
+                                        <p class="text-[8px] font-bold text-slate-400">IMG</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><input type="text" class="fi" value="${r.comp||''}"></td>
+                            <td><input type="text" class="fi" value="${r.spec||''}"></td>
+                            <td><input type="text" class="fi" value="${r.qty||''}"></td>
+                            <td><input type="text" class="fi" value="${r.price||''}"></td>
+                        </tr>`;
                     });
                 }
 
@@ -665,7 +743,22 @@
                     const b = document.getElementById('bom-t');
                     b.innerHTML = '';
                     existingData.bomT.forEach(r => {
-                        b.innerHTML += `<tr><td><input type="text" class="fi" value="${r.comp||''}"></td><td><input type="text" class="fi" value="${r.spec||''}"></td><td><input type="text" class="fi" value="${r.qty||''}"></td><td><input type="text" class="fi" value="${r.price||''}"></td></tr>`;
+                        const uid = Math.random().toString(36).substr(2,9);
+                        const imgId = r.imgId || `img-bomt-${uid}`;
+                        b.innerHTML += `<tr>
+                            <td>
+                                <div class="img-upload-wrap min-w-[60px] min-h-[60px]">
+                                    <input type="file" accept="image/*" onchange="handleVisualUpload(event, '${imgId}')">
+                                    <div class="img-upload-box !p-2 flex items-center justify-center h-full w-full border-dashed" id="${imgId}">
+                                        <p class="text-[8px] font-bold text-slate-400">IMG</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><input type="text" class="fi" value="${r.comp||''}"></td>
+                            <td><input type="text" class="fi" value="${r.spec||''}"></td>
+                            <td><input type="text" class="fi" value="${r.qty||''}"></td>
+                            <td><input type="text" class="fi" value="${r.price||''}"></td>
+                        </tr>`;
                     });
                 }
 
@@ -759,13 +852,27 @@
             const html = document.documentElement;
             html.classList.toggle('dark');
             const isDark = html.classList.contains('dark');
-            localStorage.setItem('vcp_dark_mode', isDark ? '1' : '0');
-        }
-
-        // Initialize from local storage or system preference
-        if (localStorage.getItem('vcp_dark_mode') === '1' || 
-            (!localStorage.getItem('vcp_dark_mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
+            
+            // Sync with global theme
+            if (isDark) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+            
+            // Trigger storage event manually for other tabs
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: 'theme',
+                newValue: localStorage.theme
+            }));
+            
+            // Broadcast to any iframes if necessary
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                if(iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({ type: 'THEME_CHANGE', theme: localStorage.theme }, '*');
+                }
+            });
         }
 
         function setTheme(t) {
@@ -840,7 +947,14 @@
             el.classList.add('on');
         }
 
-        function tglCi(el) { el.classList.toggle('on'); }
+        function tglCi(el, groupId) { 
+            if (groupId) {
+                document.getElementById(groupId).querySelectorAll('.ci').forEach(c => {
+                    if (c !== el) c.classList.remove('on');
+                });
+            }
+            el.classList.toggle('on'); 
+        }
         function tglCheck(el) {
             el.parentElement.querySelectorAll('.tg').forEach(t => t.classList.remove('on'));
             el.classList.add('on');
@@ -911,8 +1025,12 @@
                     if(ai.pclass) fillAI('f-class', ai.pclass);
                     if(ai.fabricReason) fillAI('f-fabric-reason', ai.fabricReason);
                     if(ai.construct) fillAI('f-construct', ai.construct);
-                    if(ai.polySz) fillAI('f-poly-sz', ai.polySz);
-                    if(ai.polyTh) fillAI('f-poly-th', ai.polyTh);
+                    // Fill packaging spec fields (first card has suffix -1)
+                    if(ai.polySz) fillAI('f-poly-sz-1', ai.polySz);
+                    if(ai.polyTh) fillAI('f-poly-th-1', ai.polyTh);
+                    if(ai.polyWhy) fillAI('f-poly-why-1', ai.polyWhy);
+                    if(ai.polyType) fillAI('f-poly-1', ai.polyType);
+                    if(ai.polySpec) fillAI('f-poly-spec-1', ai.polySpec);
                     if(ai.care_id) fillAI('f-care-id', ai.care_id);
                     if(ai.care_en) fillAI('f-care-en', ai.care_en);
                     
@@ -1041,23 +1159,59 @@
                     <div class="w-1/4">
                         <div class="img-upload-wrap h-full min-h-[140px]">
                             <input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-mat-${matCount}')">
-                            <div class="img-upload-box h-full flex items-center justify-center" id="img-mat-${matCount}">
+                            <div class="img-upload-box h-full flex flex-col items-center justify-center" id="img-mat-${matCount}">
                                 <p class="text-[10px] font-bold text-slate-400 uppercase">UPLOAD PHOTO</p>
+                                <p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p>
                             </div>
                         </div>
                     </div>
                     <div class="w-3/4 flex flex-col justify-between">
-                        <div class="g4 mb-4">
+                        <div class="g3 mb-4">
                             <div class="fg mb-0"><label class="fl">Fabric</label><input type="text" class="fi" id="f-fabric-${matCount}"></div>
-                            <div class="fg mb-0"><label class="fl">Construction</label><input type="text" class="fi" id="f-construct-${matCount}"></div>
                             <div class="fg mb-0"><label class="fl">GSM</label><input type="text" class="fi" id="f-gsm-${matCount}"></div>
                             <div class="fg mb-0"><label class="fl">Color</label><input type="text" class="fi" id="f-color-${matCount}"></div>
                         </div>
+                        <div class="fg mb-4"><label class="fl">Construction</label><textarea class="fta" id="f-construct-${matCount}" rows="2"></textarea></div>
                         <div class="fg mb-0"><label class="fl">Notes</label><textarea class="fta" id="f-fabric-reason-${matCount}" rows="2"></textarea></div>
                     </div>
                 </div>
             `;
             document.getElementById('material-specs-container').appendChild(div);
+        }
+
+        let pkgCount = 1;
+        function addPackagingSpec() {
+            pkgCount++;
+            const div = document.createElement('div');
+            div.className = 'card mt-4';
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <div class="ct mb-0"><div class="cd"></div> Packaging Spec ${pkgCount}</div>
+                    <button class="text-red-500 font-bold text-xs" onclick="this.parentElement.parentElement.remove()">REMOVE</button>
+                </div>
+                <div class="flex gap-6">
+                    <div class="w-1/4">
+                        <div class="img-upload-wrap h-full min-h-[140px]">
+                            <input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-packaging-${pkgCount}')">
+                            <div class="img-upload-box h-full flex flex-col items-center justify-center" id="img-packaging-${pkgCount}">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">UPLOAD PHOTO</p>
+                                <p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-3/4 flex flex-col justify-between">
+                        <div class="g4 mb-4">
+                            <div class="fg mb-0"><label class="fl">Packaging Spec</label><input type="text" class="fi" id="f-poly-spec-${pkgCount}"></div>
+                            <div class="fg mb-0"><label class="fl">Polybag Type</label><input type="text" class="fi" id="f-poly-${pkgCount}"></div>
+                            <div class="fg mb-0"><label class="fl">Size (cm)</label><input type="text" class="fi" id="f-poly-sz-${pkgCount}"></div>
+                            <div class="fg mb-0"><label class="fl">Thickness</label><input type="text" class="fi" id="f-poly-th-${pkgCount}"></div>
+                        </div>
+                        <div class="fg mb-4"><label class="fl">Folding Method</label><div class="tg-grp" id="f-fold-${pkgCount}"><div class="tg" onclick="this.classList.toggle('on')">Flat Fold</div><div class="tg" onclick="this.classList.toggle('on')">Roll</div><div class="tg" onclick="this.classList.toggle('on')">Hanger</div></div></div>
+                        <div class="fg mb-0"><label class="fl">AI Packaging Insight</label><textarea class="fta" id="f-poly-why-${pkgCount}" rows="2"></textarea></div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('packaging-specs-container').appendChild(div);
         }
 
         let detailCount = 2;
@@ -1070,8 +1224,9 @@
                 <input type="text" class="fi mb-2" id="d${detailCount}-label" placeholder="Detail Label">
                 <div class="img-upload-wrap">
                     <input type="file" accept="image/*" onchange="handleVisualUpload(event, 'img-d${detailCount}')">
-                    <div class="img-upload-box" id="img-d${detailCount}">
+                    <div class="img-upload-box flex flex-col items-center justify-center" id="img-d${detailCount}">
                         <p class="text-xs font-bold text-slate-400 uppercase">UPLOAD DETAIL</p>
+                        <p class="text-[9px] text-slate-400 mt-1">(Max 2MB)</p>
                     </div>
                 </div>
             `;
@@ -1140,9 +1295,29 @@
                     price: tr.cells[4].querySelector('input').value
                 })),
                 bomMat: G('bom-mat'), bomTrim: G('bom-trim'), cmt: G('f-cmt'), hpp: G('bom-hpp'),
-                polyType: G('f-poly'), polySz: G('f-poly-sz'), polyTh: G('f-poly-th'), fold: GA('f-fold'), polyWhy: G('f-poly-why'),
+                // Collect all packaging spec cards dynamically
+                packagingSpecs: [...document.querySelectorAll('#packaging-specs-container .card')].map((c, i) => {
+                    const idx = i + 1;
+                    return {
+                        spec: c.querySelector(`[id^="f-poly-spec-"]`)?.value || '',
+                        polyType: c.querySelector(`[id^="f-poly-"]:not([id^="f-poly-spec"]):not([id^="f-poly-sz"]):not([id^="f-poly-th"]):not([id^="f-poly-why"])`)?.value || '',
+                        polySz: c.querySelector(`[id^="f-poly-sz-"]`)?.value || '',
+                        polyTh: c.querySelector(`[id^="f-poly-th-"]`)?.value || '',
+                        fold: [...(c.querySelector(`[id^="f-fold-"]`)?.querySelectorAll('.tg.on') || [])].map(t => t.textContent.trim()).join(', '),
+                        polyWhy: c.querySelector(`[id^="f-poly-why-"]`)?.value || '',
+                        imgId: c.querySelector('.img-upload-box')?.id
+                    };
+                }),
+                // Legacy single fields for backward compat
+                polyType: G('f-poly-1'), polySz: G('f-poly-sz-1'), polyTh: G('f-poly-th-1'), fold: GA('f-fold-1'), polyWhy: G('f-poly-why-1'),
                 ctnQty: G('f-ctn-qty'), ctnSz: G('f-ctn-sz'), ctnWt: G('f-ctn-wt'), ctnSt: G('f-ctn-st'),
-                careSymbols: [...document.querySelectorAll('#care-grid .ci.on')].map(c => c.querySelector('.ci-nm').textContent),
+                careSymbols: [...document.querySelectorAll('.care-grid .ci.on')].map(c => {
+                    const img = c.querySelector('img.care-img');
+                    return {
+                        name: c.getAttribute('data-nm'),
+                        imgSrc: img ? img.src : null
+                    };
+                }),
                 care_id: G('f-care-id'), care_en: G('f-care-en'), comp: G('f-comp'), origin: G('f-origin'),
                 sDate: G('s-date'), sType: G('s-type'), sFrom: G('s-from'), sSize: G('s-size'),
                 sChecks: [...document.querySelectorAll('.cl-item')].map(c => ({
@@ -1268,18 +1443,22 @@
                     let cy = ly;
                     [['Fabric', mat.fabric], ['Construction', mat.construct], ['GSM', mat.gsm], ['Color', mat.color]].forEach(([l, v]) => {
                         doc.setFont('helvetica', 'bold'); doc.text(l + ':', 55, cy);
-                        doc.setFont('helvetica', 'normal'); doc.text(String(v || '-'), 90, cy);
-                        cy += 6;
+                        doc.setFont('helvetica', 'normal'); 
+                        const splitText = doc.splitTextToSize(String(v || '-'), 110);
+                        doc.text(splitText, 90, cy);
+                        cy += (splitText.length * 5) + 1;
                     });
                     
                     if(mat.reason) {
                         cy += 2;
                         doc.setFont('helvetica', 'bold'); doc.text('Notes:', 55, cy);
                         doc.setFont('helvetica', 'normal'); 
-                        doc.text(doc.splitTextToSize(mat.reason, 120), 55, cy + 5);
+                        const splitNotes = doc.splitTextToSize(mat.reason, 145);
+                        doc.text(splitNotes, 55, cy + 5);
+                        cy += (splitNotes.length * 5) + 5;
                     }
                     
-                    ly += 35;
+                    ly = Math.max(ly + 35, cy + 10);
                     renderedMats++;
                 });
 
@@ -1375,26 +1554,43 @@
                 doc.addPage();
                 addHeader('PACKAGING SPECIFICATION');
                 
-                secBar(20, 45, 180, 10, 'POLYBAG & FOLDING');
-                doc.setFontSize(11);
-                ly = 65;
-                [['Type', D.polyType], ['Size', D.polySz], ['Thickness', D.polyTh], ['Folding', D.fold]].forEach(([l, v]) => {
-                    doc.setFont('helvetica', 'bold'); doc.text(l + ':', 25, ly);
-                    doc.setFont('helvetica', 'normal'); doc.text(String(v || '-'), 70, ly);
-                    ly += 10;
+                // Use packagingSpecs array if available, fallback to legacy fields
+                const pkgSpecs = (D.packagingSpecs && D.packagingSpecs.length > 0) ? D.packagingSpecs : [{
+                    spec: '', polyType: D.polyType, polySz: D.polySz, polyTh: D.polyTh, fold: D.fold, polyWhy: D.polyWhy
+                }];
+                
+                let pkgY = 35;
+                pkgSpecs.forEach((pkg, pkgIdx) => {
+                    const pkgLabel = pkgSpecs.length > 1 ? `POLYBAG & FOLDING ${pkgIdx + 1}` : 'POLYBAG & FOLDING';
+                    secBar(20, pkgY, 185, 9, pkgLabel);
+                    doc.setFontSize(10);
+                    let pY = pkgY + 16;
+                    
+                    if(pkg.spec) {
+                        doc.setFont('helvetica', 'bold'); doc.text('Spec:', 25, pY);
+                        doc.setFont('helvetica', 'normal'); doc.text(String(pkg.spec || '-'), 65, pY); pY += 9;
+                    }
+                    [['Type', pkg.polyType], ['Size', pkg.polySz], ['Thickness', pkg.polyTh], ['Folding', pkg.fold]].forEach(([l, v]) => {
+                        doc.setFont('helvetica', 'bold'); doc.text(l + ':', 25, pY);
+                        doc.setFont('helvetica', 'normal'); doc.text(String(v || '-'), 65, pY);
+                        pY += 9;
+                    });
+                    if(pkg.polyWhy) {
+                        doc.setFillColor(...LIGHT_ORA); doc.rect(20, pY + 2, 185, 32, 'F');
+                        doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.text('AI PACKAGING INSIGHT:', 24, pY + 10);
+                        doc.setFont('helvetica', 'normal'); doc.text(doc.splitTextToSize(pkg.polyWhy, 175), 24, pY + 18);
+                        pY += 36;
+                    }
+                    pkgY = pY + 8;
+                    if(pkgY > 250 && pkgIdx < pkgSpecs.length - 1) { doc.addPage(); addHeader('PACKAGING SPECIFICATION (cont.)'); pkgY = 35; }
                 });
-                if(D.polyWhy) {
-                    doc.setFillColor(...LIGHT_ORA); doc.rect(20, ly, 180, 40, 'F');
-                    doc.setFont('helvetica', 'bold'); doc.text('PACKAGING INSIGHT:', 25, ly + 8);
-                    doc.setFont('helvetica', 'normal'); doc.text(doc.splitTextToSize(D.polyWhy, 170), 25, ly + 18);
-                }
 
-                secBar(210, 45, 190, 10, 'MASTER CARTON');
-                ly = 65;
+                secBar(210, 35, 190, 9, 'MASTER CARTON');
+                let ctnY = 53;
                 [['Qty/Carton', D.ctnQty], ['Carton Size', D.ctnSz], ['Est Weight', D.ctnWt], ['Max Stack', D.ctnSt]].forEach(([l, v]) => {
-                    doc.setFont('helvetica', 'bold'); doc.text(l + ':', 215, ly);
-                    doc.setFont('helvetica', 'normal'); doc.text(String(v || '-'), 260, ly);
-                    ly += 10;
+                    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.text(l + ':', 215, ctnY);
+                    doc.setFont('helvetica', 'normal'); doc.text(String(v || '-'), 270, ctnY);
+                    ctnY += 9;
                 });
 
                 // --- PAGE 6: CARE INSTRUCTION ---
@@ -1402,7 +1598,40 @@
                 addHeader('CARE INSTRUCTION');
                 secBar(20, 45, 380, 10, 'SELECTED CARE SYMBOLS');
                 doc.setFontSize(12); doc.setFont('helvetica', 'normal');
-                doc.text(D.careSymbols.join('   |   ') || 'No symbols selected', 30, 70);
+                if (D.careSymbols && D.careSymbols.length > 0) {
+                    let cx = 30;
+                    let cy = 65;
+                    D.careSymbols.forEach(sym => {
+                        const symName = typeof sym === 'string' ? sym : sym.name;
+                        const symImgSrc = typeof sym === 'string' ? null : sym.imgSrc;
+                        
+                        if (symImgSrc) {
+                            // Find the image element in the DOM to pass to jsPDF
+                            const imgEls = document.querySelectorAll('.care-img');
+                            let targetImg = null;
+                            for (let img of imgEls) {
+                                if (img.src === symImgSrc) {
+                                    targetImg = img;
+                                    break;
+                                }
+                            }
+                            if (targetImg) {
+                                try {
+                                    doc.addImage(targetImg, 'PNG', cx, cy, 12, 12);
+                                } catch(e) {}
+                            }
+                        }
+                        doc.setFontSize(10);
+                        doc.text(symName, cx + 15, cy + 8);
+                        cx += 65;
+                        if (cx > 350) {
+                            cx = 30;
+                            cy += 20;
+                        }
+                    });
+                } else {
+                    doc.text('No symbols selected', 30, 70);
+                }
                 
                 secBar(20, 100, 380, 10, 'LABEL TEXT & COMPOSITION');
                 doc.setFontSize(11);

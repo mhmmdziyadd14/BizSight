@@ -9,11 +9,55 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <script>
+        // Theme initialization
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
+
+        // Cross-tab theme synchronization
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'theme') {
+                if (e.newValue === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+        });
+        
+        // Local time formatter
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.local-time').forEach(function(el) {
+                const utcDate = el.getAttribute('data-utc');
+                const format = el.getAttribute('data-format') || 'd M Y';
+                if (utcDate) {
+                    const date = new Date(utcDate);
+                    const options = {};
+                    
+                    if (format.includes('d') || format.includes('M') || format.includes('Y')) {
+                        options.day = '2-digit';
+                        options.month = 'short';
+                        options.year = 'numeric';
+                    }
+                    
+                    if (format.includes('H:i') || format.includes('h:i')) {
+                        options.hour = '2-digit';
+                        options.minute = '2-digit';
+                    }
+                    
+                    // Default to date if empty
+                    if (Object.keys(options).length === 0) {
+                        options.day = '2-digit';
+                        options.month = 'short';
+                        options.year = 'numeric';
+                    }
+                    
+                    el.textContent = date.toLocaleString('id-ID', options).replace(/,/g, '');
+                }
+            });
+        });
     </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -162,7 +206,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Template briefing dan dokumen kerja yang bikin tim, vendor, dan klien lo ngerti dari awal — tanpa perlu diulang.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 149k</p>
-                        <button @click="checkoutModal = true; selectedProduct = { id: 1, name: 'Visual Clarity Pack' }; selectedPrice = 149000" class="btn-primary py-2 px-6">Beli</button>
+                        <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497388&qty=1" class="btn-primary py-2 px-6">Beli</a>
                     </div>
                 </div>
 
@@ -178,7 +222,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Hitung HPP produk fashion lo dengan benar — bahan, CMT, packaging, reject rate, sampai margin yang realistis.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 149k</p>
-                        <button @click="checkoutModal = true; selectedProduct = { id: 2, name: 'Profit Clarity Calculator' }; selectedPrice = 149000" class="btn-primary py-2 px-6">Beli</button>
+                        <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497385&qty=1" class="btn-primary py-2 px-6">Beli</a>
                     </div>
                 </div>
 
@@ -192,7 +236,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Evaluasi apakah produk layak dijual — berdasarkan angka, bukan feeling. Sebelum produksi, lo udah tau jawabannya.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 249k</p>
-                        <button @click="checkoutModal = true; selectedProduct = { id: 3, name: 'Decision Engine' }; selectedPrice = 249000" class="btn-primary py-2 px-6">Beli</button>
+                        <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497390&qty=1" class="btn-primary py-2 px-6">Beli</a>
                     </div>
                 </div>
             </div>
@@ -292,7 +336,7 @@
                         <span class="text-sm text-gray-400 line-through">Rp 398k</span>
                     </div>
                     <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 119k dari harga satuan</p>
-                    <button class="btn-secondary w-full">Beli Essentials</button>
+                    <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497399&qty=1" class="btn-secondary w-full text-center block">Beli Essentials</a>
                 </div>
 
                 <!-- Tier 2 -->
@@ -324,7 +368,7 @@
                         <span class="text-sm text-gray-400 line-through">Rp 547k</span>
                     </div>
                     <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 158k — bayar 2, dapet 3</p>
-                    <button class="btn-primary w-full">Beli Clarity Full</button>
+                    <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497401&qty=1" class="btn-primary w-full text-center justify-center block">Beli Clarity Full</a>
                 </div>
             </div>
         </div>
@@ -469,33 +513,7 @@
         </div>
     </footer>
 
-    <!-- Checkout Modal -->
-    <div x-show="checkoutModal" class="fixed inset-0 z-[100] flex items-center justify-center px-4" x-cloak>
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="checkoutModal = false"></div>
-        <div class="bg-white dark:bg-navy-900 w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
-            <h2 class="text-2xl font-black mb-2 dark:text-white">Satu langkah lagi.</h2>
-            <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">Lo akan membeli <span class="font-black text-orange-500" x-text="selectedProduct?.name"></span>.</p>
-            
-            <form action="{{ route('checkout') }}" method="POST">
-                @csrf
-                <input type="hidden" name="product_id" :value="selectedProduct?.id">
-                <input type="hidden" name="total_price" :value="selectedPrice">
-                
-                <div class="bg-gray-50 dark:bg-navy-950 p-6 rounded-2xl mb-8">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Bayar</span>
-                        <span class="text-2xl font-black text-orange-500" x-text="'Rp ' + (selectedPrice/1000) + 'k'"></span>
-                    </div>
-                    <p class="text-[10px] text-gray-400">Pembayaran aman via Midtrans. Akses instan setelah bayar.</p>
-                </div>
-                
-                <div class="flex gap-4">
-                    <button type="button" @click="checkoutModal = false" class="btn-secondary flex-1">Batal</button>
-                    <button type="submit" class="btn-primary flex-1 justify-center">Lanjutkan ke Pembayaran</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- Checkout Modal Removed (Using Scalev Links) -->
 
     <!-- Notify Modal -->
     <div x-show="notifyModal" class="fixed inset-0 z-[100] flex items-center justify-center px-4" x-cloak>

@@ -1,0 +1,95 @@
+Product Mapping & Automation System for Laravel +
+ Scalev
+ 
+Dokumen ini menjelaskan bagaimana sistem automation membership bekerja untuk website digital product
+berbasis Laravel yang menggunakan Scalev sebagai checkout/payment system. Fokus utama sistem ini adalah: -
+membedakan product yang dibeli user - memberikan akses otomatis sesuai product - menjaga agar 1 user bisa
+memiliki banyak product
+1. Problem Utama
+Problem sebenarnya bukan pada password atau email automation, tetapi bagaimana sistem mengetahui user
+membeli product yang mana. Jika semua user masuk dari form yang sama, Laravel tidak dapat mengetahui:
+Product apa yang dibeli Akses mana yang harus dibuka Dashboard mana yang tampil File/course mana yang
+unlock
+2. Solusi Utama
+Setiap product harus memiliki identifier / slug unik. Contoh:
+Product
+product_id
+Excel Mastery
+excel_mastery
+AI Tools
+ai_tools
+Canva Kit
+canva_kit
+Notion System
+notion_system
+Digital Hustler
+digital_hustler
+3. Recommended System Flow
+Ads
+↓
+Landing Page
+↓
+Checkout Scalev
+↓
+Payment Success
+↓
+Webhook ke Laravel
+↓
+Laravel cek email user
+↓
+Create / Update User
+↓
+Assign Product Access
+↓
+Send Email
+↓
+User Login Dashboard
+4. Webhook Example
+Setelah payment success, Scalev harus mengirimkan product_id ke Laravel melalui webhook/API.
+{
+  "email": "user@gmail.com",
+  "name": "John",
+  "product_id": "excel_mastery"
+}
+5. Product Mapping Logic
+IF product_id = excel_mastery
+→ kasih akses Excel Mastery
+IF product_id = ai_tools
+→ kasih akses AI Tools
+6. Database Structure
+Table: users
+id
+name
+email
+password
+Table: products
+id
+title
+slug
+Table: user_products
+user_id
+product_id
+7. Why user_products is Important
+user_id
+product_id
+15
+1
+15
+2
+Artinya: User ID 15 membeli product ID 1 User ID 15 juga membeli product ID 2 Dengan sistem ini: 1 user bisa
+memiliki banyak product Dashboard bisa menampilkan semua pembelian Sistem scalable untuk future products
+8. Kenapa Tidak Disarankan Register Manual
+Jika user harus isi password setiap kali checkout, akan muncul problem: Duplicate account Email sama tetapi
+password berbeda Overwriting account Management user menjadi kacau Solusi terbaik: Email dijadikan unique
+identity User pertama kali otomatis dibuatkan account Pembelian berikutnya hanya menambah akses product
+9. Dashboard Concept
+Hi Armanda ■
+Your Products:
+- Excel Mastery
+- AI Tools
+- Canva Kit
+10. Final Recommendation
+Sistem terbaik untuk digital product membership: Scalev hanya untuk checkout/payment Laravel untuk
+membership system Email sebagai unique identity Webhook sebagai penghubung payment dan access
+user_products sebagai penentu akses product Automation utama yang harus dibangun: Payment → Product
+Mapping → Product Access

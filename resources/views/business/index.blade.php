@@ -287,7 +287,7 @@
                                         + New Product
                                     </button>
                                 </div>
-                                <input type="hidden" name="product_type" id="productType" value="new">
+                                <input type="hidden" name="product_type" id="productType" value="existing">
                             </div>
 
                             <!-- SECTION B: Business Variables -->
@@ -390,6 +390,7 @@
                                         <input type="number" name="hpp" required
                                             class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                             value="85000" placeholder="HPP">
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga modal per produk.</p>
                                     </div>
                                     <div class="relative">
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Selling (Rp)</label>
@@ -397,6 +398,7 @@
                                         <input type="number" name="selling_price" required
                                             class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
                                             value="175000" placeholder="Jual">
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga jual ke konsumen.</p>
                                     </div>
                                 </div>
 
@@ -411,6 +413,7 @@
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Potongan platform/marketplace.</p>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Overhead
@@ -421,6 +424,7 @@
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Biaya ops (listrik, gaji, dll).</p>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Pajak
@@ -431,6 +435,7 @@
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Pajak PPN/PPH.</p>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Promo
@@ -441,9 +446,9 @@
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Diskon atau voucher.</p>
                                     </div>
                                 </div>
-                                <p class="text-[10px] text-gray-400">Margin dibandingkan antara normal vs promo.</p>
 
                                 <!-- Ads & Affiliate -->
                                 <div class="grid grid-cols-2 gap-3">
@@ -456,6 +461,7 @@
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Budget iklan (Meta/TikTok).</p>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Affiliate
@@ -466,6 +472,7 @@
                                                 value="0" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
+                                        <p class="mt-1 text-[9px] text-gray-400 font-medium">Komisi influencer.</p>
                                     </div>
                                 </div>
 
@@ -819,6 +826,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('decisionEngineForm');
 
+
+
             // Form submission handler
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -844,7 +853,8 @@
                     const res = await response.json();
                     if (res.success) {
                         displayResults(res.data);
-                        // Show a temporary success message
+                        
+                        // Scroll to results
                         const resultsContainer = document.getElementById('resultsContainer');
                         resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     } else {
@@ -871,11 +881,11 @@
                 if (type === 'new') {
                     sectionC?.classList.add('hidden');
                     sectionD?.classList.add('hidden');
-                    existingProductSelect?.classList.remove('hidden');
+                    existingProductSelect?.classList.add('hidden');
                 } else {
                     sectionC?.classList.remove('hidden');
                     sectionD?.classList.remove('hidden');
-                    existingProductSelect?.classList.add('hidden');
+                    existingProductSelect?.classList.remove('hidden');
                 }
             };
 
@@ -900,11 +910,11 @@
                     if (type === 'new') {
                         sectionC?.classList.add('hidden');
                         sectionD?.classList.add('hidden');
-                        existingProductSelect?.classList.remove('hidden');
+                        existingProductSelect?.classList.add('hidden');
                     } else {
                         sectionC?.classList.remove('hidden');
                         sectionD?.classList.remove('hidden');
-                        existingProductSelect?.classList.add('hidden');
+                        existingProductSelect?.classList.remove('hidden');
                     }
                 });
             });
@@ -963,7 +973,8 @@
 
             // HPP auto-fill (without triggering calculation)
             const hppSelect = document.getElementById('hppSelect');
-            if (hppSelect) {
+            const hppInput = document.querySelector('input[name="hpp"]');
+            if (hppSelect && hppInput) {
                 hppSelect.addEventListener('change', function() {
                     if (this.value) {
                         hppInput.value = this.value;

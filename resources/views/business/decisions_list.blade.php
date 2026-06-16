@@ -275,7 +275,7 @@
                                         <div class="font-bold text-navy-900 dark:text-white text-lg leading-tight">{{ $calc->product_name }}</div>
                                         <div class="flex items-center gap-2 mt-1">
                                             <span class="text-[9px] font-black text-orange-500 uppercase tracking-widest">ID: #BZS-{{ $calc->id }}</span>
-                                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">| {{ $calc->created_at->format('d M Y') }}</span>
+                                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">| <span class="local-time" data-utc="{{ $calc->created_at->toIso8601String() }}">{{ $calc->created_at->format('d M Y') }}</span></span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-5">

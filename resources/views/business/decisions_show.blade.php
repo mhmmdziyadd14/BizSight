@@ -113,7 +113,7 @@
                                 <span class="text-navy-900 dark:text-white">Results</span>
                             </h1>
                             <p class="mt-1 text-sm text-slate-500 dark:text-gray-400 font-medium">
-                                {{ $calc->product_name }} • {{ $calc->created_at->format('d M Y H:i') }}
+                                {{ $calc->product_name }} • <span class="local-time" data-utc="{{ $calc->created_at->toIso8601String() }}" data-format="d M Y H:i">{{ $calc->created_at->format('d M Y H:i') }}</span>
                             </p>
                         </div>
                     </div>

@@ -31,7 +31,7 @@
                         @forelse($visuals as $visual)
                         <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                             <td class="py-4 px-6">
-                                <span class="font-bold text-slate-700">{{ $visual->created_at->format('d M Y') }}</span>
+                                <span class="font-bold text-slate-700"><span class="local-time" data-utc="{{ $visual->created_at->toIso8601String() }}">{{ $visual->created_at->format('d M Y') }}</span></span>
                             </td>
                             <td class="py-4 px-6">
                                 <div class="font-bold text-slate-900">{{ $visual->name }}</div>

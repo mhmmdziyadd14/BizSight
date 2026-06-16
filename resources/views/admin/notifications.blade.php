@@ -74,8 +74,8 @@
                                     </span>
                                 </td>
                                 <td class="px-8 py-6">
-                                    <div class="text-sm font-bold text-navy dark:text-white">{{ $notif->created_at->format('d M Y') }}</div>
-                                    <div class="text-[10px] text-gray-400 font-bold">{{ $notif->created_at->format('H:i') }} WIB</div>
+                                    <div class="text-sm font-bold text-navy dark:text-white"><span class="local-time" data-utc="{{ $notif->created_at->toIso8601String() }}" data-format="d M Y">{{ $notif->created_at->format('d M Y') }}</span></div>
+                                    <div class="text-[10px] text-gray-400 font-bold"><span class="local-time" data-utc="{{ $notif->created_at->toIso8601String() }}" data-format="H:i">{{ $notif->created_at->format('H:i') }}</span> WIB</div>
                                 </td>
                                 <td class="px-8 py-6 text-right space-x-2 flex justify-end gap-2">
                                     @php

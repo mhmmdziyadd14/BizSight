@@ -495,7 +495,7 @@
                             @forelse($orders as $order)
                             <tr>
                                 <td style="font-weight:800">#{{ strtoupper(substr($order->id, 0, 8)) }}</td>
-                                <td>{{ $order->created_at->format('d M Y') }}</td>
+                                <td><span class="local-time" data-utc="{{ $order->created_at->toIso8601String() }}">{{ $order->created_at->format('d M Y') }}</span></td>
                                 <td>
                                     @foreach($order->items as $item)
                                         <div style="font-weight:600">{{ $item->product->name }}</div>

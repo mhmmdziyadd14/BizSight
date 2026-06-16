@@ -17,11 +17,55 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
         <script>
-            if (localStorage.theme === 'dark') {
+            // Theme initialization
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');
             }
+
+            // Cross-tab theme synchronization
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'theme') {
+                    if (e.newValue === 'dark') {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                }
+            });
+            
+            // Local time formatter
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.local-time').forEach(function(el) {
+                    const utcDate = el.getAttribute('data-utc');
+                    const format = el.getAttribute('data-format') || 'd M Y';
+                    if (utcDate) {
+                        const date = new Date(utcDate);
+                        const options = {};
+                        
+                        if (format.includes('d') || format.includes('M') || format.includes('Y')) {
+                            options.day = '2-digit';
+                            options.month = 'short';
+                            options.year = 'numeric';
+                        }
+                        
+                        if (format.includes('H:i') || format.includes('h:i')) {
+                            options.hour = '2-digit';
+                            options.minute = '2-digit';
+                        }
+                        
+                        // Default to date if empty
+                        if (Object.keys(options).length === 0) {
+                            options.day = '2-digit';
+                            options.month = 'short';
+                            options.year = 'numeric';
+                        }
+                        
+                        el.textContent = date.toLocaleString('id-ID', options).replace(/,/g, '');
+                    }
+                });
+            });
         </script>
         
         <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>

@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'feature' => \App\Http\Middleware\CheckFeatureAccess::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'api/midtrans/callback',
+            'api/scalev/webhook',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -12,12 +12,40 @@ Route::get('/', function () {
     return view('welcome', compact('products'));
 })->name('welcome');
 
+// Success Page for Scalev redirect
+Route::get('/payment-success', function () {
+    return view('payment-success');
+})->name('payment.success');
+
 // Product Notification
 Route::post('/notify', [\App\Http\Controllers\ProductNotificationController::class, 'store'])->name('notify.store');
 
 // Midtrans Webhook (No CSRF)
-Route::post('/api/midtrans/callback', [PaymentController::class, 'callback'])->name('midtrans.callback')
-    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/api/midtrans/callback', [PaymentController::class, 'callback'])->name('midtrans.callback');
+
+// Scalev Webhook (No CSRF)
+Route::post('/api/scalev/webhook', [\App\Http\Controllers\ScalevWebhookController::class, 'handleWebhook'])->name('scalev.webhook');
+
+// Temporary DB Migration Route
+Route::get('/migrasi-db', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--seed' => true,
+            '--force' => true
+        ]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Database successfully migrated and seeded!',
+            'output' => $output
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
 
 // Middleware Auth
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -87,6 +115,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/download-template', function () {
             return response()->json(['status' => 'success', 'message' => 'Resource siap']);
         })->name('download.template');
+
+            // Lightweight polling API endpoints for realtime UI updates
+            Route::get('/api/hpp/list', [BusinessController::class, 'apiHppList'])->name('api.hpp.list');
+            Route::get('/api/materials/list', [BusinessController::class, 'apiMaterialsList'])->name('api.materials.list');
     });
 
     // Profile

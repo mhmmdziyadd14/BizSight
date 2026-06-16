@@ -317,7 +317,7 @@
                             <tbody class="divide-y divide-orange-500/10">
                                 @foreach($materials as $material)
                                     <tr class="table-row-hover hover:bg-orange-500/5 transition-colors">
-                                        <td class="py-4 px-6 text-slate-300 font-medium">{{ \Carbon\Carbon::parse($material->purchase_date)->format('d M Y') }}</td>
+                                        <td class="py-4 px-6 text-slate-300 font-medium"><span class="local-time" data-utc="{{ \Carbon\Carbon::parse($material->purchase_date)->toIso8601String() }}">{{ \Carbon\Carbon::parse($material->purchase_date)->format('d M Y') }}</span></td>
                                         <td class="py-4 px-6">
                                             @php
                                                 $badgeClass = 'badge-utama';
