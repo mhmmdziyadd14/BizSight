@@ -155,13 +155,21 @@
                                                 <div class="flex flex-wrap gap-2">
                                                     @php
                                                         $userFeatures = $user->accesses->pluck('feature_code')->map(fn($f) => strtolower($f))->toArray();
+                                                        $productsHtml = '';
+                                                        if (in_array('vcp', $userFeatures)) {
+                                                            $productsHtml .= '<span class="badge-feature badge-vcp">Visual Pack</span>';
+                                                        }
+                                                        if (in_array('pcc', $userFeatures)) {
+                                                            $productsHtml .= '<span class="badge-feature badge-pcc">Profit Calc</span>';
+                                                        }
+                                                        if (in_array('de', $userFeatures)) {
+                                                            $productsHtml .= '<span class="badge-feature badge-de">Decision Eng</span>';
+                                                        }
                                                     @endphp
                                                     @if(empty($userFeatures))
                                                         <span class="text-[10px] text-gray-300 dark:text-gray-600 italic font-bold">No Purchases</span>
                                                     @else
-                                                        @if(in_array('vcp', $userFeatures)) <span class="badge-feature badge-vcp">Visual Pack</span> @endif
-                                                        @if(in_array('pcc', $userFeatures)) <span class="badge-feature badge-pcc">Profit Calc</span> @endif
-                                                        @if(in_array('de', $userFeatures)) <span class="badge-feature badge-de">Decision Eng</span> @endif
+                                                        {!! $productsHtml !!}
                                                     @endif
                                                 </div>
                                             </td>
@@ -172,7 +180,7 @@
                                                             email: '{{ $user->email }}', 
                                                             phone: '{{ $user->phone ?? '' }}',
                                                             created_at: '{{ $user->created_at->format('d M Y H:i') }}',
-                                                            products_html: `{{ in_array('vcp', $userFeatures) ? '<span class=\'badge-feature badge-vcp\'>Visual Pack</span>' : '' }}{{ in_array('pcc', $userFeatures) ? '<span class=\'badge-feature badge-pcc\'>Profit Calc</span>' : '' }}{{ in_array('de', $userFeatures) ? '<span class=\'badge-feature badge-de\'>Decision Eng</span>' : '' }`
+                                                            products_html: `{!! $productsHtml !!}`
                                                         }; editModal = true" 
                                                         class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                                     Edit
