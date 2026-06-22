@@ -37,7 +37,7 @@
         .fade-in-up { animation: fadeInUp 0.5s ease-out; }
     </style>
 
-    <div class="py-10 bg-gray-50 dark:bg-navy-950 min-h-screen transition-colors duration-500" x-data="{ editModal: false, selectedUser: {id: null, name: '', email: ''} }">
+    <div class="py-10 bg-gray-50 dark:bg-navy-950 min-h-screen transition-colors duration-500" x-data="{ editModal: false, selectedUser: {id: null, name: '', email: '', phone: '', created_at: '', products_html: ''} }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Header Section -->
@@ -165,8 +165,15 @@
                                                     @endif
                                                 </div>
                                             </td>
-                                            <td class="px-8 py-6 text-right space-x-2">
-                                                <button @click="selectedUser = {id: {{ $user->id }}, name: '{{ $user->name }}', email: '{{ $user->email }}'}; editModal = true" 
+                                            <td class="px-8 py-6 text-right">
+                                                <button @click="selectedUser = {
+                                                            id: {{ $user->id }}, 
+                                                            name: '{{ addslashes($user->name) }}', 
+                                                            email: '{{ $user->email }}', 
+                                                            phone: '{{ $user->phone ?? '' }}',
+                                                            created_at: '{{ $user->created_at->format('d M Y H:i') }}',
+                                                            products_html: `{{ in_array('vcp', $userFeatures) ? '<span class=\'badge-feature badge-vcp\'>Visual Pack</span>' : '' }}{{ in_array('pcc', $userFeatures) ? '<span class=\'badge-feature badge-pcc\'>Profit Calc</span>' : '' }}{{ in_array('de', $userFeatures) ? '<span class=\'badge-feature badge-de\'>Decision Eng</span>' : '' }`
+                                                        }; editModal = true" 
                                                         class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                                     Edit
                                                 </button>
@@ -300,14 +307,14 @@
         <!-- Edit Modal -->
         <div x-show="editModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" x-cloak>
             <div class="absolute inset-0 bg-navy/80 backdrop-blur-sm" @click="editModal = false"></div>
-            <div class="bg-white dark:bg-navy-900 w-full max-w-md rounded-[32px] p-10 relative shadow-2xl scale-in transition-colors" @click.away="editModal = false"
+            <div class="bg-white dark:bg-navy-900 w-full max-w-md rounded-[32px] p-10 relative shadow-2xl scale-in transition-colors max-h-[90vh] overflow-y-auto" @click.away="editModal = false"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 scale-95"
                  x-transition:enter-end="opacity-100 scale-100">
                 <h2 class="text-2xl font-black text-navy dark:text-white mb-2">Edit User Details</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 font-medium">Perbarui informasi email atau nama pengguna.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 font-medium">Perbarui informasi email, nama, atau telepon pengguna.</p>
                 
-                <form :action="'/admin/users/' + selectedUser.id" method="POST" class="space-y-6">
+                <form :action="'/admin/users/' + selectedUser.id" method="POST" id="edit-user-form" class="space-y-5">
                     @csrf
                     @method('PUT')
                     
@@ -315,17 +322,45 @@
                         <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
                         <input type="text" name="name" x-model="selectedUser.name" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
                     </div>
-
+ 
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 ml-1">Email Address</label>
                         <input type="email" name="email" x-model="selectedUser.email" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
                     </div>
 
-                    <div class="flex gap-4 pt-4">
-                        <button type="button" @click="editModal = false" class="flex-1 bg-gray-100 dark:bg-navy-800 text-gray-500 dark:text-gray-400 text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl">Cancel</button>
-                        <button type="submit" class="flex-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl shadow-lg shadow-orange-500/20">Save Changes</button>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 ml-1">No Telepon</label>
+                        <input type="text" name="phone" x-model="selectedUser.phone" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="border-t border-gray-100 dark:border-white/5 pt-4 space-y-4">
+                        <div>
+                            <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Tanggal Terdaftar</span>
+                            <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white" x-text="selectedUser.created_at"></div>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Produk Yang Dibeli</span>
+                            <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-4 flex flex-wrap gap-2 text-navy dark:text-white" x-html="selectedUser.products_html || '<span class=\'text-gray-400 italic font-bold text-xs\'>No Purchases</span>'"></div>
+                        </div>
                     </div>
                 </form>
+
+                <!-- Actions Container -->
+                <div class="flex flex-col gap-3 pt-6 border-t border-gray-100 dark:border-white/5 mt-6">
+                    <div class="flex gap-4">
+                        <button type="button" @click="editModal = false" class="flex-1 bg-gray-100 dark:bg-navy-800 text-gray-500 dark:text-gray-400 text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl">Cancel</button>
+                        <button type="submit" form="edit-user-form" class="flex-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl shadow-lg shadow-orange-500/20">Save Changes</button>
+                    </div>
+
+                    <form :action="'/admin/users/' + selectedUser.id" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini? Tindakan ini tidak dapat dibatalkan.')" class="w-full">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl transition-all">
+                            Hapus Akun
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
