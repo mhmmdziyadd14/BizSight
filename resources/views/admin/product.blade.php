@@ -37,76 +37,85 @@
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 fade-in-up">
-                <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
-                    <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-1">Total Analysis</p>
-                    <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->count() }}</p>
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Sidebar Admin -->
+                <div class="w-full lg:w-64 shrink-0">
+                    @include('layouts.admin-sidebar')
                 </div>
-                <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
-                    <p class="text-[10px] font-black text-green-500 uppercase tracking-widest mb-1">Healthy Products</p>
-                    <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->where('status_label', 'Healthy')->count() }}</p>
-                </div>
-                <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
-                    <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-1">Fragile/Risky</p>
-                    <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->where('status_label', 'Fragile')->count() }}</p>
-                </div>
-                <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
-                    <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">Critical Status</p>
-                    <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->where('status_label', 'Critical')->count() }}</p>
-                </div>
-            </div>
 
-            <!-- Monitoring Table -->
-            <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden fade-in-up transition-colors">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-gray-50 dark:bg-navy-950/50 transition-colors">
-                            <tr>
-                                <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Product Instance</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Ownership</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Financial Summary</th>
-                                <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">System Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-50 dark:divide-white/5 bg-white dark:bg-navy-900 transition-colors">
-                            @foreach($allCalculations as $calc)
-                            <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
-                                <td class="px-8 py-6">
-                                    <div class="font-black text-navy dark:text-white text-base">{{ $calc->product_name }}</div>
-                                    <div class="text-[9px] font-bold text-orange-500 uppercase mt-1 tracking-widest">#BZS-{{ $calc->id }}</div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    <div class="text-sm font-bold text-navy dark:text-gray-300">{{ $calc->user->name }}</div>
-                                    <div class="text-xs text-gray-400 dark:text-gray-500">{{ $calc->user->email }}</div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    <div class="flex items-center gap-6">
-                                        <div>
-                                            <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Net Margin</div>
-                                            <div class="text-base font-black text-navy dark:text-white">{{ number_format($calc->net_margin_percent, 1) }}%</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Target Price</div>
-                                            <div class="text-base font-black text-orange-500">Rp{{ number_format($calc->target_selling_price, 0, ',', '.') }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6 text-right">
-                                    @php
-                                        $label = strtoupper($calc->status_label);
-                                        $colorClass = ($label === 'HEALTHY') ? 'status-healthy' : (($label === 'FRAGILE') ? 'status-risky' : 'status-danger');
-                                        $dotClass = ($label === 'HEALTHY') ? 'bg-green-500' : (($label === 'FRAGILE') ? 'bg-orange-500' : 'bg-red-500');
-                                    @endphp
-                                    <span class="status-badge {{ $colorClass }}">
-                                        <span class="w-1.5 h-1.5 rounded-full {{ $dotClass }}"></span>
-                                        {{ $label }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="flex-1">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10 fade-in-up">
+                        <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
+                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-1">Total Analysis</p>
+                            <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->count() }}</p>
+                        </div>
+                        <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
+                            <p class="text-[10px] font-black text-green-500 uppercase tracking-widest mb-1">Healthy Products</p>
+                            <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->where('status_label', 'Healthy')->count() }}</p>
+                        </div>
+                        <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
+                            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-1">Fragile/Risky</p>
+                            <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->where('status_label', 'Fragile')->count() }}</p>
+                        </div>
+                        <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm transition-colors">
+                            <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">Critical Status</p>
+                            <p class="text-3xl font-black text-navy dark:text-white">{{ $allCalculations->where('status_label', 'Critical')->count() }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Monitoring Table -->
+                    <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden fade-in-up transition-colors">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 dark:bg-navy-950/50 transition-colors">
+                                    <tr>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Product Instance</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Ownership</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Financial Summary</th>
+                                        <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">System Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-50 dark:divide-white/5 bg-white dark:bg-navy-900 transition-colors">
+                                    @foreach($allCalculations as $calc)
+                                    <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
+                                        <td class="px-8 py-6">
+                                            <div class="font-black text-navy dark:text-white text-base">{{ $calc->product_name }}</div>
+                                            <div class="text-[9px] font-bold text-orange-500 uppercase mt-1 tracking-widest">#BZS-{{ $calc->id }}</div>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="text-sm font-bold text-navy dark:text-gray-300">{{ $calc->user->name }}</div>
+                                            <div class="text-xs text-gray-400 dark:text-gray-500">{{ $calc->user->email }}</div>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex items-center gap-6">
+                                                <div>
+                                                    <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Net Margin</div>
+                                                    <div class="text-base font-black text-navy dark:text-white">{{ number_format($calc->net_margin_percent, 1) }}%</div>
+                                                </div>
+                                                <div>
+                                                    <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Target Price</div>
+                                                    <div class="text-base font-black text-orange-500">Rp{{ number_format($calc->target_selling_price, 0, ',', '.') }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            @php
+                                                $label = strtoupper($calc->status_label);
+                                                $colorClass = ($label === 'HEALTHY') ? 'status-healthy' : (($label === 'FRAGILE') ? 'status-risky' : 'status-danger');
+                                                $dotClass = ($label === 'HEALTHY') ? 'bg-green-500' : (($label === 'FRAGILE') ? 'bg-orange-500' : 'bg-red-500');
+                                            @endphp
+                                            <span class="status-badge {{ $colorClass }}">
+                                                <span class="w-1.5 h-1.5 rounded-full {{ $dotClass }}"></span>
+                                                {{ $label }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -54,9 +54,9 @@
                 <span class="text-[9px] text-slate-400 dark:text-slate-600 font-medium uppercase tracking-widest leading-none">Business Intelligence Platform</span>
             </div>
             
-            <div class="flex items-center gap-6">
-                <a href="#" class="text-[10px] font-black text-slate-400 dark:text-slate-500 hover:text-orange-500 dark:hover:text-white uppercase tracking-widest transition-all">Documentation</a>
-                <a href="#" class="text-[10px] font-black text-slate-400 dark:text-slate-500 hover:text-orange-500 dark:hover:text-white uppercase tracking-widest transition-all">Privacy Policy</a>
+            <div class="flex items-center gap-6 flex-wrap justify-center md:justify-end">
+                <a href="https://wa.me/6285797245448" target="_blank" class="text-[10px] font-black text-slate-400 dark:text-slate-500 hover:text-orange-500 dark:hover:text-white uppercase tracking-widest transition-all">Support: +62 857-9724-5448</a>
+                <a href="https://Instagram.com/claritylabs.id" target="_blank" class="text-[10px] font-black text-slate-400 dark:text-slate-500 hover:text-orange-500 dark:hover:text-white uppercase tracking-widest transition-all">Instagram: @claritylabs.id</a>
                 <div class="w-1.5 h-1.5 rounded-full bg-orange-500/20"></div>
                 <span class="text-[10px] font-black text-navy-900 dark:text-white uppercase tracking-widest">© 2026 ClarityLabs</span>
             </div>

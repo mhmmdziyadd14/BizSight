@@ -52,55 +52,64 @@
                 </div>
             </div>
 
-            <!-- Table -->
-            <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden fade-in-up transition-colors">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-100 dark:divide-white/5">
-                        <thead class="bg-gray-50/50 dark:bg-navy-950/50 transition-colors">
-                            <tr>
-                                <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Profile</th>
-                                <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Purchased Tools</th>
-                                <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-50 dark:divide-white/5 bg-white dark:bg-navy-900 transition-colors">
-                            @foreach($users as $user)
-                            <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
-                                <td class="px-8 py-6 whitespace-nowrap">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-10 h-10 bg-navy dark:bg-navy-800 rounded-xl flex items-center justify-center text-orange-500 font-black shadow-sm transition-colors">
-                                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                                        </div>
-                                        <div>
-                                            <div class="text-base font-bold text-navy dark:text-white transition-colors">{{ $user->name }}</div>
-                                            <div class="text-xs text-gray-400 dark:text-gray-500 font-medium">{{ $user->email }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    <div class="flex flex-wrap gap-2">
-                                        @php
-                                            $userFeatures = $user->accesses->pluck('feature_code')->toArray();
-                                        @endphp
-                                        @if(empty($userFeatures))
-                                            <span class="text-[10px] text-gray-300 dark:text-gray-600 italic font-bold">No Purchases</span>
-                                        @else
-                                            @if(in_array('vcp', $userFeatures)) <span class="badge-feature badge-vcp">Visual Pack</span> @endif
-                                            @if(in_array('pcc', $userFeatures)) <span class="badge-feature badge-pcc">Profit Calc</span> @endif
-                                            @if(in_array('de', $userFeatures)) <span class="badge-feature badge-de">Decision Eng</span> @endif
-                                        @endif
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6 text-right space-x-2">
-                                    <button @click="selectedUser = {id: {{ $user->id }}, name: '{{ $user->name }}', email: '{{ $user->email }}'}; editModal = true" 
-                                            class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
-                                        Edit
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Sidebar Admin -->
+                <div class="w-full lg:w-64 shrink-0">
+                    @include('layouts.admin-sidebar')
+                </div>
+
+                <div class="flex-1">
+                    <!-- Table -->
+                    <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden fade-in-up transition-colors">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-100 dark:divide-white/5">
+                                <thead class="bg-gray-50/50 dark:bg-navy-950/50 transition-colors">
+                                    <tr>
+                                        <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Profile</th>
+                                        <th class="px-8 py-5 text-left text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Purchased Tools</th>
+                                        <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-50 dark:divide-white/5 bg-white dark:bg-navy-900 transition-colors">
+                                    @foreach($users as $user)
+                                    <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
+                                        <td class="px-8 py-6 whitespace-nowrap">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-10 h-10 bg-navy dark:bg-navy-800 rounded-xl flex items-center justify-center text-orange-500 font-black shadow-sm transition-colors">
+                                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                                </div>
+                                                <div>
+                                                    <div class="text-base font-bold text-navy dark:text-white transition-colors">{{ $user->name }}</div>
+                                                    <div class="text-xs text-gray-400 dark:text-gray-500 font-medium">{{ $user->email }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex flex-wrap gap-2">
+                                                @php
+                                                    $userFeatures = $user->accesses->pluck('feature_code')->map(fn($f) => strtolower($f))->toArray();
+                                                @endphp
+                                                @if(empty($userFeatures))
+                                                    <span class="text-[10px] text-gray-300 dark:text-gray-600 italic font-bold">No Purchases</span>
+                                                @else
+                                                    @if(in_array('vcp', $userFeatures)) <span class="badge-feature badge-vcp">Visual Pack</span> @endif
+                                                    @if(in_array('pcc', $userFeatures)) <span class="badge-feature badge-pcc">Profit Calc</span> @endif
+                                                    @if(in_array('de', $userFeatures)) <span class="badge-feature badge-de">Decision Eng</span> @endif
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6 text-right space-x-2">
+                                            <button @click="selectedUser = {id: {{ $user->id }}, name: '{{ $user->name }}', email: '{{ $user->email }}'}; editModal = true" 
+                                                    class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

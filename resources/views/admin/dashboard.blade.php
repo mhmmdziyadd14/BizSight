@@ -68,195 +68,234 @@
                 </div>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 fade-in-up">
-                <div class="stat-card bg-white dark:bg-navy-900 rounded-[24px] shadow-sm border border-gray-100 dark:border-white/5 p-6 relative overflow-hidden group">
-                    <div class="absolute -right-4 -top-4 w-20 h-20 bg-orange-50 dark:bg-orange-500/5 rounded-full opacity-50 group-hover:scale-150 transition-all duration-700"></div>
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-2 mb-3">
-                            <div class="w-8 h-8 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                            </div>
-                            <div class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Analyzed Products</div>
-                        </div>
-                        <div class="text-4xl font-black text-navy dark:text-white">{{ $allCalculations->count() }}</div>
-                        <p class="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Global Viability Checks</p>
-                    </div>
-                </div> 
-                
-                <div class="stat-card bg-white dark:bg-navy-900 rounded-[24px] shadow-sm border border-gray-100 dark:border-white/5 p-6 relative overflow-hidden group">
-                    <div class="absolute -right-4 -top-4 w-20 h-20 bg-orange-50 dark:bg-orange-500/5 rounded-full opacity-50 group-hover:scale-150 transition-all duration-700"></div>
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-2 mb-3">
-                            <div class="w-8 h-8 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            </div>
-                            <div class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Registered</div>
-                        </div>
-                        <div class="text-4xl font-black text-navy dark:text-white">{{ $users->count() }}</div>
-                        <p class="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Global Clarity Users</p>
-                    </div>
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Sidebar Admin -->
+                <div class="w-full lg:w-64 shrink-0">
+                    @include('layouts.admin-sidebar')
                 </div>
-            </div>
 
-            <!-- User Monitoring -->
-            <div class="mb-12 fade-in-up">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-navy dark:bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg transition-colors">
-                            <svg class="w-5 h-5 text-orange-500 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                        </div>
-                        <h2 class="text-xl font-black text-navy dark:text-white uppercase tracking-tight">Recent User Activity</h2>
-                    </div>
-                    <a href="{{ route('admin.users') }}" class="text-[10px] font-black text-orange-500 uppercase tracking-widest hover:underline">View All Users &rarr;</a>
-                </div>
-                
-                <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden transition-colors">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="bg-gray-50 dark:bg-navy-950 border-b border-gray-100 dark:border-white/5 transition-colors">
-                                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Profile</th>
-                                    <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Purchased Tools</th>
-                                    <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50 dark:divide-white/5">
-                                @foreach($users->take(10) as $user)
-                                <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
-                                    <td class="px-8 py-6">
-                                        <div class="flex items-center gap-4">
-                                            <div class="w-10 h-10 bg-navy dark:bg-navy-800 rounded-xl flex items-center justify-center text-orange-500 font-black shadow-sm transition-colors">
-                                                {{ strtoupper(substr($user->name, 0, 1)) }}
-                                            </div>
-                                            <div>
-                                                <div class="text-base font-bold text-navy dark:text-white transition-colors">{{ $user->name }}</div>
-                                                <div class="text-xs text-gray-400 dark:text-gray-500 font-medium">{{ $user->email }}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-8 py-6">
-                                        <div class="flex flex-wrap gap-2">
-                                            @php
-                                                $userFeatures = $user->accesses->pluck('feature_code')->toArray();
-                                            @endphp
-                                            @if(empty($userFeatures))
-                                                <span class="text-[10px] text-gray-300 dark:text-gray-600 italic font-bold">No Purchases</span>
-                                            @else
-                                                @if(in_array('vcp', $userFeatures)) <span class="badge-feature badge-vcp">Visual Pack</span> @endif
-                                                @if(in_array('pcc', $userFeatures)) <span class="badge-feature badge-pcc">Profit Calc</span> @endif
-                                                @if(in_array('de', $userFeatures)) <span class="badge-feature badge-de">Decision Eng</span> @endif
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-8 py-6 text-right space-x-2">
-                                        <button @click="selectedUser = {id: {{ $user->id }}, name: '{{ $user->name }}', email: '{{ $user->email }}'}; editModal = true" 
-                                                class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ecosystem Analytics -->
-            <div class="mb-12 fade-in-up">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 bg-navy dark:bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg transition-colors">
-                        <svg class="w-5 h-5 text-orange-500 dark:text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h2 class="text-xl font-black text-navy dark:text-white uppercase tracking-tight">Purchase Ecosystem Analytics</h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    @foreach(['vcp' => 'Visual Clarity Pack', 'pcc' => 'Profit Clarity Calculator', 'de' => 'Decision Engine'] as $code => $name)
-                    <div class="bg-white dark:bg-navy-900 p-6 rounded-[24px] border border-gray-100 dark:border-white/5 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="px-3 py-1 bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-lg text-[9px] font-black uppercase tracking-widest">{{ $name }}</span>
-                            <span class="text-[10px] font-black text-gray-400">{{ strtoupper($code) }}</span>
-                        </div>
-                        <div class="text-3xl font-black text-navy dark:text-white">{{ $featureStats[$code] }} <span class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Purchasers</span></div>
-                        <div class="mt-4 h-1.5 w-full bg-gray-100 dark:bg-navy-800 rounded-full overflow-hidden">
-                            <div class="h-full bg-orange-500" style="width: {{ $users->count() > 0 ? ($featureStats[$code]/$users->count())*100 : 0 }}%"></div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Global Product Monitoring -->
-            <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden fade-in-up">
-                <div class="bg-navy dark:bg-navy-800 px-8 py-6 flex justify-between items-center transition-colors">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        </div>
-                        <h3 class="font-black text-white text-lg tracking-tight uppercase">Global Product Monitoring</h3>
-                    </div>
-                </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="bg-gray-50 dark:bg-navy-950 border-b border-gray-100 dark:border-white/5 transition-colors">
-                                <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Product Instance</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Ownership</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Performance</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-right">System Result</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-50 dark:divide-white/5">
-                            @forelse($allCalculations as $calc)
-                            <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
-                                <td class="px-8 py-6">
-                                    <div class="font-black text-navy dark:text-white text-base">{{ $calc->product_name }}</div>
-                                    <div class="text-[9px] font-bold text-orange-500 uppercase mt-1 tracking-widest">ID: #BZS-{{ $calc->id }}</div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    <div class="text-sm font-bold text-navy dark:text-gray-300">{{ $calc->user->name }}</div>
-                                    <div class="text-xs text-gray-400 dark:text-gray-500">{{ $calc->user->email }}</div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    <div class="flex items-center gap-6">
-                                        <div>
-                                            <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Margin</div>
-                                            <div class="text-base font-black text-navy dark:text-white">{{ number_format($calc->net_margin_percent, 1) }}%</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">BEP</div>
-                                            <div class="text-base font-black text-orange-500">{{ $calc->bep_unit }} <span class="text-[9px] text-gray-400">PCS</span></div>
-                                        </div>
+                <!-- Main Content Panel -->
+                <div class="flex-1">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 fade-in-up">
+                        <div class="stat-card bg-white dark:bg-navy-900 rounded-[24px] shadow-sm border border-gray-100 dark:border-white/5 p-6 relative overflow-hidden group">
+                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-orange-50 dark:bg-orange-500/5 rounded-full opacity-50 group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <div class="w-8 h-8 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                                     </div>
-                                </td>
-                                <td class="px-8 py-6 text-right">
-                                    @php
-                                        $label = strtoupper($calc->status_label);
-                                        $color = ($label === 'HEALTHY') ? 'status-healthy' : (($label === 'FRAGILE') ? 'status-fragile' : 'status-critical');
-                                        $dot = ($label === 'HEALTHY') ? 'bg-green-500' : (($label === 'FRAGILE') ? 'bg-orange-500' : 'bg-red-500');
-                                    @endphp
-                                    <span class="status-badge {{ $color }}">
-                                        <span class="w-1.5 h-1.5 rounded-full {{ $dot }}"></span>
-                                        {{ $label }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="4" class="px-8 py-20 text-center">
-                                    <p class="text-gray-400 font-bold italic text-sm">No global product data detected.</p>
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                                    <div class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Analyzed Products</div>
+                                </div>
+                                <div class="text-4xl font-black text-navy dark:text-white">{{ $allCalculations->count() }}</div>
+                                <p class="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Global Viability Checks</p>
+                            </div>
+                        </div> 
+                        
+                        <div class="stat-card bg-white dark:bg-navy-900 rounded-[24px] shadow-sm border border-gray-100 dark:border-white/5 p-6 relative overflow-hidden group">
+                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-orange-50 dark:bg-orange-500/5 rounded-full opacity-50 group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <div class="w-8 h-8 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                    </div>
+                                    <div class="text-[10px] font-black text-orange-500 uppercase tracking-wider">Total Registered</div>
+                                </div>
+                                <div class="text-4xl font-black text-navy dark:text-white">{{ $users->count() }}</div>
+                                <p class="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Global Clarity Users</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Monitoring -->
+                    <div class="mb-12 fade-in-up">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-navy dark:bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg transition-colors">
+                                    <svg class="w-5 h-5 text-orange-500 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                </div>
+                                <h2 class="text-xl font-black text-navy dark:text-white uppercase tracking-tight">Recent User Activity</h2>
+                            </div>
+                            <a href="{{ route('admin.users') }}" class="text-[10px] font-black text-orange-500 uppercase tracking-widest hover:underline">View All Users &rarr;</a>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden transition-colors">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="bg-gray-50 dark:bg-navy-950 border-b border-gray-100 dark:border-white/5 transition-colors">
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Profile</th>
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Tanggal Terdaftar</th>
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Purchased Tools</th>
+                                            <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-50 dark:divide-white/5">
+                                        @foreach($users as $user)
+                                        <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
+                                            <td class="px-8 py-6">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="w-10 h-10 bg-navy dark:bg-navy-800 rounded-xl flex items-center justify-center text-orange-500 font-black shadow-sm transition-colors">
+                                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-base font-bold text-navy dark:text-white transition-colors">{{ $user->name }}</div>
+                                                        <div class="text-xs text-gray-400 dark:text-gray-500 font-medium">{{ $user->email }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <div class="text-sm font-bold text-navy dark:text-white">
+                                                    <span class="local-time" data-utc="{{ $user->created_at->toIso8601String() }}" data-format="d M Y">{{ $user->created_at->format('d M Y') }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6">
+                                                <div class="flex flex-wrap gap-2">
+                                                    @php
+                                                        $userFeatures = $user->accesses->pluck('feature_code')->map(fn($f) => strtolower($f))->toArray();
+                                                    @endphp
+                                                    @if(empty($userFeatures))
+                                                        <span class="text-[10px] text-gray-300 dark:text-gray-600 italic font-bold">No Purchases</span>
+                                                    @else
+                                                        @if(in_array('vcp', $userFeatures)) <span class="badge-feature badge-vcp">Visual Pack</span> @endif
+                                                        @if(in_array('pcc', $userFeatures)) <span class="badge-feature badge-pcc">Profit Calc</span> @endif
+                                                        @if(in_array('de', $userFeatures)) <span class="badge-feature badge-de">Decision Eng</span> @endif
+                                                    @endif
+                                                </div>
+                                            </td>
+                                            <td class="px-8 py-6 text-right space-x-2">
+                                                <button @click="selectedUser = {id: {{ $user->id }}, name: '{{ $user->name }}', email: '{{ $user->email }}'}; editModal = true" 
+                                                        class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
+                                                    Edit
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ecosystem Product Performance & Revenue -->
+                    <div class="mb-12 fade-in-up">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 bg-navy dark:bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg transition-colors">
+                                <svg class="w-5 h-5 text-orange-500 dark:text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 16V5" />
+                                </svg>
+                            </div>
+                            <h2 class="text-xl font-black text-navy dark:text-white uppercase tracking-tight">Kinerja Produk & Pemasukan</h2>
+                        </div>
+                        <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden transition-colors">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="bg-gray-50 dark:bg-navy-950 border-b border-gray-100 dark:border-white/5 transition-colors">
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Nama Produk</th>
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-center">Kode Fitur</th>
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-right">Harga Satuan</th>
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-center">Jumlah Pembeli</th>
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-right">Total Pemasukan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-50 dark:divide-white/5">
+                                        @foreach($productStats as $code => $stat)
+                                        <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
+                                            <td class="px-8 py-6">
+                                                <div class="text-base font-bold text-navy dark:text-white transition-colors">{{ $stat['name'] }}</div>
+                                            </td>
+                                            <td class="px-8 py-6 text-center">
+                                                <span class="badge-feature badge-{{ $code }}">{{ strtoupper($code) }}</span>
+                                            </td>
+                                            <td class="px-8 py-6 text-right font-semibold text-navy dark:text-white">
+                                                Rp {{ number_format($code == 'de' ? 249000 : 149000, 0, ',', '.') }}
+                                            </td>
+                                            <td class="px-8 py-6 text-center text-base font-black text-navy dark:text-white">
+                                                {{ $stat['buyers'] }}
+                                            </td>
+                                            <td class="px-8 py-6 text-right text-base font-black text-orange-500">
+                                                Rp {{ number_format($stat['revenue'], 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Global Product Monitoring -->
+                    <div class="bg-white dark:bg-navy-900 rounded-[32px] shadow-xl border border-gray-100 dark:border-white/5 overflow-hidden fade-in-up">
+                        <div class="bg-navy dark:bg-navy-800 px-8 py-6 flex justify-between items-center transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                </div>
+                                <h3 class="font-black text-white text-lg tracking-tight uppercase">Global Product Monitoring</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-gray-50 dark:bg-navy-950 border-b border-gray-100 dark:border-white/5 transition-colors">
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Product Instance</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Ownership</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Performance</th>
+                                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest text-right">System Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-50 dark:divide-white/5">
+                                    @forelse($allCalculations as $calc)
+                                    <tr class="hover:bg-orange-50/30 dark:hover:bg-white/5 transition-colors">
+                                        <td class="px-8 py-6">
+                                            <div class="font-black text-navy dark:text-white text-base">{{ $calc->product_name }}</div>
+                                            <div class="text-[9px] font-bold text-orange-500 uppercase mt-1 tracking-widest">ID: #BZS-{{ $calc->id }}</div>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="text-sm font-bold text-navy dark:text-gray-300">{{ $calc->user->name }}</div>
+                                            <div class="text-xs text-gray-400 dark:text-gray-500">{{ $calc->user->email }}</div>
+                                        </td>
+                                        <td class="px-8 py-6">
+                                            <div class="flex items-center gap-6">
+                                                <div>
+                                                    <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Margin</div>
+                                                    <div class="text-base font-black text-navy dark:text-white">{{ number_format($calc->net_margin_percent, 1) }}%</div>
+                                                </div>
+                                                <div>
+                                                    <div class="text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">BEP</div>
+                                                    <div class="text-base font-black text-orange-500">{{ $calc->bep_unit }} <span class="text-[9px] text-gray-400">PCS</span></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-6 text-right">
+                                            @php
+                                                $label = strtoupper($calc->status_label);
+                                                $color = ($label === 'HEALTHY') ? 'status-healthy' : (($label === 'FRAGILE') ? 'status-fragile' : 'status-critical');
+                                                $dot = ($label === 'HEALTHY') ? 'bg-green-500' : (($label === 'FRAGILE') ? 'bg-orange-500' : 'bg-red-500');
+                                            @endphp
+                                            <span class="status-badge {{ $color }}">
+                                                <span class="w-1.5 h-1.5 rounded-full {{ $dot }}"></span>
+                                                {{ $label }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="4" class="px-8 py-20 text-center">
+                                            <p class="text-gray-400 font-bold italic text-sm">No global product data detected.</p>
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <!-- Edit Modal -->
         <div x-show="editModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" x-cloak>

@@ -498,8 +498,8 @@
                     <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Company</h4>
                     <ul class="space-y-4">
                         <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">About</a></li>
-                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Support</a></li>
-                        <li><a href="#" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Instagram</a></li>
+                        <li><a href="https://wa.me/6285797245448" target="_blank" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Support (+62 857-9724-5448)</a></li>
+                        <li><a href="https://Instagram.com/claritylabs.id" target="_blank" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500">Instagram (@claritylabs.id)</a></li>
                     </ul>
                 </div>
             </div>
