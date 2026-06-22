@@ -41,15 +41,23 @@ return new class extends Migration
             foreach ($userAccesses as $access) {
                 $feature = strtolower($access->feature_code);
 
-                // Cari product yang memiliki feature_code ini di kolom features JSON
+                // Cari product yang memiliki feature_code ini (case-insensitive)
                 $product = DB::table('products')
                     ->where('is_active', true)
-                    ->whereJsonContains('features', $feature)
+                    ->get()
+                    ->filter(function($p) use ($feature) {
+                        $feats = json_decode($p->features, true) ?? [];
+                        return in_array(strtoupper($feature), array_map('strtoupper', $feats));
+                    })
                     ->first();
 
                 if (!$product) {
                     $product = DB::table('products')
-                        ->whereJsonContains('features', $feature)
+                        ->get()
+                        ->filter(function($p) use ($feature) {
+                            $feats = json_decode($p->features, true) ?? [];
+                            return in_array(strtoupper($feature), array_map('strtoupper', $feats));
+                        })
                         ->first();
                 }
 
