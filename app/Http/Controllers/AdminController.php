@@ -134,22 +134,48 @@ class AdminController extends Controller
     }
 
     /**
-     * Mengupdate detail user (Email/Nama).
+     * Mengupdate detail user (Email/Nama/Telepon).
      */
     public function updateUser(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
+            'phone' => 'nullable|string|max:255',
         ]);
 
         $user = User::findOrFail($id);
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
         ]);
 
         return redirect()->back()->with('success', 'User details updated successfully.');
+    }
+
+    /**
+     * Menghapus akun user.
+     */
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Mencegah admin menghapus dirinya sendiri
+        if ($user->id === auth()->id()) {
+            if (request()->ajax()) {
+                return response()->json(['message' => 'Anda tidak dapat menghapus akun Anda sendiri.'], 403);
+            }
+            return redirect()->back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        $user->delete();
+
+        if (request()->ajax()) {
+            return response()->json(['status' => 'success', 'message' => 'User deleted successfully.']);
+        }
+
+        return redirect()->back()->with('success', 'User deleted successfully.');
     }
 
     /**

@@ -15,9 +15,10 @@ class ScalevWebhookController extends Controller
     {
         Log::info('Scalev Webhook Received', $request->all());
 
-        // Ekstrak email dan product/variant ID secara dinamis
+        // Ekstrak email, nama, dan telepon secara dinamis
         $email = $request->input('email') ?? $request->input('customer.email') ?? $request->input('data.customer.email');
         $name = $request->input('name') ?? $request->input('customer.name') ?? $request->input('data.customer.name') ?? 'User';
+        $phone = $request->input('phone') ?? $request->input('customer.phone') ?? $request->input('data.customer.phone') ?? null;
         
         // Ambil product_id atau dari array products[0].variant_id
         $productId = $request->input('product_id');
@@ -55,10 +56,16 @@ class ScalevWebhookController extends Controller
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
+                'phone' => $phone,
                 'password' => Hash::make($randomPassword),
                 'role' => 'user',
                 'is_approved' => true // Asumsi user yang bayar otomatis di-approve
             ]);
+        } else {
+            // Update phone if it's set in the webhook and empty on the user
+            if ($phone && !$user->phone) {
+                $user->update(['phone' => $phone]);
+            }
         }
 
         // 3. Assign Product Access (Pivot / User Access)

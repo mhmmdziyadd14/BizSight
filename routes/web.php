@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Rute untuk Approve User (WAJIB ADA untuk tombol Grant Access)
         Route::patch('/users/{id}/approve', [AdminController::class, 'approve'])->name('admin.users.approve');
         Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+        Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
 
         // Product Notifications
         Route::get('/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');
