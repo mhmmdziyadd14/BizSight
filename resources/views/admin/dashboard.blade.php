@@ -315,59 +315,75 @@
         <!-- Edit Modal -->
         <div x-show="editModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" x-cloak>
             <div class="absolute inset-0 bg-navy/80 backdrop-blur-sm" @click="editModal = false"></div>
-            <div class="bg-white dark:bg-navy-900 w-full max-w-md rounded-[32px] p-10 relative shadow-2xl scale-in transition-colors max-h-[90vh] overflow-y-auto" @click.away="editModal = false"
+            <div class="bg-white dark:bg-navy-900 w-full max-w-3xl rounded-[32px] p-8 md:p-10 relative shadow-2xl scale-in transition-colors max-h-[95vh] overflow-y-auto" @click.away="editModal = false"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 scale-95"
                  x-transition:enter-end="opacity-100 scale-100">
-                <h2 class="text-2xl font-black text-navy dark:text-white mb-2">Edit User Details</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 font-medium">Perbarui informasi email, nama, atau telepon pengguna.</p>
                 
-                <form :action="'/admin/users/' + selectedUser.id" method="POST" id="edit-user-form" class="space-y-5">
-                    @csrf
-                    @method('PUT')
-                    
+                <div class="flex justify-between items-start mb-6">
                     <div>
-                        <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
-                        <input type="text" name="name" x-model="selectedUser.name" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                        <h2 class="text-2xl font-black text-navy dark:text-white mb-1">Edit User Details</h2>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Perbarui informasi email, nama, atau telepon pengguna.</p>
                     </div>
- 
+                    <button type="button" @click="editModal = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left Column: Inputs -->
                     <div>
-                        <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 ml-1">Email Address</label>
-                        <input type="email" name="email" x-model="selectedUser.email" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                        <form :action="'/admin/users/' + selectedUser.id" method="POST" id="edit-user-form" class="space-y-5">
+                            @csrf
+                            @method('PUT')
+                            
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Full Name</label>
+                                <input type="text" name="name" x-model="selectedUser.name" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                            </div>
+         
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
+                                <input type="email" name="email" x-model="selectedUser.email" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                            </div>
+        
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">No Telepon</label>
+                                <input type="text" name="phone" x-model="selectedUser.phone" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                            </div>
+                        </form>
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 ml-1">No Telepon</label>
-                        <input type="text" name="phone" x-model="selectedUser.phone" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
-                    </div>
-
-                    <!-- Details Section -->
-                    <div class="border-t border-gray-100 dark:border-white/5 pt-4 space-y-4">
-                        <div>
-                            <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Tanggal Terdaftar</span>
-                            <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-4 text-sm font-bold text-navy dark:text-white" x-text="selectedUser.created_at"></div>
+                    <!-- Right Column: Details & Actions -->
+                    <div class="flex flex-col justify-between">
+                        <!-- Details Section -->
+                        <div class="space-y-5">
+                            <div>
+                                <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Tanggal Terdaftar</span>
+                                <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white" x-text="selectedUser.created_at"></div>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Produk Yang Dibeli</span>
+                                <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-3.5 flex flex-wrap gap-2 text-navy dark:text-white" x-html="selectedUser.products_html || '<span class=\'text-gray-400 italic font-bold text-xs\'>No Purchases</span>'"></div>
+                            </div>
                         </div>
-                        <div>
-                            <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Produk Yang Dibeli</span>
-                            <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-4 flex flex-wrap gap-2 text-navy dark:text-white" x-html="selectedUser.products_html || '<span class=\'text-gray-400 italic font-bold text-xs\'>No Purchases</span>'"></div>
+
+                        <!-- Actions Container -->
+                        <div class="flex flex-col gap-3 pt-6 border-t border-gray-100 dark:border-white/5 mt-6">
+                            <div class="flex gap-3">
+                                <button type="button" @click="editModal = false" class="flex-1 bg-gray-100 dark:bg-navy-800 text-gray-500 dark:text-gray-400 text-[10px] font-black uppercase tracking-widest py-3.5 rounded-2xl">Cancel</button>
+                                <button type="submit" form="edit-user-form" class="flex-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest py-3.5 rounded-2xl shadow-lg shadow-orange-500/20">Save Changes</button>
+                            </div>
+
+                            <form :action="'/admin/users/' + selectedUser.id" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini? Tindakan ini tidak dapat dibatalkan.')" class="w-full">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white text-[10px] font-black uppercase tracking-widest py-3.5 rounded-2xl transition-all">
+                                    Hapus Akun
+                                </button>
+                            </form>
                         </div>
                     </div>
-                </form>
-
-                <!-- Actions Container -->
-                <div class="flex flex-col gap-3 pt-6 border-t border-gray-100 dark:border-white/5 mt-6">
-                    <div class="flex gap-4">
-                        <button type="button" @click="editModal = false" class="flex-1 bg-gray-100 dark:bg-navy-800 text-gray-500 dark:text-gray-400 text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl">Cancel</button>
-                        <button type="submit" form="edit-user-form" class="flex-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl shadow-lg shadow-orange-500/20">Save Changes</button>
-                    </div>
-
-                    <form :action="'/admin/users/' + selectedUser.id" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini? Tindakan ini tidak dapat dibatalkan.')" class="w-full">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl transition-all">
-                            Hapus Akun
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>

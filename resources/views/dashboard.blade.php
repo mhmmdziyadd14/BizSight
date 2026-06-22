@@ -528,18 +528,107 @@
         <!-- PROFILE VIEW -->
         <div class="page-view" id="view-profile">
             <div class="product-grid">
+                <!-- Profile Info Form Card -->
                 <div class="card">
                     <div class="section-title"><div class="title-dot"></div> Profile Info</div>
-                    <div style="display:flex; flex-direction:column; gap:20px">
-                        <div><p style="font-size:11px; font-weight:800; color:var(--t3); text-transform:uppercase">Full Name</p><p style="font-weight:700">{{ $user->name }}</p></div>
-                        <div><p style="font-size:11px; font-weight:800; color:var(--t3); text-transform:uppercase">Email Address</p><p style="font-weight:700">{{ $user->email }}</p></div>
-                        <div><p style="font-size:11px; font-weight:800; color:var(--t3); text-transform:uppercase">User ID</p><p style="font-family:monospace">{{ $user->id }}</p></div>
-                    </div>
+                    
+                    @if (session('status') === 'profile-updated')
+                        <div style="margin-bottom: 20px; padding: 12px 16px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Profile updated successfully!
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('profile.update') }}" style="display:flex; flex-direction:column; gap:16px">
+                        @csrf
+                        @method('PATCH')
+                        
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 ml-1">Full Name</label>
+                            <input type="text" name="name" value="{{ old('name', $user->name) }}" required
+                                class="w-full bg-slate-50 border border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-slate-800 dark:text-slate-100 transition-all"
+                                style="width: 100%; border-radius: 12px; font-weight: 600;">
+                            @error('name')
+                                <p style="color: #ef4444; font-size: 11px; margin-top: 4px; font-weight: 700;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 ml-1">Email Address</label>
+                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required
+                                class="w-full bg-slate-50 border border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-slate-800 dark:text-slate-100 transition-all"
+                                style="width: 100%; border-radius: 12px; font-weight: 600;">
+                            @error('email')
+                                <p style="color: #ef4444; font-size: 11px; margin-top: 4px; font-weight: 700;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 ml-1">No Telepon</label>
+                            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" required
+                                class="w-full bg-slate-50 border border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-slate-800 dark:text-slate-100 transition-all"
+                                style="width: 100%; border-radius: 12px; font-weight: 600;">
+                            @error('phone')
+                                <p style="color: #ef4444; font-size: 11px; margin-top: 4px; font-weight: 700;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div style="margin-top: 8px;">
+                            <button type="submit" class="btn-action" style="width:100%; background:var(--ora); color:#fff; border:none; padding: 12px; font-weight: 800;">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
                 </div>
+
+                <!-- Security Form Card -->
                 <div class="card">
                     <div class="section-title"><div class="title-dot"></div> Security</div>
-                    <p style="color:var(--t2); font-size:14px; margin-bottom:24px">Your account is secured with standard encryption. Manage your password in the main settings.</p>
-                    <button class="btn-action" style="width:100%; background:var(--bg3); color:var(--t1)">Change Password</button>
+                    
+                    @if (session('status') === 'password-updated')
+                        <div style="margin-bottom: 20px; padding: 12px 16px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Password updated successfully!
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('password.update') }}" style="display:flex; flex-direction:column; gap:16px">
+                        @csrf
+                        @method('PUT')
+
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 ml-1">Current Password</label>
+                            <input type="password" name="current_password" required autocomplete="current-password"
+                                class="w-full bg-slate-50 border border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-slate-800 dark:text-slate-100 transition-all"
+                                style="width: 100%; border-radius: 12px; font-weight: 600;">
+                            @if($errors->updatePassword->has('current_password'))
+                                <p style="color: #ef4444; font-size: 11px; margin-top: 4px; font-weight: 700;">{{ $errors->updatePassword->first('current_password') }}</p>
+                            @endif
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 ml-1">New Password</label>
+                            <input type="password" name="password" required autocomplete="new-password"
+                                class="w-full bg-slate-50 border border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-slate-800 dark:text-slate-100 transition-all"
+                                style="width: 100%; border-radius: 12px; font-weight: 600;">
+                            @if($errors->updatePassword->has('password'))
+                                <p style="color: #ef4444; font-size: 11px; margin-top: 4px; font-weight: 700;">{{ $errors->updatePassword->first('password') }}</p>
+                            @endif
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5 ml-1">Confirm New Password</label>
+                            <input type="password" name="password_confirmation" required autocomplete="new-password"
+                                class="w-full bg-slate-50 border border-slate-200 dark:bg-slate-900/50 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 text-slate-800 dark:text-slate-100 transition-all"
+                                style="width: 100%; border-radius: 12px; font-weight: 600;">
+                        </div>
+
+                        <div style="margin-top: 8px;">
+                            <button type="submit" class="btn-action" style="width:100%; background:var(--ora); color:#fff; border:none; padding: 12px; font-weight: 800;">
+                                Update Password
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -554,6 +643,9 @@
         
         document.getElementById('view-' + viewId).classList.add('active');
         el.classList.add('active');
+        
+        // Simpan hash lokasi ke URL
+        window.location.hash = viewId;
     }
 
     function toggleTheme() {
@@ -561,6 +653,28 @@
         html.classList.toggle('dark');
         localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash;
+        let defaultTab = 'products';
+        
+        // Cek jika session memiliki status/error profile/password, arahkan ke tab profile
+        if (hash === '#profile' || 
+            {{ session('status') === 'profile-updated' || session('status') === 'password-updated' || $errors->any() || $errors->updatePassword->any() ? 'true' : 'false' }}) {
+            defaultTab = 'profile';
+        } else if (hash === '#orders') {
+            defaultTab = 'orders';
+        }
+        
+        const targetLink = Array.from(document.querySelectorAll('.nav-link')).find(link => {
+            const onClickText = link.getAttribute('onclick') || '';
+            return onClickText.includes(defaultTab);
+        });
+        
+        if (targetLink) {
+            switchView(defaultTab, targetLink);
+        }
+    });
 </script>
 
 </body>
