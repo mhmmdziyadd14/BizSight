@@ -26,6 +26,15 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Phone Field -->
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">No Telepon</label>
+            <x-text-input type="text" name="phone" :value="old('phone')" required 
+                class="w-full bg-gray-50 border-gray-200 text-navy placeholder-gray-400 focus:bg-white dark:bg-white/5 dark:border-white/10 dark:text-white"
+                placeholder="+62 812-3456-7890" />
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        </div>
+
         <!-- Password Field -->
         <div>
             <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">Password</label>

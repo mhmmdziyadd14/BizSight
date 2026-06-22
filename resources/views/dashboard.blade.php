@@ -509,9 +509,9 @@
                                         <div style="font-weight:600">{{ $item->product->name }}</div>
                                     @endforeach
                                 </td>
-                                <td style="font-weight:800">Rp{{ number_format($order->total_price, 0, ',', '.') }}</td>
+                                <td style="font-weight:800">Rp{{ number_format($order->total_amount, 0, ',', '.') }}</td>
                                 <td>
-                                    <span class="badge {{ $order->status == 'paid' ? 'badge-green' : 'bg-yellow-100 text-yellow-700' }}">
+                                    <span class="badge {{ in_array($order->status, ['paid', 'success']) ? 'badge-green' : 'bg-yellow-100 text-yellow-700' }}">
                                         {{ strtoupper($order->status) }}
                                     </span>
                                 </td>

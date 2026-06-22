@@ -68,7 +68,21 @@ class ScalevWebhookController extends Controller
             }
         }
 
-        // 3. Assign Product Access (Pivot / User Access)
+        // 3. Create Order & OrderItem so it shows up in Purchase History and counts in stats
+        $order = \App\Models\Order::create([
+            'user_id' => $user->id,
+            'total_amount' => $product->price,
+            'status' => 'success',
+            'payment_method' => 'Scalev',
+        ]);
+
+        \App\Models\OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'price' => $product->price,
+        ]);
+
+        // 4. Assign Product Access (Pivot / User Access)
         // Ambil features dari product
         $features = $product->features ?? [];
 
@@ -78,8 +92,7 @@ class ScalevWebhookController extends Controller
             if (!$hasAccess) {
                 $user->accesses()->create([
                     'feature_code' => $featureCode,
-                    // 'order_id' => null, karena Scalev checkout di luar sistem internal orders
-                    'order_id' => null
+                    'order_id' => $order->id,
                 ]);
             }
         }

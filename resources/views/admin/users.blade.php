@@ -90,13 +90,13 @@
                                                     $userFeatures = $user->accesses->pluck('feature_code')->map(fn($f) => strtolower($f))->toArray();
                                                     $productsHtml = '';
                                                     if (in_array('vcp', $userFeatures)) {
-                                                        $productsHtml .= '<span class="badge-feature badge-vcp">Visual Pack</span>';
+                                                        $productsHtml .= "<span class='badge-feature badge-vcp'>Visual Pack</span>";
                                                     }
                                                     if (in_array('pcc', $userFeatures)) {
-                                                        $productsHtml .= '<span class="badge-feature badge-pcc">Profit Calc</span>';
+                                                        $productsHtml .= "<span class='badge-feature badge-pcc'>Profit Calc</span>";
                                                     }
                                                     if (in_array('de', $userFeatures)) {
-                                                        $productsHtml .= '<span class="badge-feature badge-de">Decision Eng</span>';
+                                                        $productsHtml .= "<span class='badge-feature badge-de'>Decision Eng</span>";
                                                     }
                                                 @endphp
                                                 @if(empty($userFeatures))
@@ -113,9 +113,9 @@
                                                         email: '{{ $user->email }}', 
                                                         phone: '{{ $user->phone ?? '' }}',
                                                         created_at: '{{ $user->created_at->format('d M Y H:i') }}',
-                                                        products_html: `{!! $productsHtml !!}`
+                                                        products_html: '{!! addslashes($productsHtml) !!}'
                                                     }; editModal = true" 
-                                                    class="bg-navy dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
+                                                    class="bg-navy-900 dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                                 Edit
                                             </button>
                                         </td>
