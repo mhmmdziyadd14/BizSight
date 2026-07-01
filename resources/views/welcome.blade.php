@@ -206,7 +206,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Template briefing dan dokumen kerja yang bikin tim, vendor, dan klien lo ngerti dari awal — tanpa perlu diulang.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 149k</p>
-                        <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497388&qty=1" class="btn-primary py-2 px-6">Beli</a>
+                        <a href="https://clarity-labs.myscalev.com/b/clarity-design-special-offer-xpf7yb" class="btn-primary py-2 px-6">Beli</a>
                     </div>
                 </div>
 
@@ -222,7 +222,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Hitung HPP produk fashion lo dengan benar — bahan, CMT, packaging, reject rate, sampai margin yang realistis.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 149k</p>
-                        <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497385&qty=1" class="btn-primary py-2 px-6">Beli</a>
+                        <a href="https://clarity-labs.myscalev.com/b/clarity-cost-special-offer-bsla5h" class="btn-primary py-2 px-6">Beli</a>
                     </div>
                 </div>
 
@@ -236,7 +236,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Evaluasi apakah produk layak dijual — berdasarkan angka, bukan feeling. Sebelum produksi, lo udah tau jawabannya.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 249k</p>
-                        <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497390&qty=1" class="btn-primary py-2 px-6">Beli</a>
+                        <a href="https://clarity-labs.myscalev.com/b/clarity-decision-special-offer-ciieye" class="btn-primary py-2 px-6">Beli</a>
                     </div>
                 </div>
             </div>
@@ -336,7 +336,7 @@
                         <span class="text-sm text-gray-400 line-through">Rp 398k</span>
                     </div>
                     <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 119k dari harga satuan</p>
-                    <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497399&qty=1" class="btn-secondary w-full text-center block">Beli Essentials</a>
+                    <a href="https://clarity-labs.myscalev.com/b/clarity-essentials-discount-uv5xls" class="btn-secondary w-full text-center block">Beli Essentials</a>
                 </div>
 
                 <!-- Tier 2 -->
@@ -368,7 +368,7 @@
                         <span class="text-sm text-gray-400 line-through">Rp 547k</span>
                     </div>
                     <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 158k — bayar 2, dapet 3</p>
-                    <a href="https://clarity-labs.myscalev.com/c/checkout?variant_ids=497401&qty=1" class="btn-primary w-full text-center justify-center block">Beli Clarity Full</a>
+                    <a href="https://clarity-labs.myscalev.com/b/clarity-full-hemat-158k-bayar-2-dapat-3-axys6d" class="btn-primary w-full text-center justify-center block">Beli Clarity Full</a>
                 </div>
             </div>
         </div>
