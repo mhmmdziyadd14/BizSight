@@ -10,6 +10,8 @@ class UserAccess extends Model
 
     protected $casts = [
         'granted_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'is_trial' => 'boolean',
     ];
 
     public function user()

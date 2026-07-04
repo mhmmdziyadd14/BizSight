@@ -57,6 +57,30 @@ class User extends Authenticatable
         return isset($this->role) && strcasecmp($this->role, 'admin') === 0;
     }
 
+    /**
+     * Check if user has active access (lifetime or non-expired trial) to a feature.
+     */
+    public function hasAccessTo(string $featureCode): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        $access = $this->accesses()
+            ->where('feature_code', strtolower($featureCode))
+            ->first();
+
+        if (!$access) {
+            return false;
+        }
+
+        if ($access->is_trial && $access->expires_at && now()->greaterThan($access->expires_at)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class);

@@ -142,6 +142,8 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
             'phone' => 'nullable|string|max:255',
+            'access_ids' => 'nullable|array',
+            'accesses' => 'nullable|array',
         ]);
 
         $user = User::findOrFail($id);
@@ -150,6 +152,21 @@ class AdminController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
         ]);
+
+        if ($request->has('access_ids')) {
+            foreach ($request->access_ids as $accessId) {
+                $accessData = $request->input("accesses.{$accessId}", []);
+                $isTrial = isset($accessData['is_trial']) ? (bool)$accessData['is_trial'] : false;
+                $expiresAt = $isTrial && !empty($accessData['expires_at']) ? $accessData['expires_at'] : null;
+
+                \App\Models\UserAccess::where('id', $accessId)
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'is_trial' => $isTrial,
+                        'expires_at' => $expiresAt,
+                    ]);
+            }
+        }
 
         return redirect()->back()->with('success', 'User details updated successfully.');
     }

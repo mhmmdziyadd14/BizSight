@@ -84,7 +84,11 @@
             @php
                 $user = auth()->user();
                 $isAdmin = $user && $user->isAdmin();
-                $accesses = $isAdmin ? [] : ($user ? \App\Models\UserAccess::where('user_id', $user->id)->pluck('feature_code')->toArray() : []);
+                $accesses = $isAdmin ? [] : ($user ? \App\Models\UserAccess::where('user_id', $user->id)
+                    ->where(fn($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
+                    ->pluck('feature_code')
+                    ->map(fn($val) => strtolower($val))
+                    ->toArray() : []);
                 $hasVCP = $isAdmin || in_array('vcp', $accesses);
                 $hasPCC = $isAdmin || in_array('pcc', $accesses);
                 $hasDE = $isAdmin || in_array('de', $accesses);

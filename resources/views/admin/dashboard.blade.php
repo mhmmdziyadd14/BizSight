@@ -37,7 +37,7 @@
         .fade-in-up { animation: fadeInUp 0.5s ease-out; }
     </style>
 
-    <div class="py-10 bg-gray-50 dark:bg-navy-950 min-h-screen transition-colors duration-500" x-data="{ editModal: false, selectedUser: {id: null, name: '', email: '', phone: '', created_at: '', products_html: ''} }">
+    <div class="py-10 bg-gray-50 dark:bg-navy-950 min-h-screen transition-colors duration-500" x-data="{ editModal: false, selectedUser: {id: null, name: '', email: '', phone: '', created_at: '', products_html: '', accesses: []} }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Header Section -->
@@ -129,6 +129,7 @@
                                             <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">User Profile</th>
                                             <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Tanggal Terdaftar</th>
                                             <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Purchased Tools</th>
+                                            <th class="px-8 py-5 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Trial & Expiry</th>
                                             <th class="px-8 py-5 text-right text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Action</th>
                                         </tr>
                                     </thead>
@@ -173,6 +174,44 @@
                                                     @endif
                                                 </div>
                                             </td>
+                                            <td class="px-8 py-6">
+                                                <div class="space-y-1.5">
+                                                    @php
+                                                        $trials = $user->accesses->where('is_trial', true);
+                                                    @endphp
+                                                    @if($trials->isEmpty())
+                                                        <span class="text-xs text-gray-400 font-bold">-</span>
+                                                    @else
+                                                        @foreach($trials as $trial)
+                                                            @php
+                                                                $isExpired = $trial->expires_at && now()->greaterThan($trial->expires_at);
+                                                            @endphp
+                                                            <div class="flex items-center gap-1.5 text-xs">
+                                                                <span class="font-black uppercase tracking-wider text-[10px] {{ $isExpired ? 'text-gray-400' : 'text-orange-500' }}">
+                                                                    {{ strtoupper($trial->feature_code) }}:
+                                                                </span>
+                                                                @if($isExpired)
+                                                                    <span class="text-red-500 font-bold">Expired</span>
+                                                                @else
+                                                                    <span class="text-navy dark:text-white font-bold">
+                                                                        {{ $trial->expires_at ? $trial->expires_at->format('d M Y') : 'Active' }}
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            </td>
+                                            @php
+                                                $accessesJson = $user->accesses->map(function($access) {
+                                                    return [
+                                                        'id' => $access->id,
+                                                        'feature_code' => strtoupper($access->feature_code),
+                                                        'is_trial' => (bool)$access->is_trial,
+                                                        'expires_at' => $access->expires_at ? $access->expires_at->format('Y-m-d') : '',
+                                                    ];
+                                                })->values()->toJson();
+                                            @endphp
                                             <td class="px-8 py-6 text-right">
                                                 <button @click="selectedUser = {
                                                             id: {{ $user->id }}, 
@@ -180,7 +219,8 @@
                                                             email: '{{ $user->email }}', 
                                                             phone: '{{ $user->phone ?? '' }}',
                                                             created_at: '{{ $user->created_at->format('d M Y H:i') }}',
-                                                            products_html: '{!! addslashes($productsHtml) !!}'
+                                                            products_html: '{!! addslashes($productsHtml) !!}',
+                                                            accesses: {!! addslashes($accessesJson) !!}
                                                         }; editModal = true" 
                                                         class="bg-navy-900 dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                                     Edit
@@ -348,10 +388,32 @@
                             </div>
         
                             <div>
-                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">No Telepon</label>
-                                <input type="text" name="phone" x-model="selectedUser.phone" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
-                            </div>
-                        </form>
+                                                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">No Telepon</label>
+                                                                <input type="text" name="phone" x-model="selectedUser.phone" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                            </div>
+
+                                                            <div class="border-t border-gray-100 dark:border-white/5 pt-4 mt-4" x-show="selectedUser.accesses && selectedUser.accesses.length > 0">
+                                                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-1">Manage Trial Status & Expiry</label>
+                                                                <div class="space-y-4">
+                                                                    <template x-for="(access, index) in selectedUser.accesses" :key="access.id">
+                                                                        <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
+                                                                            <div class="flex items-center justify-between mb-2">
+                                                                                <span class="text-xs font-black text-navy dark:text-white" x-text="access.feature_code"></span>
+                                                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                                                    <input type="checkbox" :name="'accesses[' + access.id + '][is_trial]'" x-model="access.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
+                                                                                    <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider">Trial Access</span>
+                                                                                </label>
+                                                                            </div>
+                                                                            <input type="hidden" name="access_ids[]" :value="access.id">
+                                                                            <div x-show="access.is_trial">
+                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
+                                                                                <input type="date" :name="'accesses[' + access.id + '][expires_at]'" x-model="access.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                                            </div>
+                                                                        </div>
+                                                                    </template>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                     </div>
 
                     <!-- Right Column: Details & Actions -->

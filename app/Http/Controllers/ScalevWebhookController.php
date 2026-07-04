@@ -67,11 +67,39 @@ class ScalevWebhookController extends Controller
                 $user->update(['phone' => $phone]);
             }
         }
+        // 3. Extract all purchased product/variant IDs from Scalev payload
+        $allPurchasedIds = [];
+        if ($request->input('product_id')) {
+            $allPurchasedIds[] = (string) $request->input('product_id');
+        }
+        $productsList = $request->input('products') ?? $request->input('data.products') ?? [];
+        if (is_array($productsList)) {
+            foreach ($productsList as $pItem) {
+                $vId = $pItem['variant_id'] ?? $pItem['product_id'] ?? null;
+                if ($vId) {
+                    $allPurchasedIds[] = (string) $vId;
+                }
+            }
+        }
+        $allPurchasedIds = array_unique($allPurchasedIds);
 
-        // 3. Create Order & OrderItem so it shows up in Purchase History and counts in stats
+        $pccBumpId = (string) config('services.scalev.pcc_bump_id');
+        $vcpBumpId = (string) config('services.scalev.vcp_bump_id');
+        $deBumpId  = (string) config('services.scalev.de_bump_id');
+
+        $hasPccBump = !empty($pccBumpId) && in_array($pccBumpId, $allPurchasedIds);
+        $hasVcpBump = !empty($vcpBumpId) && in_array($vcpBumpId, $allPurchasedIds);
+        $hasDeBump  = !empty($deBumpId)  && in_array($deBumpId, $allPurchasedIds);
+
+        $additionalAmount = 0;
+        if ($hasPccBump) $additionalAmount += 49000;
+        if ($hasVcpBump) $additionalAmount += 39000;
+        if ($hasDeBump)  $additionalAmount += 49000;
+
+        // Create Order & OrderItem
         $order = \App\Models\Order::create([
             'user_id' => $user->id,
-            'total_amount' => $product->price,
+            'total_amount' => $product->price + $additionalAmount,
             'status' => 'success',
             'payment_method' => 'Scalev',
         ]);
@@ -82,22 +110,92 @@ class ScalevWebhookController extends Controller
             'price' => $product->price,
         ]);
 
-        // 4. Assign Product Access (Pivot / User Access)
-        // Ambil features dari product
+        // 4. Assign Main Product Access (Lifetime)
         $features = $product->features ?? [];
+        $purchasedFeatureCodes = [];
 
         foreach ($features as $featureCode) {
-            // Cek apakah user sudah punya akses ini
-            $hasAccess = $user->accesses()->where('feature_code', $featureCode)->exists();
-            if (!$hasAccess) {
+            $fCode = strtolower($featureCode);
+            $purchasedFeatureCodes[] = $fCode;
+
+            $existingAccess = $user->accesses()->where('feature_code', $fCode)->first();
+            if ($existingAccess) {
+                if ($existingAccess->is_trial) {
+                    $existingAccess->update([
+                        'is_trial' => false,
+                        'expires_at' => null,
+                        'order_id' => $order->id,
+                    ]);
+                }
+            } else {
                 $user->accesses()->create([
-                    'feature_code' => $featureCode,
+                    'feature_code' => $fCode,
                     'order_id' => $order->id,
+                    'is_trial' => false,
+                    'expires_at' => null,
                 ]);
             }
         }
 
-        // 4. Send Email
+        // 5. Grant Trial Bonuses
+        $trialFeature = null;
+        $duration = 7;
+
+        if (in_array('pcc', $purchasedFeatureCodes) && in_array('de', $purchasedFeatureCodes) && !in_array('vcp', $purchasedFeatureCodes)) {
+            // Clarity Essentials bundle -> VCP trial
+            $trialFeature = 'vcp';
+        } elseif (count($purchasedFeatureCodes) === 1) {
+            $fCode = $purchasedFeatureCodes[0];
+            if ($fCode === 'pcc') {
+                $trialFeature = 'de';
+                if ($hasPccBump) {
+                    $duration = 37;
+                }
+            } elseif ($fCode === 'vcp') {
+                $trialFeature = 'pcc';
+                if ($hasVcpBump) {
+                    $duration = 37;
+                }
+            } elseif ($fCode === 'de') {
+                $trialFeature = 'pcc';
+                if ($hasDeBump) {
+                    $duration = 37;
+                }
+            }
+        }
+
+        if ($trialFeature) {
+            $hasLifetime = $user->accesses()
+                ->where('feature_code', $trialFeature)
+                ->where('is_trial', false)
+                ->exists();
+
+            if (!$hasLifetime) {
+                $expiresAt = now()->addDays($duration);
+                $existingTrial = $user->accesses()
+                    ->where('feature_code', $trialFeature)
+                    ->where('is_trial', true)
+                    ->first();
+
+                if ($existingTrial) {
+                    if ($existingTrial->expires_at && $expiresAt->greaterThan($existingTrial->expires_at)) {
+                        $existingTrial->update([
+                            'expires_at' => $expiresAt,
+                            'order_id' => $order->id,
+                        ]);
+                    }
+                } else {
+                    $user->accesses()->create([
+                        'feature_code' => $trialFeature,
+                        'order_id' => $order->id,
+                        'is_trial' => true,
+                        'expires_at' => $expiresAt,
+                    ]);
+                }
+            }
+        }
+
+        // 6. Send Email
         if ($isNewUser) {
             // Karena sistem otomatis membuat akun, kami mengarahkan pengguna
             // untuk menggunakan fitur lupa password agar bisa mengatur password sendiri.

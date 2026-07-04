@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'scalev' => [
+        'pcc_bump_id' => env('SCALEV_PCC_BUMP_ID'),
+        'vcp_bump_id' => env('SCALEV_VCP_BUMP_ID'),
+        'de_bump_id' => env('SCALEV_DE_BUMP_ID'),
+    ],
+
 ];

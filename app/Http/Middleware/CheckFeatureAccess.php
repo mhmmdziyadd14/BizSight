@@ -23,10 +23,10 @@ class CheckFeatureAccess
         }
 
         // Check if user has access to the feature
-        $hasAccess = $user && $user->accesses()->where('feature_code', $featureCode)->exists();
+        $hasAccess = $user && $user->hasAccessTo($featureCode);
 
         if (!$hasAccess) {
-            return redirect()->route('welcome')->with('error', "Akses Ditolak: Anda belum membeli fitur ini.");
+            return redirect()->route('welcome')->with('error', "Akses Ditolak: Anda belum membeli fitur ini atau masa trial Anda telah habis.");
         }
 
         return $next($request);
