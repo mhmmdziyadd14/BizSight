@@ -24,6 +24,7 @@ class TrialAccessTest extends TestCase
         Config::set('services.scalev.pcc_bump_id', 'pcc-bump-123');
         Config::set('services.scalev.vcp_bump_id', 'vcp-bump-123');
         Config::set('services.scalev.de_bump_id', 'de-bump-123');
+        Config::set('services.scalev.webhook_secret', null);
     }
 
     public function test_purchase_pcc_gives_7_day_de_trial(): void
@@ -156,5 +157,30 @@ class TrialAccessTest extends TestCase
         $this->assertNotNull($deAccess);
         $this->assertFalse($deAccess->is_trial);
         $this->assertNull($deAccess->expires_at);
+    }
+
+    public function test_webhook_blocks_without_secret_when_configured(): void
+    {
+        // Set secret
+        Config::set('services.scalev.webhook_secret', 'secret-token-xyz');
+
+        $payload = [
+            'email' => 'buyer@example.com',
+            'name' => 'John Doe',
+            'phone' => '081234567890',
+            'product_id' => '497385', // PCC
+        ];
+
+        // 1. Sending without secret should get 401
+        $response = $this->postJson(route('scalev.webhook'), $payload);
+        $response->assertStatus(401);
+
+        // 2. Sending with wrong secret should get 401
+        $response = $this->postJson(route('scalev.webhook') . '?secret=wrong-secret', $payload);
+        $response->assertStatus(401);
+
+        // 3. Sending with correct secret should get 200
+        $response = $this->postJson(route('scalev.webhook') . '?secret=secret-token-xyz', $payload);
+        $response->assertStatus(200);
     }
 }

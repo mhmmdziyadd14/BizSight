@@ -16,7 +16,7 @@ class ScalevWebhookController extends Controller
         Log::info('Scalev Webhook Received', $request->all());
 
         // 0. Verify Webhook Secret to prevent spoofing
-        $webhookSecret = env('SCALEV_WEBHOOK_SECRET');
+        $webhookSecret = config('services.scalev.webhook_secret');
         if (!empty($webhookSecret)) {
             $providedSecret = $request->query('secret') ?? $request->header('X-Scalev-Secret');
             if ($providedSecret !== $webhookSecret) {
