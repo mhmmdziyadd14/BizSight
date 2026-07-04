@@ -15,6 +15,16 @@ class ScalevWebhookController extends Controller
     {
         Log::info('Scalev Webhook Received', $request->all());
 
+        // 0. Verify Webhook Secret to prevent spoofing
+        $webhookSecret = env('SCALEV_WEBHOOK_SECRET');
+        if (!empty($webhookSecret)) {
+            $providedSecret = $request->query('secret') ?? $request->header('X-Scalev-Secret');
+            if ($providedSecret !== $webhookSecret) {
+                Log::warning('Scalev Webhook: Invalid webhook secret token provided.');
+                return response()->json(['message' => 'Unauthorized: Invalid secret token'], 401);
+            }
+        }
+
         // Ekstrak email, nama, dan telepon secara dinamis
         $email = $request->input('email') ?? $request->input('customer.email') ?? $request->input('data.customer.email');
         $name = $request->input('name') ?? $request->input('customer.name') ?? $request->input('data.customer.name') ?? 'User';
