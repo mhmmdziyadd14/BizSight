@@ -153,7 +153,7 @@
                                                         phone: {{ json_encode($user->phone ?? '') }},
                                                         created_at: {{ json_encode($user->created_at->format('d M Y H:i')) }},
                                                         products_html: {{ json_encode($productsHtml) }},
-                                                        accesses: {!! $accessesJson !!}
+                                                        accesses: {{ $accessesJson }}
                                                     }; editModal = true" 
                                                     class="bg-navy-900 dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                                 Edit
