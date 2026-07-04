@@ -206,7 +206,11 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Template briefing dan dokumen kerja yang bikin tim, vendor, dan klien lo ngerti dari awal — tanpa perlu diulang.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 149k</p>
-                        <a href="https://clarity-labs.myscalev.com/b/clarity-design-special-offer-xpf7yb" class="btn-primary py-2 px-6">Beli</a>
+                        @if(auth()->check() && auth()->user()->hasAccessTo('vcp'))
+                            <a href="{{ route('dashboard') }}" class="btn-primary py-2 px-6 bg-green-600 hover:bg-green-700 border-none text-center">Gunakan</a>
+                        @else
+                            <a href="https://clarity-labs.myscalev.com/b/clarity-design-special-offer-xpf7yb" class="btn-primary py-2 px-6">Beli</a>
+                        @endif
                     </div>
                 </div>
 
@@ -222,7 +226,11 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Hitung HPP produk fashion lo dengan benar — bahan, CMT, packaging, reject rate, sampai margin yang realistis.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 149k</p>
-                        <a href="https://clarity-labs.myscalev.com/b/clarity-cost-special-offer-bsla5h" class="btn-primary py-2 px-6">Beli</a>
+                        @if(auth()->check() && auth()->user()->hasAccessTo('pcc'))
+                            <a href="{{ route('business.index') }}" class="btn-primary py-2 px-6 bg-green-600 hover:bg-green-700 border-none text-center">Gunakan</a>
+                        @else
+                            <a href="https://clarity-labs.myscalev.com/b/clarity-cost-special-offer-bsla5h" class="btn-primary py-2 px-6">Beli</a>
+                        @endif
                     </div>
                 </div>
 
@@ -236,7 +244,11 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">Evaluasi apakah produk layak dijual — berdasarkan angka, bukan feeling. Sebelum produksi, lo udah tau jawabannya.</p>
                     <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                         <p class="text-2xl font-black dark:text-white">Rp 249k</p>
-                        <a href="https://clarity-labs.myscalev.com/b/clarity-decision-special-offer-ciieye" class="btn-primary py-2 px-6">Beli</a>
+                        @if(auth()->check() && auth()->user()->hasAccessTo('de'))
+                            <a href="{{ route('decisions.list') }}" class="btn-primary py-2 px-6 bg-green-600 hover:bg-green-700 border-none text-center">Gunakan</a>
+                        @else
+                            <a href="https://clarity-labs.myscalev.com/b/clarity-decision-special-offer-ciieye" class="btn-primary py-2 px-6">Beli</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -336,7 +348,11 @@
                         <span class="text-sm text-gray-400 line-through">Rp 398k</span>
                     </div>
                     <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 119k dari harga satuan</p>
-                    <a href="https://clarity-labs.myscalev.com/b/clarity-essentials-discount-uv5xls" class="btn-secondary w-full text-center block">Beli Essentials</a>
+                    @if(auth()->check() && auth()->user()->hasAccessTo('pcc') && auth()->user()->hasAccessTo('de'))
+                        <a href="{{ route('dashboard') }}" class="btn-secondary w-full text-center block bg-green-600 text-white hover:bg-green-700 border-none">Gunakan Essentials</a>
+                    @else
+                        <a href="https://clarity-labs.myscalev.com/b/clarity-essentials-discount-uv5xls" class="btn-secondary w-full text-center block">Beli Essentials</a>
+                    @endif
                 </div>
 
                 <!-- Tier 2 -->
@@ -368,7 +384,11 @@
                         <span class="text-sm text-gray-400 line-through">Rp 547k</span>
                     </div>
                     <p class="text-orange-600 font-bold text-sm mb-8">Hemat Rp 158k — bayar 2, dapet 3</p>
-                    <a href="https://clarity-labs.myscalev.com/b/clarity-full-hemat-158k-bayar-2-dapat-3-axys6d" class="btn-primary w-full text-center justify-center block">Beli Clarity Full</a>
+                    @if(auth()->check() && auth()->user()->hasAccessTo('pcc') && auth()->user()->hasAccessTo('de') && auth()->user()->hasAccessTo('vcp'))
+                        <a href="{{ route('dashboard') }}" class="btn-primary w-full text-center justify-center block bg-green-600 hover:bg-green-700 border-none">Gunakan Clarity Full</a>
+                    @else
+                        <a href="https://clarity-labs.myscalev.com/b/clarity-full-hemat-158k-bayar-2-dapat-3-axys6d" class="btn-primary w-full text-center justify-center block">Beli Clarity Full</a>
+                    @endif
                 </div>
             </div>
         </div>

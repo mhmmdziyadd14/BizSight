@@ -148,12 +148,12 @@
                                         <td class="px-8 py-6 text-right">
                                             <button @click="selectedUser = {
                                                         id: {{ $user->id }}, 
-                                                        name: '{{ addslashes($user->name) }}', 
-                                                        email: '{{ $user->email }}', 
-                                                        phone: '{{ $user->phone ?? '' }}',
-                                                        created_at: '{{ $user->created_at->format('d M Y H:i') }}',
-                                                        products_html: '{!! addslashes($productsHtml) !!}',
-                                                        accesses: {!! addslashes($accessesJson) !!}
+                                                        name: {{ json_encode($user->name) }}, 
+                                                        email: {{ json_encode($user->email) }}, 
+                                                        phone: {{ json_encode($user->phone ?? '') }},
+                                                        created_at: {{ json_encode($user->created_at->format('d M Y H:i')) }},
+                                                        products_html: {{ json_encode($productsHtml) }},
+                                                        accesses: {!! $accessesJson !!}
                                                     }; editModal = true" 
                                                     class="bg-navy-900 dark:bg-navy-800 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl hover:bg-black transition-all">
                                                 Edit
