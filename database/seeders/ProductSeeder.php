@@ -68,7 +68,7 @@ class ProductSeeder extends Seeder
             [
                 'slug' => 'extended-access-profit-clarity-calculator-30-days-50-off-checkout-only-7qvgkr',
                 'type' => 'trial_extension',
-                'price' => 74500,
+                'price' => 39000,
                 'features' => ['PCC'],
             ]
         );
@@ -78,7 +78,7 @@ class ProductSeeder extends Seeder
             [
                 'slug' => 'extended-access-decision-engine-30-days-60-off-checkout-only-qemluw',
                 'type' => 'trial_extension',
-                'price' => 99600,
+                'price' => 59000,
                 'features' => ['DE'],
             ]
         );
@@ -88,7 +88,7 @@ class ProductSeeder extends Seeder
             [
                 'slug' => 'extended-access-visual-clarity-pack-30-days-50-off-checkout-only-5hdlxm',
                 'type' => 'trial_extension',
-                'price' => 74500,
+                'price' => 39000,
                 'features' => ['VCP'],
             ]
         );
