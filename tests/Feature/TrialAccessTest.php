@@ -17,14 +17,14 @@ class TrialAccessTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Seed products
-        $this->seed(ProductSeeder::class);
-
-        // Configure test bump IDs in services config
+        // Configure test bump IDs in services config (Must be set BEFORE seeding so ProductSeeder uses these slugs)
         Config::set('services.scalev.pcc_bump_id', 'pcc-bump-123');
         Config::set('services.scalev.vcp_bump_id', 'vcp-bump-123');
         Config::set('services.scalev.de_bump_id', 'de-bump-123');
         Config::set('services.scalev.webhook_secret', null);
+
+        // Seed products
+        $this->seed(ProductSeeder::class);
     }
 
     public function test_purchase_pcc_gives_7_day_de_trial(): void
@@ -182,5 +182,81 @@ class TrialAccessTest extends TestCase
         // 3. Sending with correct secret should get 200
         $response = $this->postJson(route('scalev.webhook') . '?secret=secret-token-xyz', $payload);
         $response->assertStatus(200);
+    }
+
+    public function test_purchase_trial_extension_via_webhook(): void
+    {
+        // 1. Create a user
+        $user = User::create([
+            'name' => 'Trial Buyer',
+            'email' => 'trial_buyer@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        // 2. Buy a trial extension standalone (slug: de-bump-123 which is PCC extension)
+        $payload = [
+            'email' => 'trial_buyer@example.com',
+            'name' => 'Trial Buyer',
+            'phone' => '081234567890',
+            'product_id' => 'de-bump-123', // DE bump key (PCC extension)
+        ];
+
+        $response = $this->postJson(route('scalev.webhook'), $payload);
+        $response->assertStatus(200);
+
+        // 3. User should have trial access to PCC (expires in 30 days)
+        $pccAccess = $user->accesses()->where('feature_code', 'pcc')->first();
+        $this->assertNotNull($pccAccess);
+        $this->assertTrue($pccAccess->is_trial);
+        $this->assertNotNull($pccAccess->expires_at);
+        $this->assertTrue($pccAccess->expires_at->isAfter(now()->addDays(29)));
+    }
+
+    public function test_purchase_trial_extension_via_midtrans(): void
+    {
+        $user = User::create([
+            'name' => 'Midtrans Trial Buyer',
+            'email' => 'midtrans_trial_buyer@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $product = Product::where('name', 'Decision Engine - 30 Days Extension')->first();
+
+        $order = \App\Models\Order::create([
+            'user_id' => $user->id,
+            'total_amount' => $product->price,
+            'status' => 'pending',
+        ]);
+
+        \App\Models\OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'price' => $product->price,
+        ]);
+
+        // Mock Midtrans Callback
+        $serverKey = config('midtrans.server_key');
+        $statusCode = '200';
+        $grossAmount = $product->price;
+        $signature = hash("sha512", $order->id . $statusCode . $grossAmount . $serverKey);
+
+        $payload = [
+            'order_id' => $order->id,
+            'status_code' => $statusCode,
+            'gross_amount' => $grossAmount,
+            'signature_key' => $signature,
+            'transaction_status' => 'settlement',
+            'payment_type' => 'qris',
+        ];
+
+        $response = $this->postJson(route('midtrans.callback'), $payload);
+        $response->assertStatus(200);
+
+        // Check user access has been granted trial
+        $deAccess = $user->accesses()->where('feature_code', 'de')->first();
+        $this->assertNotNull($deAccess);
+        $this->assertTrue($deAccess->is_trial);
+        $this->assertNotNull($deAccess->expires_at);
+        $this->assertTrue($deAccess->expires_at->isAfter(now()->addDays(29)));
     }
 }

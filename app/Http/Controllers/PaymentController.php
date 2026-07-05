@@ -142,18 +142,53 @@ class PaymentController extends Controller
                         $product = $orderItem->product;
                         if ($product->features) {
                             foreach ($product->features as $featureCode) {
-                                // Cek apakah user sudah punya akses ini
-                                $exists = UserAccess::where('user_id', $order->user_id)
-                                    ->where('feature_code', $featureCode)
-                                    ->exists();
+                                $fCode = strtolower($featureCode);
+                                $existingAccess = UserAccess::where('user_id', $order->user_id)
+                                    ->where('feature_code', $fCode)
+                                    ->first();
                                 
-                                if (!$exists) {
-                                    UserAccess::create([
-                                        'user_id' => $order->user_id,
-                                        'feature_code' => $featureCode,
-                                        'order_id' => $order->id,
-                                        'granted_at' => now(),
-                                    ]);
+                                if ($product->type === 'trial_extension') {
+                                    $expiresAt = now()->addDays(30);
+                                    if ($existingAccess) {
+                                        if ($existingAccess->is_trial) {
+                                            $currentExpiry = $existingAccess->expires_at && $existingAccess->expires_at->greaterThan(now())
+                                                ? $existingAccess->expires_at
+                                                : now();
+                                            $existingAccess->update([
+                                                'expires_at' => $currentExpiry->addDays(30),
+                                                'order_id' => $order->id,
+                                            ]);
+                                        }
+                                    } else {
+                                        UserAccess::create([
+                                            'user_id' => $order->user_id,
+                                            'feature_code' => $fCode,
+                                            'order_id' => $order->id,
+                                            'is_trial' => true,
+                                            'expires_at' => $expiresAt,
+                                            'granted_at' => now(),
+                                        ]);
+                                    }
+                                } else {
+                                    // Regular lifetime product
+                                    if ($existingAccess) {
+                                        if ($existingAccess->is_trial) {
+                                            $existingAccess->update([
+                                                'is_trial' => false,
+                                                'expires_at' => null,
+                                                'order_id' => $order->id,
+                                            ]);
+                                        }
+                                    } else {
+                                        UserAccess::create([
+                                            'user_id' => $order->user_id,
+                                            'feature_code' => $fCode,
+                                            'order_id' => $order->id,
+                                            'is_trial' => false,
+                                            'expires_at' => null,
+                                            'granted_at' => now(),
+                                        ]);
+                                    }
                                 }
                             }
                         }

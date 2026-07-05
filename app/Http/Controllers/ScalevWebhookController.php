@@ -120,7 +120,7 @@ class ScalevWebhookController extends Controller
             'price' => $product->price,
         ]);
 
-        // 4. Assign Main Product Access (Lifetime)
+        // 4. Assign Product Access
         $features = $product->features ?? [];
         $purchasedFeatureCodes = [];
 
@@ -129,78 +129,104 @@ class ScalevWebhookController extends Controller
             $purchasedFeatureCodes[] = $fCode;
 
             $existingAccess = $user->accesses()->where('feature_code', $fCode)->first();
-            if ($existingAccess) {
-                if ($existingAccess->is_trial) {
-                    $existingAccess->update([
-                        'is_trial' => false,
-                        'expires_at' => null,
-                        'order_id' => $order->id,
-                    ]);
-                }
-            } else {
-                $user->accesses()->create([
-                    'feature_code' => $fCode,
-                    'order_id' => $order->id,
-                    'is_trial' => false,
-                    'expires_at' => null,
-                ]);
-            }
-        }
-
-        // 5. Grant Trial Bonuses
-        $trialFeature = null;
-        $duration = 7;
-
-        if (in_array('pcc', $purchasedFeatureCodes) && in_array('de', $purchasedFeatureCodes) && !in_array('vcp', $purchasedFeatureCodes)) {
-            // Clarity Essentials bundle -> VCP trial
-            $trialFeature = 'vcp';
-        } elseif (count($purchasedFeatureCodes) === 1) {
-            $fCode = $purchasedFeatureCodes[0];
-            if ($fCode === 'pcc') {
-                $trialFeature = 'de';
-                if ($hasPccBump) {
-                    $duration = 37;
-                }
-            } elseif ($fCode === 'vcp') {
-                $trialFeature = 'pcc';
-                if ($hasVcpBump) {
-                    $duration = 37;
-                }
-            } elseif ($fCode === 'de') {
-                $trialFeature = 'pcc';
-                if ($hasDeBump) {
-                    $duration = 37;
-                }
-            }
-        }
-
-        if ($trialFeature) {
-            $hasLifetime = $user->accesses()
-                ->where('feature_code', $trialFeature)
-                ->where('is_trial', false)
-                ->exists();
-
-            if (!$hasLifetime) {
-                $expiresAt = now()->addDays($duration);
-                $existingTrial = $user->accesses()
-                    ->where('feature_code', $trialFeature)
-                    ->where('is_trial', true)
-                    ->first();
-
-                if ($existingTrial) {
-                    if ($existingTrial->expires_at && $expiresAt->greaterThan($existingTrial->expires_at)) {
-                        $existingTrial->update([
-                            'expires_at' => $expiresAt,
+            
+            if ($product->type === 'trial_extension') {
+                $expiresAt = now()->addDays(30);
+                if ($existingAccess) {
+                    if ($existingAccess->is_trial) {
+                        $currentExpiry = $existingAccess->expires_at && $existingAccess->expires_at->greaterThan(now())
+                            ? $existingAccess->expires_at
+                            : now();
+                        $existingAccess->update([
+                            'expires_at' => $currentExpiry->addDays(30),
                             'order_id' => $order->id,
                         ]);
                     }
                 } else {
                     $user->accesses()->create([
-                        'feature_code' => $trialFeature,
+                        'feature_code' => $fCode,
                         'order_id' => $order->id,
                         'is_trial' => true,
                         'expires_at' => $expiresAt,
                     ]);
+                }
+            } else {
+                // Regular lifetime product
+                if ($existingAccess) {
+                    if ($existingAccess->is_trial) {
+                        $existingAccess->update([
+                            'is_trial' => false,
+                            'expires_at' => null,
+                            'order_id' => $order->id,
+                        ]);
+                    }
+                } else {
+                    $user->accesses()->create([
+                        'feature_code' => $fCode,
+                        'order_id' => $order->id,
+                        'is_trial' => false,
+                        'expires_at' => null,
+                    ]);
+                }
+            }
+        }
+
+        // 5. Grant Trial Bonuses (Only for lifetime products)
+        if ($product->type !== 'trial_extension') {
+            $trialFeature = null;
+            $duration = 7;
+
+            if (in_array('pcc', $purchasedFeatureCodes) && in_array('de', $purchasedFeatureCodes) && !in_array('vcp', $purchasedFeatureCodes)) {
+                // Clarity Essentials bundle -> VCP trial
+                $trialFeature = 'vcp';
+            } elseif (count($purchasedFeatureCodes) === 1) {
+                $fCode = $purchasedFeatureCodes[0];
+                if ($fCode === 'pcc') {
+                    $trialFeature = 'de';
+                    if ($hasPccBump) {
+                        $duration = 37;
+                    }
+                } elseif ($fCode === 'vcp') {
+                    $trialFeature = 'pcc';
+                    if ($hasVcpBump) {
+                        $duration = 37;
+                    }
+                } elseif ($fCode === 'de') {
+                    $trialFeature = 'pcc';
+                    if ($hasDeBump) {
+                        $duration = 37;
+                    }
+                }
+            }
+
+            if ($trialFeature) {
+                $hasLifetime = $user->accesses()
+                    ->where('feature_code', $trialFeature)
+                    ->where('is_trial', false)
+                    ->exists();
+
+                if (!$hasLifetime) {
+                    $expiresAt = now()->addDays($duration);
+                    $existingTrial = $user->accesses()
+                        ->where('feature_code', $trialFeature)
+                        ->where('is_trial', true)
+                        ->first();
+
+                    if ($existingTrial) {
+                        if ($existingTrial->expires_at && $expiresAt->greaterThan($existingTrial->expires_at)) {
+                            $existingTrial->update([
+                                'expires_at' => $expiresAt,
+                                'order_id' => $order->id,
+                            ]);
+                        }
+                    } else {
+                        $user->accesses()->create([
+                            'feature_code' => $trialFeature,
+                            'order_id' => $order->id,
+                            'is_trial' => true,
+                            'expires_at' => $expiresAt,
+                        ]);
+                    }
                 }
             }
         }
