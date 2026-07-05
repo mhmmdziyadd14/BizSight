@@ -142,8 +142,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
             'phone' => 'nullable|string|max:255',
-            'access_ids' => 'nullable|array',
-            'accesses' => 'nullable|array',
+            'features' => 'nullable|array',
         ]);
 
         $user = User::findOrFail($id);
@@ -153,18 +152,41 @@ class AdminController extends Controller
             'phone' => $request->phone,
         ]);
 
-        if ($request->has('access_ids')) {
-            foreach ($request->access_ids as $accessId) {
-                $accessData = $request->input("accesses.{$accessId}", []);
-                $isTrial = isset($accessData['is_trial']) ? (bool)$accessData['is_trial'] : false;
-                $expiresAt = $isTrial && !empty($accessData['expires_at']) ? $accessData['expires_at'] : null;
+        $features = ['pcc', 'vcp', 'de'];
+        $submittedFeatures = $request->input('features', []);
 
-                \App\Models\UserAccess::where('id', $accessId)
-                    ->where('user_id', $user->id)
-                    ->update([
-                        'is_trial' => $isTrial,
+        foreach ($features as $feature) {
+            $access = \App\Models\UserAccess::where('user_id', $user->id)
+                ->where('feature_code', $feature)
+                ->first();
+
+            $featureData = $submittedFeatures[$feature] ?? [];
+            $isTrialSubmitted = isset($featureData['is_trial']);
+            $expiresAt = $isTrialSubmitted && !empty($featureData['expires_at']) ? $featureData['expires_at'] : null;
+
+            if ($access) {
+                if (!$access->is_trial) {
+                    // Lifetime access remains untouched
+                    continue;
+                }
+
+                if ($isTrialSubmitted) {
+                    $access->update([
+                        'is_trial' => true,
                         'expires_at' => $expiresAt,
                     ]);
+                } else {
+                    $access->delete();
+                }
+            } else {
+                if ($isTrialSubmitted) {
+                    \App\Models\UserAccess::create([
+                        'user_id' => $user->id,
+                        'feature_code' => $feature,
+                        'is_trial' => true,
+                        'expires_at' => $expiresAt,
+                    ]);
+                }
             }
         }
 

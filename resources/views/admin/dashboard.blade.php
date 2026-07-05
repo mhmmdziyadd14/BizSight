@@ -203,14 +203,29 @@
                                                 </div>
                                             </td>
                                             @php
-                                                $accessesJson = $user->accesses->map(function($access) {
-                                                    return [
-                                                        'id' => $access->id,
-                                                        'feature_code' => strtoupper($access->feature_code),
-                                                        'is_trial' => (bool)$access->is_trial,
-                                                        'expires_at' => $access->expires_at ? $access->expires_at->format('Y-m-d') : '',
-                                                    ];
-                                                })->values()->toJson();
+                                                 $featureMap = [];
+                                                 $coreFeatures = ['pcc', 'vcp', 'de'];
+                                                 foreach ($coreFeatures as $fc) {
+                                                     $access = $user->accesses->where('feature_code', $fc)->first();
+                                                     if ($access) {
+                                                         $featureMap[$fc] = [
+                                                             'id' => $access->id,
+                                                             'feature_code' => strtoupper($fc),
+                                                             'is_trial' => (bool)$access->is_trial,
+                                                             'expires_at' => $access->expires_at ? $access->expires_at->format('Y-m-d') : '',
+                                                             'is_lifetime' => !$access->is_trial,
+                                                         ];
+                                                     } else {
+                                                         $featureMap[$fc] = [
+                                                             'id' => null,
+                                                             'feature_code' => strtoupper($fc),
+                                                             'is_trial' => false,
+                                                             'expires_at' => '',
+                                                             'is_lifetime' => false,
+                                                         ];
+                                                     }
+                                                 }
+                                                 $accessesJson = json_encode($featureMap);
                                             @endphp
                                             <td class="px-8 py-6 text-right">
                                                 <button @click="selectedUser = {
@@ -392,25 +407,94 @@
                                                                 <input type="text" name="phone" x-model="selectedUser.phone" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
                                                             </div>
 
-                                                            <div class="border-t border-gray-100 dark:border-white/5 pt-4 mt-4" x-show="selectedUser.accesses && selectedUser.accesses.length > 0">
+                                                            <div class="border-t border-gray-100 dark:border-white/5 pt-4 mt-4" x-show="selectedUser.accesses">
                                                                 <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-1">Manage Trial Status & Expiry</label>
                                                                 <div class="space-y-4">
-                                                                    <template x-for="(access, index) in selectedUser.accesses" :key="access.id">
-                                                                        <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                                                                            <div class="flex items-center justify-between mb-2">
-                                                                                <span class="text-xs font-black text-navy dark:text-white" x-text="access.feature_code"></span>
+                                                                    
+                                                                    <!-- PCC Feature Row -->
+                                                                    <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
+                                                                        <div class="flex items-center justify-between">
+                                                                            <span class="text-xs font-black text-navy dark:text-white">PROFIT CLARITY CALCULATOR (PCC)</span>
+                                                                            
+                                                                            <!-- If it is lifetime -->
+                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && selectedUser.accesses.pcc.is_lifetime">
+                                                                                <span class="text-[10px] font-black text-green-500 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider">Purchased (Lifetime)</span>
+                                                                            </template>
+                                                                            
+                                                                            <!-- If it is trial / none -->
+                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && !selectedUser.accesses.pcc.is_lifetime">
                                                                                 <label class="flex items-center gap-2 cursor-pointer">
-                                                                                    <input type="checkbox" :name="'accesses[' + access.id + '][is_trial]'" x-model="access.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
+                                                                                    <input type="checkbox" name="features[pcc][is_trial]" x-model="selectedUser.accesses.pcc.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
                                                                                     <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider">Trial Access</span>
                                                                                 </label>
-                                                                            </div>
-                                                                            <input type="hidden" name="access_ids[]" :value="access.id">
-                                                                            <div x-show="access.is_trial">
-                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
-                                                                                <input type="date" :name="'accesses[' + access.id + '][expires_at]'" x-model="access.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                                            </div>
+                                                                            </template>
                                                                         </div>
-                                                                    </template>
+                                                                        
+                                                                        <!-- Expiry input for PCC -->
+                                                                        <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && !selectedUser.accesses.pcc.is_lifetime">
+                                                                            <div x-show="selectedUser.accesses.pcc.is_trial" class="mt-3">
+                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
+                                                                                <input type="date" name="features[pcc][expires_at]" x-model="selectedUser.accesses.pcc.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                                            </div>
+                                                                        </template>
+                                                                    </div>
+
+                                                                    <!-- VCP Feature Row -->
+                                                                    <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
+                                                                        <div class="flex items-center justify-between">
+                                                                            <span class="text-xs font-black text-navy dark:text-white">VISUAL CLARITY PACK (VCP)</span>
+                                                                            
+                                                                            <!-- If it is lifetime -->
+                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && selectedUser.accesses.vcp.is_lifetime">
+                                                                                <span class="text-[10px] font-black text-green-500 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider">Purchased (Lifetime)</span>
+                                                                            </template>
+                                                                            
+                                                                            <!-- If it is trial / none -->
+                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && !selectedUser.accesses.vcp.is_lifetime">
+                                                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                                                    <input type="checkbox" name="features[vcp][is_trial]" x-model="selectedUser.accesses.vcp.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
+                                                                                    <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider">Trial Access</span>
+                                                                                </label>
+                                                                            </template>
+                                                                        </div>
+                                                                        
+                                                                        <!-- Expiry input for VCP -->
+                                                                        <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && !selectedUser.accesses.vcp.is_lifetime">
+                                                                            <div x-show="selectedUser.accesses.vcp.is_trial" class="mt-3">
+                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
+                                                                                <input type="date" name="features[vcp][expires_at]" x-model="selectedUser.accesses.vcp.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                                            </div>
+                                                                        </template>
+                                                                    </div>
+
+                                                                    <!-- DE Feature Row -->
+                                                                    <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
+                                                                        <div class="flex items-center justify-between">
+                                                                            <span class="text-xs font-black text-navy dark:text-white">DECISION ENGINE (DE)</span>
+                                                                            
+                                                                            <!-- If it is lifetime -->
+                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.de && selectedUser.accesses.de.is_lifetime">
+                                                                                <span class="text-[10px] font-black text-green-500 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider">Purchased (Lifetime)</span>
+                                                                            </template>
+                                                                            
+                                                                            <!-- If it is trial / none -->
+                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.de && !selectedUser.accesses.de.is_lifetime">
+                                                                                <label class="flex items-center gap-2 cursor-pointer">
+                                                                                    <input type="checkbox" name="features[de][is_trial]" x-model="selectedUser.accesses.de.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
+                                                                                    <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider">Trial Access</span>
+                                                                                </label>
+                                                                            </template>
+                                                                        </div>
+                                                                        
+                                                                        <!-- Expiry input for DE -->
+                                                                        <template x-if="selectedUser.accesses && selectedUser.accesses.de && !selectedUser.accesses.de.is_lifetime">
+                                                                            <div x-show="selectedUser.accesses.de.is_trial" class="mt-3">
+                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
+                                                                                <input type="date" name="features[de][expires_at]" x-model="selectedUser.accesses.de.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                                            </div>
+                                                                        </template>
+                                                                    </div>
+
                                                                 </div>
                                                             </div>
                                                         </form>
