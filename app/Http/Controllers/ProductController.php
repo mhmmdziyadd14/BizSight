@@ -39,13 +39,23 @@ class ProductController extends Controller
                 }
             }
 
-            // Filter out products they already own as lifetime
-            if ($hasAllLifetime) {
+            // Filter out lifetime products they already own as lifetime (But allow trial extensions)
+            if ($hasAllLifetime && $product->type !== 'trial_extension') {
                 continue;
             }
 
             if ($product->type === 'trial_extension') {
                 $feature = strtolower($features[0] ?? '');
+                
+                // If they already have lifetime access to the feature, they don't need trial card
+                $hasLifetime = UserAccess::where('user_id', $user->id)
+                    ->where('feature_code', $feature)
+                    ->where('is_trial', false)
+                    ->exists();
+                if ($hasLifetime) {
+                    continue;
+                }
+
                 $existingTrial = UserAccess::where('user_id', $user->id)
                     ->where('feature_code', $feature)
                     ->where('is_trial', true)
