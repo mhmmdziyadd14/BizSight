@@ -518,13 +518,8 @@
                     </div>
 
                     <div class="btn-checkout-group">
-                        <form action="{{ route('checkout') }}" method="POST" style="flex: 1; display: flex;">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <button type="submit" class="btn-midtrans">Beli Langsung</button>
-                        </form>
                         @if (isset($product->scalev_url))
-                            <a href="{{ $product->scalev_url }}" target="_blank" class="btn-scalev">Beli di Scalev</a>
+                            <a href="{{ $product->scalev_url }}" target="_blank" class="btn-midtrans" style="width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Beli</a>
                         @endif
                     </div>
                 </div>
@@ -583,13 +578,8 @@
                     </div>
 
                     <div class="btn-checkout-group">
-                        <form action="{{ route('checkout') }}" method="POST" style="flex: 1; display: flex;">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <button type="submit" class="btn-midtrans">Beli Langsung</button>
-                        </form>
                         @if (isset($product->scalev_url))
-                            <a href="{{ $product->scalev_url }}" target="_blank" class="btn-scalev">Beli di Scalev</a>
+                            <a href="{{ $product->scalev_url }}" target="_blank" class="btn-midtrans" style="width: 100%; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Beli</a>
                         @endif
                     </div>
                 </div>

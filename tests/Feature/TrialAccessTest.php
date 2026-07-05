@@ -193,12 +193,12 @@ class TrialAccessTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
-        // 2. Buy a trial extension standalone (slug: de-bump-123 which is PCC extension)
+        // 2. Buy a trial extension standalone (slug: extended-access-profit-clarity-calculator-30-days-50-off-checkout-only-7qvgkr)
         $payload = [
             'email' => 'trial_buyer@example.com',
             'name' => 'Trial Buyer',
             'phone' => '081234567890',
-            'product_id' => 'de-bump-123', // DE bump key (PCC extension)
+            'product_id' => 'extended-access-profit-clarity-calculator-30-days-50-off-checkout-only-7qvgkr',
         ];
 
         $response = $this->postJson(route('scalev.webhook'), $payload);

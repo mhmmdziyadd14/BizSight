@@ -62,38 +62,34 @@ class ProductSeeder extends Seeder
             ]
         );
 
-        // Standalone Trial / Monthly Extensions
-        $pccBumpId = config('services.scalev.pcc_bump_id') ?: 'pcc_bump_id_placeholder';
-        $vcpBumpId = config('services.scalev.vcp_bump_id') ?: 'vcp_bump_id_placeholder';
-        $deBumpId = config('services.scalev.de_bump_id') ?: 'de_bump_id_placeholder';
+        // Standalone Trial / Monthly Extensions with direct Scalev URLs as slugs
+        Product::updateOrCreate(
+            ['name' => 'Profit Clarity Calculator - 30 Days Extension'],
+            [
+                'slug' => 'extended-access-profit-clarity-calculator-30-days-50-off-checkout-only-7qvgkr',
+                'type' => 'trial_extension',
+                'price' => 74500,
+                'features' => ['PCC'],
+            ]
+        );
 
         Product::updateOrCreate(
             ['name' => 'Decision Engine - 30 Days Extension'],
             [
-                'slug' => $pccBumpId,
+                'slug' => 'extended-access-decision-engine-30-days-60-off-checkout-only-qemluw',
                 'type' => 'trial_extension',
-                'price' => 49000,
+                'price' => 99600,
                 'features' => ['DE'],
             ]
         );
 
         Product::updateOrCreate(
-            ['name' => 'Profit Clarity Calculator - 30 Days Extension (VCP Buyer)'],
+            ['name' => 'Visual Clarity Pack - 30 Days Extension'],
             [
-                'slug' => $vcpBumpId,
+                'slug' => 'extended-access-visual-clarity-pack-30-days-50-off-checkout-only-5hdlxm',
                 'type' => 'trial_extension',
-                'price' => 39000,
-                'features' => ['PCC'],
-            ]
-        );
-
-        Product::updateOrCreate(
-            ['name' => 'Profit Clarity Calculator - 30 Days Extension (DE Buyer)'],
-            [
-                'slug' => $deBumpId,
-                'type' => 'trial_extension',
-                'price' => 49000,
-                'features' => ['PCC'],
+                'price' => 74500,
+                'features' => ['VCP'],
             ]
         );
     }

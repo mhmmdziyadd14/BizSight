@@ -10,23 +10,6 @@ class ProductController extends Controller
 {
     public function index()
     {
-        // 1. Sync trial extension slugs with current config values (Self-healing mechanism)
-        $pccBumpId = config('services.scalev.pcc_bump_id') ?: 'pcc_bump_id_placeholder';
-        $vcpBumpId = config('services.scalev.vcp_bump_id') ?: 'vcp_bump_id_placeholder';
-        $deBumpId = config('services.scalev.de_bump_id') ?: 'de_bump_id_placeholder';
-
-        Product::where('name', 'Decision Engine - 30 Days Extension')
-            ->where('slug', '!=', $pccBumpId)
-            ->update(['slug' => $pccBumpId]);
-
-        Product::where('name', 'Profit Clarity Calculator - 30 Days Extension (VCP Buyer)')
-            ->where('slug', '!=', $vcpBumpId)
-            ->update(['slug' => $vcpBumpId]);
-
-        Product::where('name', 'Profit Clarity Calculator - 30 Days Extension (DE Buyer)')
-            ->where('slug', '!=', $deBumpId)
-            ->update(['slug' => $deBumpId]);
-
         $user = auth()->user();
 
         // Retrieve all active products
@@ -70,13 +53,13 @@ class ProductController extends Controller
 
                 $product->existing_trial = $existingTrial;
                 
-                // Add scalev link mapping dynamically
-                if ($product->name === 'Decision Engine - 30 Days Extension') {
-                    $product->scalev_url = 'https://clarity-labs.myscalev.com/b/clarity-decision-special-offer-ciieye';
-                } elseif (str_contains($product->name, 'VCP Buyer')) {
-                    $product->scalev_url = 'https://clarity-labs.myscalev.com/b/clarity-design-special-offer-xpf7yb';
-                } else {
-                    $product->scalev_url = 'https://clarity-labs.myscalev.com/b/clarity-cost-special-offer-bsla5h';
+                // Add scalev link mapping dynamically based on target feature
+                if ($feature === 'pcc') {
+                    $product->scalev_url = 'https://clarity-labs.myscalev.com/b/extended-access-profit-clarity-calculator-30-days-50-off-checkout-only-7qvgkr';
+                } elseif ($feature === 'de') {
+                    $product->scalev_url = 'https://clarity-labs.myscalev.com/b/extended-access-decision-engine-30-days-60-off-checkout-only-qemluw';
+                } elseif ($feature === 'vcp') {
+                    $product->scalev_url = 'https://clarity-labs.myscalev.com/b/extended-access-visual-clarity-pack-30-days-50-off-checkout-only-5hdlxm';
                 }
 
                 $trialExtensions[] = $product;
