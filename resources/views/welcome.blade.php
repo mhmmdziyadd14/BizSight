@@ -124,9 +124,10 @@
         .section-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
         
         @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body x-data="{ checkoutModal: false, selectedProduct: null, selectedPrice: 0, notifyModal: false, notifyProduct: '' }">
+<body x-data="{ checkoutModal: false, selectedProduct: null, selectedPrice: 0, notifyModal: false, notifyProduct: '', mobileMenuOpen: false }">
 
     <!-- Navigation -->
     <nav class="glass-nav fixed top-0 left-0 right-0 z-50">
@@ -148,6 +149,24 @@
                     <a href="{{ route('register') }}" class="btn-primary py-2 px-6">Get started</a>
                 @endauth
             </div>
+            <!-- Mobile Menu Toggle Button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-900 dark:text-white hover:text-orange-500 transition-colors focus:outline-none" aria-label="Toggle Navigation">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+        </div>
+        <!-- Mobile Dropdown Menu -->
+        <div x-show="mobileMenuOpen" x-transition.opacity.duration.200ms class="md:hidden border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 space-y-4 shadow-xl" x-cloak>
+            <a href="#products" @click="mobileMenuOpen = false" class="block text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors py-2">Products</a>
+            <a href="#pricing" @click="mobileMenuOpen = false" class="block text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors py-2">Pricing</a>
+            <hr class="border-gray-100 dark:border-slate-800">
+            @auth
+                <a href="{{ route('dashboard') }}" @click="mobileMenuOpen = false" class="block btn-primary text-center py-3">Dashboard</a>
+            @else
+                <div class="flex flex-col gap-3">
+                    <a href="{{ route('login') }}" @click="mobileMenuOpen = false" class="block text-center text-sm font-bold text-gray-900 dark:text-white py-3 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">Log in</a>
+                    <a href="{{ route('register') }}" @click="mobileMenuOpen = false" class="block btn-primary text-center py-3 justify-center">Get started</a>
+                </div>
+            @endauth
         </div>
     </nav>
 
