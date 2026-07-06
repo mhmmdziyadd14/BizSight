@@ -151,17 +151,120 @@
         .tl-dot.cur { background: var(--ora); border-color: var(--ora); color: #fff; }
         .tl-lbl { font-size: 11px; font-weight: 700; color: var(--t2); text-transform: uppercase; }
 
+        /* VCP Mobile Header & Backdrop */
+        .vcp-mobile-header {
+            display: none;
+            position: fixed;
+            top: 80px; /* main header is h-20 (80px) */
+            left: 0;
+            right: 0;
+            height: 52px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--bd);
+            padding: 0 24px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 40;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .vcp-mobile-btn {
+            background: none;
+            border: 1px solid var(--bd);
+            color: var(--t1);
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .vcp-mobile-btn:hover {
+            background: var(--bg3);
+        }
+
+        .vcp-mobile-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 45;
+        }
+
         @media (max-width: 1024px) {
-            .vcp-container { grid-template-columns: 1fr; }
-            .vcp-sidebar { display: none; }
-            .g4, .g3, .g2 { grid-template-columns: 1fr; }
-            .care-grid { grid-template-columns: repeat(2, 1fr); }
+            .vcp-container {
+                grid-template-columns: 1fr;
+                padding-top: 52px;
+            }
+            .vcp-sidebar {
+                position: fixed;
+                top: 132px; /* 80px main header + 52px VCP subheader */
+                left: -280px;
+                width: 280px;
+                height: calc(100vh - 132px);
+                background: var(--bg);
+                box-shadow: 20px 0 30px rgba(0,0,0,0.1);
+                transition: transform 0.3s ease;
+                z-index: 50;
+            }
+            .vcp-sidebar.mobile-open {
+                transform: translateX(280px);
+            }
+            .vcp-main {
+                padding: 32px 24px;
+            }
+            .vcp-mobile-header {
+                display: flex;
+            }
+            .vcp-mobile-backdrop {
+                display: block;
+            }
+            .g4 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .g3 {
+                grid-template-columns: 1fr;
+            }
+            .g4 {
+                grid-template-columns: 1fr;
+            }
+            .care-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .g2 {
+                grid-template-columns: 1fr;
+            }
+            .ph1 {
+                font-size: 28px;
+            }
         }
     </style>
 
-    <div class="vcp-container">
+    <!-- Mobile Sub-Header -->
+    <div class="vcp-mobile-header">
+        <button @click="vcpSidebarOpen = !vcpSidebarOpen" class="vcp-mobile-btn">
+            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <span>Langkah (Step)</span>
+        </button>
+        <span class="font-extrabold text-navy-900 dark:text-white uppercase tracking-wider text-[11px]">Clarity Visual</span>
+    </div>
+
+    <!-- Mobile Sub-Header Backdrop -->
+    <div class="vcp-mobile-backdrop" x-show="vcpSidebarOpen" @click="vcpSidebarOpen = false" x-cloak></div>
+
+    <div class="vcp-container" x-data="{ vcpSidebarOpen: false }">
         <!-- Sidebar Navigation -->
-        <div class="vcp-sidebar">
+        <div class="vcp-sidebar" :class="{ 'mobile-open': vcpSidebarOpen }">
             <div class="sb-top">
                 <div class="pbar-lbl"><span>Visual Pack Progress</span><span id="ppct">0%</span></div>
                 <div class="pbar"><div class="pbar-fill" id="pfill"></div></div>
@@ -185,33 +288,33 @@
                 </div>
 
                 <p class="sb-sec">Automasi AI</p>
-                <div class="nv on" id="nav-0" onclick="gp(0,this)">
+                <div class="nv on" id="nav-0" onclick="gp(0,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">✦</div> AI Analisa Produk
                 </div>
                 
                 <p class="sb-sec">Halaman Dokumen</p>
-                <div class="nv" id="nav-1" onclick="gp(1,this)">
+                <div class="nv" id="nav-1" onclick="gp(1,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">1</div> Cover Page
                 </div>
-                <div class="nv" id="nav-2" onclick="gp(2,this)">
+                <div class="nv" id="nav-2" onclick="gp(2,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">2</div> Technical Sheet <span id="chip-2" class="ml-auto text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-black hidden">AI✓</span>
                 </div>
-                <div class="nv" id="nav-3" onclick="gp(3,this)">
+                <div class="nv" id="nav-3" onclick="gp(3,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">3</div> Revision Log
                 </div>
-                <div class="nv" id="nav-4" onclick="gp(4,this)">
+                <div class="nv" id="nav-4" onclick="gp(4,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">4</div> Bill of Materials <span id="chip-4" class="ml-auto text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-black hidden">AI✓</span>
                 </div>
-                <div class="nv" id="nav-5" onclick="gp(5,this)">
+                <div class="nv" id="nav-5" onclick="gp(5,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">5</div> Packaging Spec <span id="chip-5" class="ml-auto text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-black hidden">AI✓</span>
                 </div>
-                <div class="nv" id="nav-6" onclick="gp(6,this)">
+                <div class="nv" id="nav-6" onclick="gp(6,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">6</div> Care Instruction <span id="chip-6" class="ml-auto text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-black hidden">AI✓</span>
                 </div>
-                <div class="nv" id="nav-7" onclick="gp(7,this)">
+                <div class="nv" id="nav-7" onclick="gp(7,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">7</div> Sample Checklist
                 </div>
-                <div class="nv" id="nav-8" onclick="gp(8,this)">
+                <div class="nv" id="nav-8" onclick="gp(8,this)" @click="vcpSidebarOpen = false">
                     <div class="nb">8</div> Production Timeline
                 </div>
             </div>
