@@ -44,7 +44,7 @@ class AdminController extends Controller
             }
 
             $midtransAccesses = $accesses->whereNotNull('order_id');
-            $scalevAccesses = $accesses->whereNull('order_id');
+            $scalevAccesses = $accesses->whereNull('order_id')->where('is_trial', false);
 
             // 1. Process Midtrans orders
             if ($midtransAccesses->isNotEmpty()) {
