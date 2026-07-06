@@ -396,9 +396,23 @@
         @media (max-width: 640px) {
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
             .product-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .stat-card {
+                padding: 20px;
+            }
+            .stat-value {
+                font-size: 24px;
+            }
+            .card {
+                padding: 20px;
+            }
+            .product-card {
+                padding: 20px !important;
             }
             .header-row {
                 flex-direction: column;

@@ -247,6 +247,12 @@
             .ph1 {
                 font-size: 28px;
             }
+            .card {
+                padding: 16px;
+            }
+            .img-upload-box {
+                padding: 16px;
+            }
         }
     </style>
 

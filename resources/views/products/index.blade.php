@@ -195,11 +195,7 @@
             margin-bottom: 48px;
         }
 
-        @media (max-width: 1024px) {
-            .app-container { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
-            .product-grid { grid-template-columns: 1fr; }
-        }
+
 
         .product-card {
             background: var(--bg);
@@ -431,6 +427,10 @@
         @media (max-width: 640px) {
             .product-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .product-card {
+                padding: 20px;
             }
             .header-row {
                 flex-direction: column;
