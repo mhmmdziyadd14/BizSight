@@ -125,6 +125,30 @@
         
         @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } }
         [x-cloak] { display: none !important; }
+
+        .mobile-menu-dropdown {
+            background: #ffffff;
+            border-top: 1px solid #f1f5f9;
+        }
+        .dark .mobile-menu-dropdown {
+            background: #0F172A;
+            border-top: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .mobile-login-btn {
+            color: #1e293b;
+            border: 1.5px solid #e2e8f0;
+            background: transparent;
+        }
+        .dark .mobile-login-btn {
+            color: #ffffff;
+            border-color: #334155;
+        }
+        .mobile-login-btn:hover {
+            background: #f8fafc;
+        }
+        .dark .mobile-login-btn:hover {
+            background: #1e293b;
+        }
     </style>
 </head>
 <body x-data="{ checkoutModal: false, selectedProduct: null, selectedPrice: 0, notifyModal: false, notifyProduct: '', mobileMenuOpen: false }">
@@ -155,7 +179,7 @@
             </button>
         </div>
         <!-- Mobile Dropdown Menu -->
-        <div x-show="mobileMenuOpen" x-transition.opacity.duration.200ms class="md:hidden border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 space-y-4 shadow-xl" x-cloak>
+        <div x-show="mobileMenuOpen" x-transition.opacity.duration.200ms class="md:hidden mobile-menu-dropdown px-6 py-4 space-y-4 shadow-xl" x-cloak>
             <a href="#products" @click="mobileMenuOpen = false" class="block text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors py-2">Products</a>
             <a href="#pricing" @click="mobileMenuOpen = false" class="block text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors py-2">Pricing</a>
             <hr class="border-gray-100 dark:border-slate-800">
@@ -163,7 +187,7 @@
                 <a href="{{ route('dashboard') }}" @click="mobileMenuOpen = false" class="block btn-primary text-center py-3">Dashboard</a>
             @else
                 <div class="flex flex-col gap-3">
-                    <a href="{{ route('login') }}" @click="mobileMenuOpen = false" class="block text-center text-sm font-bold text-gray-900 dark:text-white py-3 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">Log in</a>
+                    <a href="{{ route('login') }}" @click="mobileMenuOpen = false" class="block text-center text-sm font-bold mobile-login-btn py-3 rounded-xl transition-all">Log in</a>
                     <a href="{{ route('register') }}" @click="mobileMenuOpen = false" class="block btn-primary text-center py-3 justify-center">Get started</a>
                 </div>
             @endauth
