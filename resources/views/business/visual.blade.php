@@ -256,6 +256,7 @@
         }
     </style>
 
+<div x-data="{ vcpSidebarOpen: false }">
     <!-- Mobile Sub-Header -->
     <div class="vcp-mobile-header">
         <button @click="vcpSidebarOpen = !vcpSidebarOpen" class="vcp-mobile-btn">
@@ -268,7 +269,7 @@
     <!-- Mobile Sub-Header Backdrop -->
     <div class="vcp-mobile-backdrop" x-show="vcpSidebarOpen" @click="vcpSidebarOpen = false" x-cloak></div>
 
-    <div class="vcp-container" x-data="{ vcpSidebarOpen: false }">
+    <div class="vcp-container">
         <!-- Sidebar Navigation -->
         <div class="vcp-sidebar" :class="{ 'mobile-open': vcpSidebarOpen }">
             <div class="sb-top">
@@ -737,6 +738,7 @@
 
         </div>
     </div>
+</div>
 
     <script>
         let IMG = {};
