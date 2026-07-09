@@ -42,4 +42,8 @@ return [
         'webhook_secret' => env('SCALEV_WEBHOOK_SECRET'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
 ];

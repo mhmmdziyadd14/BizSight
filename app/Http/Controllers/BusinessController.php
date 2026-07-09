@@ -628,7 +628,7 @@ class BusinessController extends Controller
             'note' => 'nullable|string'
         ]);
 
-        $apiKey = env('GEMINI_API_KEY');
+        $apiKey = config('services.gemini.api_key');
         if (!$apiKey) {
             return response()->json(['success' => false, 'message' => 'GEMINI_API_KEY belum diatur di .env. Silakan tambahkan API Key dari Google Gemini.']);
         }
