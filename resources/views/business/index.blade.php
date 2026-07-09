@@ -1207,7 +1207,9 @@
                 </div>
             `;
 
-            document.getElementById('resultsContainer').innerHTML = html;
+            const container = document.getElementById('resultsContainer');
+            container.className = "w-full space-y-6";
+            container.innerHTML = html;
         }
     </script>
 </x-app-layout>
