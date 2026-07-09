@@ -360,7 +360,7 @@
 
                 function updateMaterialSelects(items) {
                     // Update selects that store material ids
-                    const selects = Array.from(document.querySelectorAll('select[name="material_ids[]"], select.material-live, select[data-live="materials"]'));
+                    const selects = Array.from(document.querySelectorAll('select[name="material_ids[]"]:not(.material-color-select), select.material-live, select[data-live="materials"]'));
                     selects.forEach(el => {
                         const cur = el.value;
                         while (el.firstChild) el.removeChild(el.firstChild);
