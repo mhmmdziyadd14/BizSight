@@ -124,6 +124,11 @@
         .section-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
         
         @media (max-width: 768px) { .hero-title { font-size: 2.5rem; } }
+        @media (min-width: 768px) {
+            .mobile-toggle-btn {
+                display: none !important;
+            }
+        }
         [x-cloak] { display: none !important; }
 
         .mobile-menu-dropdown {
@@ -163,20 +168,22 @@
                 <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="ClarityLabs" class="h-10 w-auto hidden dark:block group-hover:scale-105 transition-transform duration-300">
                 <span class="text-xl font-black tracking-tight dark:text-white transition-colors">ClarityLab</span>
             </a>
-            <div class="hidden md:flex items-center gap-8">
-                <a href="#products" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors">Products</a>
-                <a href="#pricing" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors">Pricing</a>
-                @auth
-                    <a href="{{ route('dashboard') }}" class="btn-primary py-2 px-6">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="text-sm font-bold text-gray-900 dark:text-white">Log in</a>
-                    <a href="{{ route('register') }}" class="btn-primary py-2 px-6">Get started</a>
-                @endauth
+            <div class="flex items-center gap-8">
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#products" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors">Products</a>
+                    <a href="#pricing" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-orange-500 transition-colors">Pricing</a>
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="btn-primary py-2 px-6">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="text-sm font-bold text-gray-900 dark:text-white">Log in</a>
+                        <a href="{{ route('register') }}" class="btn-primary py-2 px-6">Get started</a>
+                    @endauth
+                </div>
+                <!-- Mobile Menu Toggle Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden mobile-toggle-btn text-gray-900 dark:text-white hover:text-orange-500 transition-colors focus:outline-none" aria-label="Toggle Navigation">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
             </div>
-            <!-- Mobile Menu Toggle Button -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-900 dark:text-white hover:text-orange-500 transition-colors focus:outline-none" aria-label="Toggle Navigation">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
-            </button>
         </div>
         <!-- Mobile Dropdown Menu -->
         <div x-show="mobileMenuOpen" x-transition.opacity.duration.200ms class="md:hidden mobile-menu-dropdown px-6 py-4 space-y-4 shadow-xl" x-cloak>
