@@ -647,14 +647,13 @@
                 const volumeEl = row.querySelector('.volume-display');
 
                 if (!selected || !selected.value) {
-                    if (typeEl) typeEl.innerText = '-';
                     if (unitEl) unitEl.innerText = '-';
                     if (volumeEl) volumeEl.innerText = '-';
                 } else {
-                    if (typeEl) typeEl.innerText = selected.dataset.type || '-';
-                    if (unitEl) unitEl.innerText = selected.dataset.unit || '-';
+                    if (typeEl) typeEl.innerText = selected.getAttribute('data-type') || selected.dataset.type || '-';
+                    if (unitEl) unitEl.innerText = selected.getAttribute('data-unit') || selected.dataset.unit || '-';
                     if (volumeEl) {
-                        const volume = parseFloat(selected.dataset.purchaseVolume || 0);
+                        const volume = parseFloat(selected.getAttribute('data-purchase-volume') || selected.dataset.purchaseVolume || 0);
                         volumeEl.innerText = volume > 0 ? volume : '-';
                     }
                 }
@@ -668,21 +667,27 @@
                     const row = e.target.closest('.material-row');
                     const colorSelect = row.querySelector('.material-color-select');
                     const typeEl = row.querySelector('.type-display');
+                    const unitEl = row.querySelector('.unit-display');
+                    const volumeEl = row.querySelector('.volume-display');
 
                     colorSelect.innerHTML = '<option value="">-- Pilih Warna --</option>';
                     colorSelect.disabled = true;
                     if (typeEl) typeEl.innerText = '-';
+                    if (unitEl) unitEl.innerText = '-';
+                    if (volumeEl) volumeEl.innerText = '-';
 
                     if (e.target.value) {
                         try {
                             const materialData = JSON.parse(e.target.value);
                             if (typeEl) typeEl.innerText = materialData.type || '-';
+                            if (unitEl) unitEl.innerText = materialData.unit || '-';
+                            
                             materialData.colors.forEach(colorItem => {
                                 const option = document.createElement('option');
                                 option.value = colorItem.id;
-                                option.textContent = colorItem.color;
+                                option.textContent = colorItem.color ? colorItem.color : 'Tanpa Warna';
                                 option.setAttribute('data-type', materialData.type);
-                                option.setAttribute('data-color', colorItem.color);
+                                option.setAttribute('data-color', colorItem.color || 'Tanpa Warna');
                                 option.setAttribute('data-unit', materialData.unit);
                                 option.setAttribute('data-price', colorItem.price);
                                 
@@ -691,7 +696,16 @@
                                 colorSelect.appendChild(option);
                             });
                             colorSelect.disabled = false;
+
+                            if (materialData.colors.length === 1) {
+                                colorSelect.selectedIndex = 1;
+                                syncRow(row);
+                            } else {
+                                calculateTotals();
+                            }
                         } catch (err) { console.error('Error parsing material data:', err); }
+                    } else {
+                        calculateTotals();
                     }
                 }
             });
@@ -929,13 +943,20 @@
                             data.colors.forEach(c => {
                                 const opt = document.createElement('option');
                                 opt.value = c.id;
-                                opt.textContent = c.color;
+                                opt.textContent = c.color ? c.color : 'Tanpa Warna';
+                                opt.setAttribute('data-price', c.price);
                                 opt.dataset.price = c.price;
+                                opt.setAttribute('data-purchase-volume', data.purchase_volume || c.purchase_volume || 1);
                                 opt.dataset.purchaseVolume = data.purchase_volume || c.purchase_volume || 1;
                                 colorSelect.appendChild(opt);
                             });
                             colorSelect.disabled = false;
                             if (unitSelect) unitSelect.value = data.unit;
+
+                            if (data.colors.length === 1) {
+                                colorSelect.selectedIndex = 1;
+                                performCalcRowCalculation(row);
+                            }
                         } catch (err) {}
                     }
                 }
