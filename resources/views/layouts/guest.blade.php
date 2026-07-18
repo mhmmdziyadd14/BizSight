@@ -11,7 +11,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -77,7 +77,8 @@
                 --navy: #0F172A;
             }
 
-            * { font-family: 'Plus Jakarta Sans', sans-serif; }
+            * { font-family: 'Outfit', sans-serif; }
+            .clarity-labs-brand, .logo-text { font-family: 'Plus Jakarta Sans', sans-serif !important; }
             
             body { margin: 0; padding: 0; overflow-x: hidden; }
 
@@ -150,7 +151,7 @@
                     <a href="{{ route('welcome') }}" class="logo-link group mb-12">
                         <img src="{{ asset('images/ClarityLabs_Light.svg') }}" alt="Logo" class="h-10 w-auto dark:hidden">
                         <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="Logo" class="h-10 w-auto hidden dark:block">
-                        <span class="text-2xl font-black tracking-tight text-navy dark:text-white transition-colors">
+                        <span class="text-2xl font-black tracking-tight text-navy dark:text-white transition-colors clarity-labs-brand">
                             <span class="text-orange-500">Clarity</span>Lab
                         </span>
                     </a>

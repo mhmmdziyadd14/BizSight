@@ -75,7 +75,7 @@
                     <img src="{{ asset('images/ClarityLabs_Light.svg') }}" alt="ClarityLabs" class="h-10 w-auto block dark:hidden group-hover:scale-105 transition-transform duration-300">
                     <!-- Tampil di Dark Mode (Logo Light) -->
                     <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="ClarityLabs" class="h-10 w-auto hidden dark:block group-hover:scale-105 transition-transform duration-300">
-                    <span class="text-xl font-extrabold tracking-tight text-navy-900 dark:text-white transition-colors duration-300">
+                    <span class="text-xl font-extrabold tracking-tight text-navy-900 dark:text-white transition-colors duration-300 clarity-labs-brand">
                         <span class="text-gradient-orange">Clarity</span> Labs
                     </span>
                 </a>

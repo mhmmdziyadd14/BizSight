@@ -1,7 +1,7 @@
 {{-- File: admin/product.blade.php --}}
 <x-app-layout>
     <style>
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        * { font-family: 'Outfit', sans-serif; }
         .bg-gradient-orange { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); }
         .text-gradient-orange { background: linear-gradient(135deg, #F97316 0%, #F59E0B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .bg-gradient-navy { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); }

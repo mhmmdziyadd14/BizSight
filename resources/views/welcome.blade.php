@@ -62,18 +62,19 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     
     <style>
         :root {
-            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-sans: 'Outfit', sans-serif;
             --ora: #F97316;
             --ora-dk: #EA580C;
         }
         
         * { font-family: var(--font-sans); }
+        .logo-text { font-family: 'Plus Jakarta Sans', sans-serif !important; }
         
         body { 
             background: linear-gradient(160deg, #fff7f3 0%, #ffffff 40%, #fff3ed 70%, #fef9f7 100%);
@@ -166,7 +167,7 @@
                 <img src="{{ asset('images/ClarityLabs_Light.svg') }}" alt="ClarityLabs" class="h-10 w-auto block dark:hidden group-hover:scale-105 transition-transform duration-300">
                 <!-- Tampil di Dark Mode (Logo Light) -->
                 <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="ClarityLabs" class="h-10 w-auto hidden dark:block group-hover:scale-105 transition-transform duration-300">
-                <span class="text-xl font-black tracking-tight dark:text-white transition-colors">ClarityLab</span>
+                <span class="text-xl font-black tracking-tight dark:text-white transition-colors logo-text">ClarityLab</span>
             </a>
             <div class="flex items-center gap-8">
                 <div class="hidden md:flex items-center gap-8">
@@ -552,7 +553,7 @@
                         <img src="{{ asset('images/ClarityLabs_Light.svg') }}" alt="ClarityLabs" class="h-8 w-auto block dark:hidden">
                         <!-- Tampil di Dark Mode (Logo Light) -->
                         <img src="{{ asset('images/ClarityLabs_Dark.svg') }}" alt="ClarityLabs" class="h-8 w-auto hidden dark:block">
-                        <span class="text-lg font-black dark:text-white tracking-tight">ClarityLab</span>
+                        <span class="text-lg font-black dark:text-white tracking-tight logo-text">ClarityLab</span>
                     </div>
                     <p class="text-gray-500 dark:text-gray-400 max-w-sm leading-relaxed">Tools digital untuk fashion brand owner yang mau jalanin bisnis dengan data, bukan feeling. Berhenti nebak-tebak, mulai dengan clarity.</p>
                 </div>

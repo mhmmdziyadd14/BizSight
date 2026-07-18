@@ -1,9 +1,7 @@
 {{-- File: hpp-calculator.blade.php --}}
 <x-app-layout>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        * { font-family: 'Outfit', sans-serif; }
 
         .bg-gradient-orange { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); }
         .text-gradient-orange { background: linear-gradient(135deg, #F97316 0%, #F59E0B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }

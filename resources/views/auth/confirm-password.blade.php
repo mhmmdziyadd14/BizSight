@@ -1,10 +1,8 @@
 {{-- File: password-confirm.blade.php --}}
 <x-guest-layout>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
-        
         * {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Outfit', sans-serif;
         }
         
         .bg-gradient-orange {
