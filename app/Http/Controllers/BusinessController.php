@@ -500,7 +500,119 @@ class BusinessController extends Controller
     public function show($id)
     {
         $hpp = HppCalculation::with('items.material')->where('user_id', Auth::id())->findOrFail($id);
-        return view('business.hpp_show', compact('hpp'));
+        $materials = Material::where('user_id', Auth::id())->get();
+        
+        // Kelompokkan bahan berdasarkan nama untuk menampilkan warna sebagai dropdown
+        $materialsByName = $materials->groupBy('name')->map(function($group) {
+            return [
+                'name' => $group->first()->name,
+                'type' => $group->first()->type,
+                'unit' => $group->first()->unit,
+                'purchase_volume' => $group->first()->purchase_volume,
+                'colors' => $group->map(function($material) {
+                    return [
+                        'id' => $material->id,
+                        'color' => $material->color,
+                        'price' => $material->price,
+                        'purchase_volume' => $material->purchase_volume
+                    ];
+                })->toArray()
+            ];
+        })->values();
+
+        return view('business.hpp_show', compact('hpp', 'materialsByName'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'material_ids' => 'required|array|min:1',
+            'material_ids.*' => 'required|integer|exists:materials,id',
+            'usage_amounts' => 'required|array|min:1',
+            'usage_amounts.*' => 'required|numeric|min:0',
+            'screen_printing_fee' => 'nullable|numeric|min:0',
+            'sewing_fee' => 'nullable|numeric|min:0',
+            'other_fees' => 'nullable|numeric|min:0',
+            'target_selling_price' => 'nullable|numeric|min:0',
+        ]);
+
+        $hpp = HppCalculation::where('user_id', Auth::id())->findOrFail($id);
+
+        // 1. Revert inventory from old items
+        $oldItems = HppMaterialItem::where('hpp_calculation_id', $hpp->id)->get();
+        foreach ($oldItems as $item) {
+            $material = Material::where('user_id', Auth::id())->find($item->material_id);
+            if ($material) {
+                $material->decrement('stock_out', $item->usage_amount);
+            }
+        }
+
+        // 2. Delete old items
+        HppMaterialItem::where('hpp_calculation_id', $hpp->id)->delete();
+
+        // 3. Process new items & update inventory
+        $materialIds = $request->input('material_ids', []);
+        $usages = $request->input('usage_amounts', []);
+
+        $totalRaw = 0;
+        $items = [];
+        $inventoryUpdates = [];
+
+        foreach ($materialIds as $idx => $matId) {
+            $material = Material::where('user_id', Auth::id())->find($matId);
+            if (! $material) {
+                continue;
+            }
+
+            $usage = floatval($usages[$idx] ?? 0);
+            $unitPrice = $material->purchase_volume > 0
+                ? ($material->price / $material->purchase_volume)
+                : $material->price;
+            $subtotal = $unitPrice * $usage;
+
+            $totalRaw += $subtotal;
+
+            $items[] = [
+                'material_id' => $material->id,
+                'usage_amount' => $usage,
+                'subtotal_cost' => $subtotal,
+            ];
+
+            // Track inventory deduction
+            $inventoryUpdates[$matId] = ($inventoryUpdates[$matId] ?? 0) + $usage;
+        }
+
+        foreach ($items as $item) {
+            HppMaterialItem::create(array_merge($item, ['hpp_calculation_id' => $hpp->id]));
+        }
+
+        // Update inventory - reduce stock_out from each material used
+        foreach ($inventoryUpdates as $materialId => $usageAmount) {
+            $material = Material::where('user_id', Auth::id())->find($materialId);
+            if ($material) {
+                $material->increment('stock_out', $usageAmount);
+            }
+        }
+
+        $screenPrinting = floatval($request->input('screen_printing_fee', 0));
+        $sewing = floatval($request->input('sewing_fee', 0));
+        $otherFees = floatval($request->input('other_fees', 0));
+        $totalHpp = $totalRaw + $screenPrinting + $sewing + $otherFees;
+
+        $hpp->update([
+            'name' => $data['name'],
+            'category' => $data['category'],
+            'total_raw_material_cost' => $totalRaw,
+            'screen_printing_fee' => $screenPrinting,
+            'sewing_fee' => $sewing,
+            'other_fees' => $otherFees,
+            'total_hpp_per_unit' => $totalHpp,
+            'target_selling_price' => floatval($request->input('target_selling_price', 0)),
+        ]);
+
+        return redirect()->route('hpp.show', $hpp->id)->with('success', 'Perhitungan HPP berhasil diperbarui.');
     }
 
     public function printHppPdf(Request $request, $id)
