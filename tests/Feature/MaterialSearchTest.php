@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\UserAccess;
 use App\Models\Material;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,9 +12,27 @@ class MaterialSearchTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function createAuthorizedUser(): User
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+            'is_approved' => true,
+        ]);
+
+        UserAccess::create([
+            'user_id' => $user->id,
+            'feature_code' => 'pcc',
+            'is_trial' => false,
+            'expires_at' => null,
+            'granted_at' => now(),
+        ]);
+
+        return $user;
+    }
+
     public function test_user_can_search_materials_by_name()
     {
-        $user = User::factory()->create();
+        $user = $this->createAuthorizedUser();
 
         Material::create([
             'user_id' => $user->id,
@@ -52,7 +71,7 @@ class MaterialSearchTest extends TestCase
 
     public function test_user_can_filter_materials_by_type()
     {
-        $user = User::factory()->create();
+        $user = $this->createAuthorizedUser();
 
         Material::create([
             'user_id' => $user->id,
