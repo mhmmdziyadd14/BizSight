@@ -13,9 +13,25 @@ class MaterialController extends Controller
     /**
      * Daftar bahan baku milik user.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $materials = Material::where('user_id', Auth::id())->orderBy('name')->get();
+        $query = Material::where('user_id', Auth::id());
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('color', 'like', "%{$search}%")
+                  ->orWhere('type', 'like', "%{$search}%")
+                  ->orWhere('unit', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $materials = $query->orderBy('name')->get();
         return view('materials.index', compact('materials'));
     }
 

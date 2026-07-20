@@ -277,14 +277,39 @@
 
             <!-- Materials List - Full Width -->
             <div class="bg-navy-900 rounded-3xl shadow-xl border border-orange-500/20 overflow-hidden fade-in-up mb-10 transition-all">
-                <div class="bg-navy-950 px-10 py-6 border-b border-orange-500/10">
+                <div class="bg-navy-950 px-8 py-5 border-b border-orange-500/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-black text-white">Daftar Bahan</h2>
+                        <div>
+                            <h2 class="text-xl font-black text-white">Daftar Bahan</h2>
+                            <p class="text-xs text-slate-400" id="materialCountText">Total: {{ $materials->count() }} bahan</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Search Bar & Filter -->
+                    <div class="flex items-center gap-3">
+                        <div class="relative w-full sm:w-64">
+                            <input type="text" id="searchMaterialInput" value="{{ request('search') }}" placeholder="Cari nama, warna, jenis..." 
+                                   class="w-full pl-10 pr-8 bg-navy-900 border border-orange-500/20 rounded-xl px-4 py-2 text-xs font-semibold text-white placeholder-slate-400 focus:border-orange-500 focus:ring-0 transition-all">
+                            <svg class="w-4 h-4 text-orange-400 absolute left-3.5 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <button type="button" id="clearSearchBtn" class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-2.5 text-slate-400 hover:text-white transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <select id="filterTypeSelect" class="bg-navy-900 border border-orange-500/20 rounded-xl px-3 py-2 text-xs font-semibold text-white focus:border-orange-500 focus:ring-0 transition-all">
+                            <option value="">Semua Jenis</option>
+                            @foreach($typeOptions as $type)
+                                <option value="{{ strtolower($type) }}" {{ strtolower(request('type')) === strtolower($type) ? 'selected' : '' }}>{{ $type }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 
@@ -299,7 +324,18 @@
                             <p class="text-slate-400 font-medium">Belum ada bahan baku. Tambahkan bahan terlebih dahulu untuk dapat menggunakannya di kalkulator HPP.</p>
                         </div>
                     @else
-                        <table class="w-full text-left text-sm">
+                        <!-- Dynamic Empty State when Instant Search finds 0 results -->
+                        <div id="emptySearchResult" class="hidden text-center py-12 px-6">
+                            <div class="w-14 h-14 bg-navy-950 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                            <p class="text-white font-bold text-sm">Tidak ada bahan baku yang cocok</p>
+                            <p class="text-slate-400 text-xs mt-1">Coba kata kunci pencarian atau filter jenis lain.</p>
+                        </div>
+
+                        <table class="w-full text-left text-sm" id="materialsTable">
                             <thead class="bg-navy-950 border-b border-orange-500/20">
                                 <tr class="text-[11px] font-black text-slate-300 uppercase tracking-wider">
                                     <th class="py-4 px-6">Tanggal</th>
@@ -314,7 +350,11 @@
                             </thead>
                             <tbody class="divide-y divide-orange-500/10">
                                 @foreach($materials as $material)
-                                    <tr class="table-row-hover hover:bg-orange-500/5 transition-colors">
+                                    <tr class="material-row table-row-hover hover:bg-orange-500/5 transition-colors" 
+                                        data-name="{{ strtolower($material->name) }}" 
+                                        data-type="{{ strtolower($material->type) }}" 
+                                        data-color="{{ strtolower($material->color ?? '') }}" 
+                                        data-unit="{{ strtolower($material->unit) }}">
                                         <td class="py-4 px-6 text-slate-300 font-medium"><span class="local-time" data-utc="{{ \Carbon\Carbon::parse($material->purchase_date)->toIso8601String() }}">{{ \Carbon\Carbon::parse($material->purchase_date)->format('d M Y') }}</span></td>
                                         <td class="py-4 px-6">
                                             @php
@@ -344,7 +384,7 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-black uppercase tracking-wider text-red-500 hover:text-white hover:bg-red-600 rounded-lg transition-all">
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                         </svg>
                                                         Hapus
                                                     </button>
@@ -599,6 +639,76 @@
             [valueInput, fromInput, toInput].forEach(el => el.addEventListener('input', updateConversion));
 
             updateConversion();
+
+            // Real-time Material Search & Filtering
+            const searchInput = document.getElementById('searchMaterialInput');
+            const filterType = document.getElementById('filterTypeSelect');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const tableRows = document.querySelectorAll('.material-row');
+            const countText = document.getElementById('materialCountText');
+            const emptySearchResult = document.getElementById('emptySearchResult');
+            const materialsTable = document.getElementById('materialsTable');
+            const totalCount = {{ $materials->count() }};
+
+            function filterMaterials() {
+                if (!tableRows.length) return;
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const selectedType = filterType ? filterType.value.toLowerCase().trim() : '';
+                let visibleCount = 0;
+
+                tableRows.forEach(row => {
+                    const name = row.getAttribute('data-name') || '';
+                    const type = row.getAttribute('data-type') || '';
+                    const color = row.getAttribute('data-color') || '';
+                    const unit = row.getAttribute('data-unit') || '';
+
+                    const matchesQuery = !query || name.includes(query) || color.includes(query) || unit.includes(query) || type.includes(query);
+                    const matchesType = !selectedType || type.includes(selectedType);
+
+                    if (matchesQuery && matchesType) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (clearBtn) {
+                    clearBtn.classList.toggle('hidden', !query);
+                }
+
+                if (countText) {
+                    if (query || selectedType) {
+                        countText.textContent = `Menampilkan ${visibleCount} dari ${totalCount} bahan`;
+                    } else {
+                        countText.textContent = `Total: ${totalCount} bahan`;
+                    }
+                }
+
+                if (emptySearchResult && materialsTable) {
+                    if (visibleCount === 0 && totalCount > 0) {
+                        emptySearchResult.classList.remove('hidden');
+                        materialsTable.classList.add('hidden');
+                    } else {
+                        emptySearchResult.classList.add('hidden');
+                        materialsTable.classList.remove('hidden');
+                    }
+                }
+            }
+
+            if (searchInput) searchInput.addEventListener('input', filterMaterials);
+            if (filterType) filterType.addEventListener('change', filterMaterials);
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    if (searchInput) searchInput.value = '';
+                    filterMaterials();
+                    if (searchInput) searchInput.focus();
+                });
+            }
+
+            if ((searchInput && searchInput.value) || (filterType && filterType.value)) {
+                filterMaterials();
+            }
         });
     </script>
 </x-app-layout>

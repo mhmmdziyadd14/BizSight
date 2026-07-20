@@ -115,11 +115,25 @@ class BusinessController extends Controller
     /**
      * Menampilkan halaman Bahan (Material) untuk HPP.
      */
-    public function bahan()
+    public function bahan(Request $request)
     {
-        $materials = Material::where('user_id', Auth::id())
-                        ->orderBy('name')
-                        ->get();
+        $query = Material::where('user_id', Auth::id());
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('color', 'like', "%{$search}%")
+                  ->orWhere('type', 'like', "%{$search}%")
+                  ->orWhere('unit', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $materials = $query->orderBy('name')->get();
 
         return view('business.hpp_bahan', compact('materials'));
     }

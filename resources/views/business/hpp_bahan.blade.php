@@ -281,17 +281,39 @@
 
                 <div class="h-px bg-orange-100 dark:bg-white/5 mx-8"></div>
 
-                <div class="bg-orange-50 dark:bg-navy-950 px-6 py-5 flex justify-between items-center border-b border-orange-200/60 dark:border-orange-500/10 transition-colors">
+                <div class="bg-orange-50 dark:bg-navy-950 px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-orange-200/60 dark:border-orange-500/10 transition-colors">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                             </svg>
                         </div>
-                        <h3 class="font-bold text-navy-900 dark:text-white text-base tracking-wide">Master Data Bahan</h3>
+                        <div>
+                            <h3 class="font-bold text-navy-900 dark:text-white text-base tracking-wide">Master Data Bahan</h3>
+                            <p class="text-[10px] font-bold text-orange-500 dark:text-orange-400 uppercase tracking-widest" id="materialCountText">Total: {{ $materials->count() }} Bahan Terdaftar</p>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-bold text-orange-400 uppercase tracking-widest">{{ $materials->count() }} Bahan Terdaftar</span>
+                    
+                    <!-- Search Bar & Filter -->
+                    <div class="flex items-center gap-3">
+                        <div class="relative w-full sm:w-64">
+                            <input type="text" id="searchMaterialInput" value="{{ request('search') }}" placeholder="Cari nama, warna, jenis..." 
+                                   class="w-full pl-10 pr-8 bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/20 rounded-xl px-4 py-2 text-xs font-semibold text-slate-800 dark:text-white placeholder-slate-400 focus:border-orange-500 focus:ring-0 transition-all">
+                            <svg class="w-4 h-4 text-orange-400 absolute left-3.5 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <button type="button" id="clearSearchBtn" class="{{ request('search') ? '' : 'hidden' }} absolute right-3 top-2.5 text-slate-400 hover:text-orange-500 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <select id="filterTypeSelect" class="bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/20 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                            <option value="">Semua Jenis</option>
+                            <option value="bahan utama" {{ strtolower(request('type')) === 'bahan utama' ? 'selected' : '' }}>Bahan Utama</option>
+                            <option value="bahan pendukung" {{ strtolower(request('type')) === 'bahan pendukung' ? 'selected' : '' }}>Bahan Pendukung</option>
+                            <option value="bahan lainnya" {{ strtolower(request('type')) === 'bahan lainnya' ? 'selected' : '' }}>Bahan Lainnya</option>
+                        </select>
                     </div>
                 </div>
 
@@ -308,8 +330,19 @@
                         </p>
                     </div>
                 @else
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
+                    <!-- Dynamic Empty State when Instant Search finds 0 results -->
+                    <div id="emptySearchResult" class="hidden text-center py-12 px-6">
+                        <div class="w-14 h-14 bg-orange-50 dark:bg-navy-950 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-navy-900 dark:text-white font-bold text-sm">Tidak ada bahan baku yang cocok</p>
+                        <p class="text-slate-400 text-xs mt-1">Coba kata kunci pencarian atau filter jenis lain.</p>
+                    </div>
+
+                    <div class="overflow-x-auto" id="materialsTableWrapper">
+                        <table class="w-full text-left text-sm" id="materialsTable">
                             <thead class="bg-orange-50 dark:bg-navy-950 border-b border-orange-200/60 dark:border-orange-500/10 transition-colors">
                                 <tr class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">
                                     <th class="py-4 px-6">Bahan</th>
@@ -322,7 +355,11 @@
                             </thead>
                             <tbody class="divide-y divide-orange-500/10">
                                 @foreach($materials as $material)
-                                    <tr class="table-row-hover hover:bg-orange-500/5 transition-colors">
+                                    <tr class="material-row table-row-hover hover:bg-orange-500/5 transition-colors"
+                                        data-name="{{ strtolower($material->name) }}" 
+                                        data-type="{{ strtolower($material->type) }}" 
+                                        data-color="{{ strtolower($material->color ?? '') }}" 
+                                        data-unit="{{ strtolower($material->unit) }}">
                                         <td class="py-4 px-6">
                                             <p class="font-bold text-navy-900 dark:text-white">{{ $material->name }}</p>
                                         </td>
@@ -471,6 +508,76 @@
                 form.addEventListener('submit', function(e) {
                     materialNameValue.value = materialNameInput.value.trim();
                 });
+            }
+
+            // Real-time Material Search & Filtering
+            const searchInput = document.getElementById('searchMaterialInput');
+            const filterType = document.getElementById('filterTypeSelect');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const tableRows = document.querySelectorAll('.material-row');
+            const countText = document.getElementById('materialCountText');
+            const emptySearchResult = document.getElementById('emptySearchResult');
+            const materialsTableWrapper = document.getElementById('materialsTableWrapper');
+            const totalCount = {{ $materials->count() }};
+
+            function filterMaterials() {
+                if (!tableRows.length) return;
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const selectedType = filterType ? filterType.value.toLowerCase().trim() : '';
+                let visibleCount = 0;
+
+                tableRows.forEach(row => {
+                    const name = row.getAttribute('data-name') || '';
+                    const type = row.getAttribute('data-type') || '';
+                    const color = row.getAttribute('data-color') || '';
+                    const unit = row.getAttribute('data-unit') || '';
+
+                    const matchesQuery = !query || name.includes(query) || color.includes(query) || unit.includes(query) || type.includes(query);
+                    const matchesType = !selectedType || type.includes(selectedType);
+
+                    if (matchesQuery && matchesType) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (clearBtn) {
+                    clearBtn.classList.toggle('hidden', !query);
+                }
+
+                if (countText) {
+                    if (query || selectedType) {
+                        countText.textContent = `Menampilkan ${visibleCount} dari ${totalCount} Bahan`;
+                    } else {
+                        countText.textContent = `Total: ${totalCount} Bahan Terdaftar`;
+                    }
+                }
+
+                if (emptySearchResult && materialsTableWrapper) {
+                    if (visibleCount === 0 && totalCount > 0) {
+                        emptySearchResult.classList.remove('hidden');
+                        materialsTableWrapper.classList.add('hidden');
+                    } else {
+                        emptySearchResult.classList.add('hidden');
+                        materialsTableWrapper.classList.remove('hidden');
+                    }
+                }
+            }
+
+            if (searchInput) searchInput.addEventListener('input', filterMaterials);
+            if (filterType) filterType.addEventListener('change', filterMaterials);
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    if (searchInput) searchInput.value = '';
+                    filterMaterials();
+                    if (searchInput) searchInput.focus();
+                });
+            }
+
+            if ((searchInput && searchInput.value) || (filterType && filterType.value)) {
+                filterMaterials();
             }
         });
     </script>
