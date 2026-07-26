@@ -575,7 +575,7 @@
                 </div>
             </div>
             <div class="pt-8 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center flex-wrap gap-4">
-                <p class="text-sm text-gray-400">© 2024 ClarityLab.id. All rights reserved.</p>
+                <p class="text-sm text-gray-400">© 2026 ClarityLab.id. All rights reserved.</p>
                 <div class="flex gap-6">
                     <a href="#" class="text-xs font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest">Privacy</a>
                     <a href="#" class="text-xs font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest">Terms</a>
