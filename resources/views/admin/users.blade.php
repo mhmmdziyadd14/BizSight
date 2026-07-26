@@ -187,165 +187,193 @@
         <!-- Edit Modal -->
         <div x-show="editModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" x-cloak>
             <div class="absolute inset-0 bg-navy/80 backdrop-blur-sm" @click="editModal = false"></div>
-            <div class="bg-white dark:bg-navy-900 w-full max-w-3xl rounded-[32px] p-8 md:p-10 relative shadow-2xl scale-in transition-colors max-h-[95vh] overflow-y-auto" @click.away="editModal = false"
+            <div class="bg-white dark:bg-navy-900 w-full max-w-4xl rounded-[32px] overflow-hidden relative shadow-2xl scale-in transition-colors max-h-[90vh] flex flex-col"
+                 @click.away="editModal = false"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 scale-95"
                  x-transition:enter-end="opacity-100 scale-100">
                 
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <h2 class="text-2xl font-black text-navy dark:text-white mb-1">Edit User Details</h2>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Perbarui informasi email, nama, atau telepon pengguna.</p>
+                <!-- Modal Header -->
+                <div class="bg-gray-50 dark:bg-navy-950 px-8 py-5 border-b border-gray-100 dark:border-white/5 flex justify-between items-center shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-orange rounded-xl flex items-center justify-center shadow-md">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-black text-navy dark:text-white">Edit Data Pengguna</h2>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Perbarui profil dan kontrol lisensi akses user</p>
+                        </div>
                     </div>
-                    <button type="button" @click="editModal = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <button type="button" @click="editModal = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-all transform hover:rotate-90 duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Left Column: Inputs -->
-                    <div>
-                        <form :action="'/admin/users/' + selectedUser.id" method="POST" id="edit-user-form" class="space-y-5">
-                            @csrf
-                            @method('PUT')
+                <!-- Modal Body (Scrollable form) -->
+                <form :action="'/admin/users/' + selectedUser.id" method="POST" id="edit-user-form" class="flex-1 overflow-y-auto p-8">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        
+                        <!-- Left Column: Personal Info & Metadata -->
+                        <div class="space-y-5">
+                            <h3 class="text-xs font-black text-orange-500 uppercase tracking-widest border-b border-gray-100 dark:border-white/5 pb-2">Informasi Profil</h3>
                             
                             <div>
-                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Full Name</label>
-                                <input type="text" name="name" x-model="selectedUser.name" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Nama Lengkap</label>
+                                <input type="text" name="name" x-model="selectedUser.name" required
+                                       class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-100 dark:border-white/5 rounded-2xl px-4 py-3 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
                             </div>
          
                             <div>
-                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
-                                <input type="email" name="email" x-model="selectedUser.email" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Alamat Email</label>
+                                <input type="email" name="email" x-model="selectedUser.email" required
+                                       class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-100 dark:border-white/5 rounded-2xl px-4 py-3 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
                             </div>
         
                             <div>
-                                                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">No Telepon</label>
-                                                                <input type="text" name="phone" x-model="selectedUser.phone" class="w-full bg-gray-50 dark:bg-navy-950 border-gray-100 dark:border-white/5 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                            </div>
+                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">No Telepon</label>
+                                <input type="text" name="phone" x-model="selectedUser.phone" placeholder="-"
+                                       class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-100 dark:border-white/5 rounded-2xl px-4 py-3 text-sm font-bold text-navy dark:text-white focus:bg-white focus:border-orange-500 focus:ring-0 transition-all">
+                            </div>
 
-                                                            <div class="border-t border-gray-100 dark:border-white/5 pt-4 mt-4" x-show="selectedUser.accesses">
-                                                                <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-1">Manage Trial Status & Expiry</label>
-                                                                <div class="space-y-4">
-                                                                    
-                                                                    <!-- PCC Feature Row -->
-                                                                    <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                                                                        <div class="flex items-center justify-between">
-                                                                            <span class="text-xs font-black text-navy dark:text-white">PROFIT CLARITY CALCULATOR (PCC)</span>
-                                                                            
-                                                                            <!-- If it is lifetime -->
-                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && selectedUser.accesses.pcc.is_lifetime">
-                                                                                <span class="text-[10px] font-black text-green-500 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider">Purchased (Lifetime)</span>
-                                                                            </template>
-                                                                            
-                                                                            <!-- If it is trial / none -->
-                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && !selectedUser.accesses.pcc.is_lifetime">
-                                                                                <label class="flex items-center gap-2 cursor-pointer">
-                                                                                    <input type="checkbox" name="features[pcc][is_trial]" x-model="selectedUser.accesses.pcc.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
-                                                                                    <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider">Trial Access</span>
-                                                                                </label>
-                                                                            </template>
-                                                                        </div>
-                                                                        
-                                                                        <!-- Expiry input for PCC -->
-                                                                        <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && !selectedUser.accesses.pcc.is_lifetime">
-                                                                            <div x-show="selectedUser.accesses.pcc.is_trial" class="mt-3">
-                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
-                                                                                <input type="date" name="features[pcc][expires_at]" x-model="selectedUser.accesses.pcc.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                                            </div>
-                                                                        </template>
-                                                                    </div>
+                            <div class="grid grid-cols-2 gap-4 pt-2">
+                                <div>
+                                    <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Terdaftar Pada</span>
+                                    <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-4 py-3 text-xs font-bold text-navy dark:text-slate-300 border border-gray-100 dark:border-white/5" x-text="selectedUser.created_at"></div>
+                                </div>
+                                <div>
+                                    <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Lisensi Lifetime</span>
+                                    <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-4 py-3 flex flex-wrap gap-1.5 text-navy dark:text-white border border-gray-100 dark:border-white/5" x-html="selectedUser.products_html || '<span class=\'text-gray-400 dark:text-gray-600 italic font-bold text-[10px]\'>Tidak Ada</span>'"></div>
+                                </div>
+                            </div>
+                        </div>
 
-                                                                    <!-- VCP Feature Row -->
-                                                                    <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                                                                        <div class="flex items-center justify-between">
-                                                                            <span class="text-xs font-black text-navy dark:text-white">VISUAL CLARITY PACK (VCP)</span>
-                                                                            
-                                                                            <!-- If it is lifetime -->
-                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && selectedUser.accesses.vcp.is_lifetime">
-                                                                                <span class="text-[10px] font-black text-green-500 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider">Purchased (Lifetime)</span>
-                                                                            </template>
-                                                                            
-                                                                            <!-- If it is trial / none -->
-                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && !selectedUser.accesses.vcp.is_lifetime">
-                                                                                <label class="flex items-center gap-2 cursor-pointer">
-                                                                                    <input type="checkbox" name="features[vcp][is_trial]" x-model="selectedUser.accesses.vcp.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
-                                                                                    <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider">Trial Access</span>
-                                                                                </label>
-                                                                            </template>
-                                                                        </div>
-                                                                        
-                                                                        <!-- Expiry input for VCP -->
-                                                                        <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && !selectedUser.accesses.vcp.is_lifetime">
-                                                                            <div x-show="selectedUser.accesses.vcp.is_trial" class="mt-3">
-                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
-                                                                                <input type="date" name="features[vcp][expires_at]" x-model="selectedUser.accesses.vcp.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                                            </div>
-                                                                        </template>
-                                                                    </div>
+                        <!-- Right Column: Trial & Expiry Controls -->
+                        <div class="space-y-4">
+                            <h3 class="text-xs font-black text-orange-500 uppercase tracking-widest border-b border-gray-100 dark:border-white/5 pb-2">Kontrol Akses Trial</h3>
+                            
+                            <!-- PCC Feature Card -->
+                            <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5 flex flex-col justify-between min-h-[90px]">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-extrabold text-navy dark:text-white tracking-wide">Profit Calculator (PCC)</span>
+                                    
+                                    <!-- Lifetime Badge -->
+                                    <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && selectedUser.accesses.pcc.is_lifetime">
+                                        <span class="text-[9px] font-black text-green-600 dark:text-green-400 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider border border-green-500/20">LIFETIME</span>
+                                    </template>
+                                    
+                                    <!-- Trial Checkbox -->
+                                    <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && !selectedUser.accesses.pcc.is_lifetime">
+                                        <label class="flex items-center gap-2 cursor-pointer group">
+                                            <input type="checkbox" name="features[pcc][is_trial]" x-model="selectedUser.accesses.pcc.is_trial" 
+                                                   class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-navy-900 text-orange-500 focus:ring-orange-500/30">
+                                            <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 group-hover:text-orange-500 transition-colors uppercase tracking-wider">Beri Trial</span>
+                                        </label>
+                                    </template>
+                                </div>
+                                
+                                <!-- Expiry Input -->
+                                <template x-if="selectedUser.accesses && selectedUser.accesses.pcc && !selectedUser.accesses.pcc.is_lifetime">
+                                    <div x-show="selectedUser.accesses.pcc.is_trial" class="mt-3" x-transition>
+                                        <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
+                                        <input type="date" name="features[pcc][expires_at]" x-model="selectedUser.accesses.pcc.expires_at" 
+                                               class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                    </div>
+                                </template>
+                            </div>
 
-                                                                    <!-- DE Feature Row -->
-                                                                    <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                                                                        <div class="flex items-center justify-between">
-                                                                            <span class="text-xs font-black text-navy dark:text-white">DECISION ENGINE (DE)</span>
-                                                                            
-                                                                            <!-- If it is lifetime -->
-                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.de && selectedUser.accesses.de.is_lifetime">
-                                                                                <span class="text-[10px] font-black text-green-500 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider">Purchased (Lifetime)</span>
-                                                                            </template>
-                                                                            
-                                                                            <!-- If it is trial / none -->
-                                                                            <template x-if="selectedUser.accesses && selectedUser.accesses.de && !selectedUser.accesses.de.is_lifetime">
-                                                                                <label class="flex items-center gap-2 cursor-pointer">
-                                                                                    <input type="checkbox" name="features[de][is_trial]" x-model="selectedUser.accesses.de.is_trial" class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-orange-500 focus:ring-orange-500/50">
-                                                                                    <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider">Trial Access</span>
-                                                                                </label>
-                                                                            </template>
-                                                                        </div>
-                                                                        
-                                                                        <!-- Expiry input for DE -->
-                                                                        <template x-if="selectedUser.accesses && selectedUser.accesses.de && !selectedUser.accesses.de.is_lifetime">
-                                                                            <div x-show="selectedUser.accesses.de.is_trial" class="mt-3">
-                                                                                <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
-                                                                                <input type="date" name="features[de][expires_at]" x-model="selectedUser.accesses.de.expires_at" class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                                            </div>
-                                                                        </template>
-                                                                    </div>
+                            <!-- VCP Feature Card -->
+                            <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5 flex flex-col justify-between min-h-[90px]">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-extrabold text-navy dark:text-white tracking-wide">Visual Clarity Pack (VCP)</span>
+                                    
+                                    <!-- Lifetime Badge -->
+                                    <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && selectedUser.accesses.vcp.is_lifetime">
+                                        <span class="text-[9px] font-black text-green-600 dark:text-green-400 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider border border-green-500/20">LIFETIME</span>
+                                    </template>
+                                    
+                                    <!-- Trial Checkbox -->
+                                    <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && !selectedUser.accesses.vcp.is_lifetime">
+                                        <label class="flex items-center gap-2 cursor-pointer group">
+                                            <input type="checkbox" name="features[vcp][is_trial]" x-model="selectedUser.accesses.vcp.is_trial" 
+                                                   class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-navy-900 text-orange-500 focus:ring-orange-500/30">
+                                            <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 group-hover:text-orange-500 transition-colors uppercase tracking-wider">Beri Trial</span>
+                                        </label>
+                                    </template>
+                                </div>
+                                
+                                <!-- Expiry Input -->
+                                <template x-if="selectedUser.accesses && selectedUser.accesses.vcp && !selectedUser.accesses.vcp.is_lifetime">
+                                    <div x-show="selectedUser.accesses.vcp.is_trial" class="mt-3" x-transition>
+                                        <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
+                                        <input type="date" name="features[vcp][expires_at]" x-model="selectedUser.accesses.vcp.expires_at" 
+                                               class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                    </div>
+                                </template>
+                            </div>
 
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                            <!-- DE Feature Card -->
+                            <div class="bg-gray-50 dark:bg-navy-950 p-4 rounded-2xl border border-gray-100 dark:border-white/5 flex flex-col justify-between min-h-[90px]">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-extrabold text-navy dark:text-white tracking-wide">Decision Engine (DE)</span>
+                                    
+                                    <!-- Lifetime Badge -->
+                                    <template x-if="selectedUser.accesses && selectedUser.accesses.de && selectedUser.accesses.de.is_lifetime">
+                                        <span class="text-[9px] font-black text-green-600 dark:text-green-400 bg-green-500/10 px-2.5 py-1 rounded-lg uppercase tracking-wider border border-green-500/20">LIFETIME</span>
+                                    </template>
+                                    
+                                    <!-- Trial Checkbox -->
+                                    <template x-if="selectedUser.accesses && selectedUser.accesses.de && !selectedUser.accesses.de.is_lifetime">
+                                        <label class="flex items-center gap-2 cursor-pointer group">
+                                            <input type="checkbox" name="features[de][is_trial]" x-model="selectedUser.accesses.de.is_trial" 
+                                                   class="rounded border-gray-300 dark:border-white/20 bg-white dark:bg-navy-900 text-orange-500 focus:ring-orange-500/30">
+                                            <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 group-hover:text-orange-500 transition-colors uppercase tracking-wider">Beri Trial</span>
+                                        </label>
+                                    </template>
+                                </div>
+                                
+                                <!-- Expiry Input -->
+                                <template x-if="selectedUser.accesses && selectedUser.accesses.de && !selectedUser.accesses.de.is_lifetime">
+                                    <div x-show="selectedUser.accesses.de.is_trial" class="mt-3" x-transition>
+                                        <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1 ml-1">Batas Akhir Trial</label>
+                                        <input type="date" name="features[de][expires_at]" x-model="selectedUser.accesses.de.expires_at" 
+                                               class="w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-navy dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
                     </div>
+                </form>
 
-                    <!-- Right Column: Details & Actions -->
-                    <div class="flex flex-col justify-between">
-                        <!-- Details Section -->
-                        <div class="space-y-5">
-                            <div>
-                                <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Tanggal Terdaftar</span>
-                                <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-3.5 text-sm font-bold text-navy dark:text-white" x-text="selectedUser.created_at"></div>
-                            </div>
-                            <div>
-                                <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Produk Yang Dibeli</span>
-                                <div class="bg-gray-50 dark:bg-navy-950 rounded-2xl px-5 py-3.5 flex flex-wrap gap-2 text-navy dark:text-white" x-html="selectedUser.products_html || '<span class=\'text-gray-400 italic font-bold text-xs\'>No Purchases</span>'"></div>
-                            </div>
-                        </div>
+                <!-- Modal Footer Actions -->
+                <div class="bg-gray-50 dark:bg-navy-950 px-8 py-5 border-t border-gray-100 dark:border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0">
+                    <!-- Delete Button (Left Aligned) -->
+                    <form :action="'/admin/users/' + selectedUser.id" method="POST" 
+                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini? Semua data terkait (HPP, brief, dll) akan terhapus permanen.')" 
+                          class="w-full sm:w-auto">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-red-500/10 hover:bg-red-500 border border-red-500/20 text-red-500 hover:text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all">
+                            Hapus Akun
+                        </button>
+                    </form>
 
-                        <!-- Actions Container -->
-                        <div class="flex flex-col gap-3 pt-6 border-t border-gray-100 dark:border-white/5 mt-6">
-                            <div class="flex gap-3">
-                                <button type="button" @click="editModal = false" class="flex-1 bg-gray-100 dark:bg-navy-800 text-gray-500 dark:text-gray-400 text-[10px] font-black uppercase tracking-widest py-3.5 rounded-2xl">Cancel</button>
-                                <button type="submit" form="edit-user-form" class="flex-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest py-3.5 rounded-2xl shadow-lg shadow-orange-500/20">Save Changes</button>
-                            </div>
-
-                            <form :action="'/admin/users/' + selectedUser.id" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini? Tindakan ini tidak dapat dibatalkan.')" class="w-full">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white text-[10px] font-black uppercase tracking-widest py-3.5 rounded-2xl transition-all">
-                                    Hapus Akun
-                                </button>
-                            </form>
-                        </div>
+                    <!-- Save / Cancel Buttons (Right Aligned) -->
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <button type="button" @click="editModal = false" 
+                                class="w-full sm:w-auto px-6 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-navy-800 dark:hover:bg-navy-700 text-gray-500 dark:text-gray-400 text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all">
+                            Cancel
+                        </button>
+                        <button type="submit" form="edit-user-form" 
+                                class="w-full sm:w-auto px-8 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-orange-500/20 transition-all">
+                            Simpan Perubahan
+                        </button>
                     </div>
                 </div>
             </div>
