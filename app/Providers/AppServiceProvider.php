@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.env') === 'production' || env('FORCE_HTTPS', false)) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // Listen to user login and sync Scalev purchases (if configured)
         Event::listen(Login::class, function ($event) {
             // Resolve listener from container to allow dependency injection
