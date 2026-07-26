@@ -516,13 +516,13 @@
                     });
                 @endif
 
-                // Listen for form submissions to replace native confirm dialogs
+                // Listen for form submissions in the CAPTURE phase to intercept inline onsubmit before they execute
                 document.addEventListener('submit', function(e) {
                     const form = e.target;
                     const onsubmitAttr = form.getAttribute('onsubmit');
                     
                     if (onsubmitAttr && onsubmitAttr.includes('confirm(')) {
-                        // Prevent the browser's default action and confirm dialog
+                        // Prevent the browser's default action and inline confirm dialog
                         e.preventDefault();
                         e.stopImmediatePropagation();
 
@@ -532,11 +532,6 @@
                         if (match && match[1]) {
                             message = match[1];
                         }
-
-                        // Temporarily bypass the inline onsubmit handler
-                        const tempOnsubmit = form.onsubmit;
-                        form.removeAttribute('onsubmit');
-                        form.onsubmit = null;
 
                         Swal.fire({
                             title: 'Konfirmasi Tindakan',
@@ -557,15 +552,12 @@
                             buttonsStyling: false
                         }).then((result) => {
                             if (result.isConfirmed) {
+                                // Programmatically submit form, which bypasses the submit event/handler loop
                                 form.submit();
-                            } else {
-                                // Restore original onsubmit handler if cancelled
-                                form.setAttribute('onsubmit', onsubmitAttr);
-                                form.onsubmit = tempOnsubmit;
                             }
                         });
                     }
-                });
+                }, true); // Use capture phase to intercept before inline onsubmit runs
             })();
         </script>
     </body>
