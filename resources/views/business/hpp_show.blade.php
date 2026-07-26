@@ -527,7 +527,8 @@
                 
                 <!-- Modal Box -->
                 <!-- Modal Box -->
-                <div class="relative bg-white dark:bg-navy-900 w-full max-w-5xl rounded-3xl shadow-2xl border border-orange-100 dark:border-white/5 overflow-hidden z-10 flex flex-col my-8 transition-colors max-h-[90vh]">
+                <div style="height: 85vh; max-height: 720px; display: flex; flex-direction: column;" 
+                     class="relative bg-white dark:bg-navy-900 w-full max-w-5xl rounded-3xl shadow-2xl border border-orange-100 dark:border-white/5 overflow-hidden z-10 my-8 transition-colors">
                     
                     <!-- Modal Header -->
                     <div class="bg-navy-900 px-6 py-5 flex items-center justify-between border-b border-white/5 shrink-0">
@@ -553,7 +554,7 @@
                         @method('PUT')
 
                         <!-- Scrollable Form Area -->
-                        <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+                        <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6" style="overflow-y: auto;">
                             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                                 
                                 <!-- Left Column: HPP Info & Fees (col-span-4) -->
@@ -610,77 +611,80 @@
                                             </h4>
                                         </div>
 
-                                        <div class="overflow-y-auto max-h-[300px] border border-gray-100 dark:border-white/5 rounded-xl custom-scrollbar">
-                                            <table class="w-full text-left text-xs table-fixed">
-                                                <thead class="bg-orange-50/50 dark:bg-navy-950 border-b border-orange-500/10 dark:border-orange-500/20 sticky top-0 z-10">
-                                                    <tr class="text-[9px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">
-                                                        <th class="py-2.5 px-3 w-12 text-center bg-orange-50/90 dark:bg-navy-950">No</th>
-                                                        <th class="py-2.5 px-3 w-[33%] bg-orange-50/90 dark:bg-navy-950">Bahan</th>
-                                                        <th class="py-2.5 px-3 w-[27%] bg-orange-50/90 dark:bg-navy-950">Warna / Ukuran</th>
-                                                        <th class="py-2.5 px-3 w-[20%] text-center bg-orange-50/90 dark:bg-navy-950">Kebutuhan</th>
-                                                        <th class="py-2.5 px-3 w-[15%] text-right bg-orange-50/90 dark:bg-navy-950">Subtotal</th>
-                                                        <th class="py-2.5 px-3 w-10 text-center bg-orange-50/90 dark:bg-navy-950"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="divide-y divide-orange-500/10">
-                                                    <template x-for="(item, index) in items" :key="index">
-                                                        <tr class="hover:bg-orange-500/5 transition-colors">
-                                                            <!-- No -->
-                                                            <td class="py-2 px-3 w-12 text-center text-xs font-black text-slate-500" x-text="index + 1"></td>
-                                                            
-                                                            <!-- Bahan -->
-                                                            <td class="py-2 px-3 w-[33%]">
-                                                                <select x-model="item.material_name" @change="onMaterialChange(item)" required
-                                                                    class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-lg px-2 py-1.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                                    <option value="">-- Pilih Bahan --</option>
-                                                                    <template x-for="mat in materialsByName" :key="mat.name">
-                                                                        <option :value="mat.name" x-text="mat.name" :selected="mat.name === item.material_name"></option>
-                                                                    </template>
-                                                                </select>
-                                                            </td>
-                                                            
-                                                            <!-- Warna / Ukuran -->
-                                                            <td class="py-2 px-3 w-[27%]">
-                                                                <select name="material_ids[]" x-model="item.color_id" @change="onColorChange(item)" :disabled="!item.material_name" required
-                                                                    class="material-color-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-lg px-2 py-1.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all disabled:opacity-50">
-                                                                    <option value="">-- Warna --</option>
-                                                                    <template x-if="item.material_name">
-                                                                        <template x-for="col in (materialsByName.find(m => m.name === item.material_name)?.colors || [])" :key="col.id">
-                                                                            <option :value="col.id" x-text="col.color ? col.color : 'Tanpa Warna'" :selected="String(col.id) === String(item.color_id)"></option>
+                                        <!-- BOM Scrollable Box Container -->
+                                        <div class="border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden bg-slate-50/20 dark:bg-navy-950/40 shadow-inner">
+                                            <div style="max-height: 260px; overflow-y: auto;" class="custom-scrollbar">
+                                                <table class="w-full text-left text-xs table-fixed">
+                                                    <thead class="bg-orange-50/50 dark:bg-navy-950 border-b border-orange-500/10 dark:border-orange-500/20 sticky top-0 z-10">
+                                                        <tr class="text-[9px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">
+                                                            <th style="width: 48px; text-align: center;" class="py-2.5 px-3 bg-orange-50/90 dark:bg-navy-950">No</th>
+                                                            <th style="width: 32%;" class="py-2.5 px-3 bg-orange-50/90 dark:bg-navy-950">Bahan</th>
+                                                            <th style="width: 28%;" class="py-2.5 px-3 bg-orange-50/90 dark:bg-navy-950">Warna / Ukuran</th>
+                                                            <th style="width: 20%; text-align: center;" class="py-2.5 px-3 bg-orange-50/90 dark:bg-navy-950">Kebutuhan</th>
+                                                            <th style="width: 14%; text-align: right;" class="py-2.5 px-3 bg-orange-50/90 dark:bg-navy-950">Subtotal</th>
+                                                            <th style="width: 40px; text-align: center;" class="py-2.5 px-3 bg-orange-50/90 dark:bg-navy-950"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-orange-500/10">
+                                                        <template x-for="(item, index) in items" :key="index">
+                                                            <tr class="hover:bg-orange-500/5 transition-colors">
+                                                                <!-- No -->
+                                                                <td style="width: 48px; text-align: center;" class="py-2 px-3 text-xs font-black text-slate-500" x-text="index + 1"></td>
+                                                                
+                                                                <!-- Bahan -->
+                                                                <td style="width: 32%;" class="py-2 px-3">
+                                                                    <select x-model="item.material_name" @change="onMaterialChange(item)" required
+                                                                        class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-lg px-2 py-1.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                                        <option value="">-- Pilih Bahan --</option>
+                                                                        <template x-for="mat in materialsByName" :key="mat.name">
+                                                                            <option :value="mat.name" x-text="mat.name" :selected="mat.name === item.material_name"></option>
                                                                         </template>
-                                                                    </template>
-                                                                </select>
-                                                            </td>
-                                                            
-                                                            <!-- Kebutuhan -->
-                                                            <td class="py-2 px-3 w-[20%] text-center">
-                                                                <div class="flex items-center gap-1 justify-center">
-                                                                    <input type="number" step="0.01" name="usage_amounts[]" x-model.number="item.usage_amount" @input="onUsageChange(item)" required
-                                                                        class="w-16 text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-lg px-1 py-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-wider min-w-[30px]" x-text="item.unit"></span>
-                                                                </div>
-                                                            </td>
-                                                            
-                                                            <!-- Subtotal -->
-                                                            <td class="py-2 px-3 w-[15%] text-right font-mono text-xs font-black text-navy-900 dark:text-white" x-text="formatRp(item.subtotal)"></td>
-                                                            
-                                                            <!-- Action delete -->
-                                                            <td class="py-2 px-3 w-10 text-center">
-                                                                <button type="button" @click="removeBomRow(index)" class="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm">
-                                                                    <svg class="w-3.5 h-3.5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path>
-                                                                    </svg>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </template>
-                                                    <template x-if="items.length === 0">
-                                                        <tr>
-                                                            <td colspan="6" class="py-6 text-center text-xs text-slate-400">Belum ada bahan baku. Silakan klik "+ Tambah Bahan".</td>
-                                                        </tr>
-                                                    </template>
-                                                </tbody>
-                                            </table>
+                                                                    </select>
+                                                                </td>
+                                                                
+                                                                <!-- Warna / Ukuran -->
+                                                                <td style="width: 28%;" class="py-2 px-3">
+                                                                    <select name="material_ids[]" x-model="item.color_id" @change="onColorChange(item)" :disabled="!item.material_name" required
+                                                                        class="material-color-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-lg px-2 py-1.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all disabled:opacity-50">
+                                                                        <option value="">-- Warna --</option>
+                                                                        <template x-if="item.material_name">
+                                                                            <template x-for="col in (materialsByName.find(m => m.name === item.material_name)?.colors || [])" :key="col.id">
+                                                                                <option :value="col.id" x-text="col.color ? col.color : 'Tanpa Warna'" :selected="String(col.id) === String(item.color_id)"></option>
+                                                                            </template>
+                                                                        </template>
+                                                                    </select>
+                                                                </td>
+                                                                
+                                                                <!-- Kebutuhan -->
+                                                                <td style="width: 20%; text-align: center;" class="py-2 px-3">
+                                                                    <div class="flex items-center gap-1 justify-center">
+                                                                        <input type="number" step="0.01" name="usage_amounts[]" x-model.number="item.usage_amount" @input="onUsageChange(item)" required
+                                                                            class="w-16 text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-lg px-1 py-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                                        <span class="text-[9px] text-slate-500 font-bold uppercase tracking-wider min-w-[30px]" x-text="item.unit"></span>
+                                                                    </div>
+                                                                </td>
+                                                                
+                                                                <!-- Subtotal -->
+                                                                <td style="width: 14%; text-align: right;" class="py-2 px-3 font-mono text-xs font-black text-navy-900 dark:text-white" x-text="formatRp(item.subtotal)"></td>
+                                                                
+                                                                <!-- Action delete -->
+                                                                <td style="width: 40px; text-align: center;" class="py-2 px-3">
+                                                                    <button type="button" @click="removeBomRow(index)" class="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm mx-auto">
+                                                                        <svg class="w-3.5 h-3.5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path>
+                                                                        </svg>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                        <template x-if="items.length === 0">
+                                                            <tr>
+                                                                <td colspan="6" class="py-6 text-center text-xs text-slate-400">Belum ada bahan baku. Silakan klik "+ Tambah Bahan".</td>
+                                                            </tr>
+                                                        </template>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
 
