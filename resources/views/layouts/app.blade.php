@@ -16,6 +16,99 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            /* SweetAlert2 Theme Customization to match ClarityLabs (Navy, Slate, Orange) */
+            .swal2-custom-popup {
+                font-family: 'Outfit', sans-serif !important;
+                border-radius: 24px !important;
+                padding: 2rem !important;
+                border: 1px solid rgba(249, 115, 22, 0.15) !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3) !important;
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                transition: background-color 0.3s, color 0.3s;
+            }
+            .dark .swal2-custom-popup {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                border-color: rgba(255, 255, 255, 0.08) !important;
+            }
+            .swal2-custom-title {
+                font-size: 1.25rem !important;
+                font-weight: 900 !important;
+                color: #0f172a !important;
+            }
+            .dark .swal2-custom-title {
+                color: #ffffff !important;
+            }
+            .swal2-custom-text {
+                font-size: 0.875rem !important;
+                font-weight: 600 !important;
+                color: #475569 !important;
+            }
+            .dark .swal2-custom-text {
+                color: #94a3b8 !important;
+            }
+            .swal2-custom-confirm-btn {
+                font-size: 0.75rem !important;
+                font-weight: 800 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
+                padding: 0.75rem 1.75rem !important;
+                border-radius: 12px !important;
+                background-color: #f97316 !important;
+                color: #ffffff !important;
+                border: none !important;
+                box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2) !important;
+                transition: all 0.2s !important;
+            }
+            .swal2-custom-confirm-btn:hover {
+                background-color: #ea580c !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3) !important;
+            }
+            .swal2-custom-cancel-btn {
+                font-size: 0.75rem !important;
+                font-weight: 800 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
+                padding: 0.75rem 1.75rem !important;
+                border-radius: 12px !important;
+                background-color: #f1f5f9 !important;
+                color: #475569 !important;
+                border: 1px solid #e2e8f0 !important;
+                transition: all 0.2s !important;
+            }
+            .dark .swal2-custom-cancel-btn {
+                background-color: #1e293b !important;
+                color: #94a3b8 !important;
+                border-color: rgba(255, 255, 255, 0.05) !important;
+            }
+            .swal2-custom-cancel-btn:hover {
+                background-color: #e2e8f0 !important;
+            }
+            .dark .swal2-custom-cancel-btn:hover {
+                background-color: #334155 !important;
+            }
+            /* Toast Styles */
+            .swal2-custom-toast {
+                font-family: 'Outfit', sans-serif !important;
+                border-radius: 16px !important;
+                padding: 0.75rem 1.25rem !important;
+                border: 1px solid rgba(249, 115, 22, 0.15) !important;
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+            }
+            .dark .swal2-custom-toast {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                border-color: rgba(255, 255, 255, 0.08) !important;
+            }
+        </style>
+        
         <script>
             // Theme initialization
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -380,6 +473,99 @@
 
                 // Start polling shortly after load
                 setTimeout(() => { fetchLists(); setInterval(fetchLists, intervalMs); }, 1500);
+            })();
+        </script>
+        <script>
+            // Custom SweetAlert2 Interception & Toast notifications
+            (function() {
+                // Toast helper configuration
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    customClass: {
+                        popup: 'swal2-custom-toast'
+                    },
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                // Display success / error session flash messages
+                @if(session('success'))
+                    Toast.fire({
+                        icon: 'success',
+                        title: "{{ session('success') }}"
+                    });
+                @endif
+
+                @if(session('error'))
+                    Toast.fire({
+                        icon: 'error',
+                        title: "{{ session('error') }}"
+                    });
+                @endif
+                
+                @if(session('status'))
+                    Toast.fire({
+                        icon: 'info',
+                        title: "{{ session('status') }}"
+                    });
+                @endif
+
+                // Listen for form submissions to replace native confirm dialogs
+                document.addEventListener('submit', function(e) {
+                    const form = e.target;
+                    const onsubmitAttr = form.getAttribute('onsubmit');
+                    
+                    if (onsubmitAttr && onsubmitAttr.includes('confirm(')) {
+                        // Prevent the browser's default action and confirm dialog
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+
+                        // Try to extract the confirmation message
+                        let message = 'Apakah Anda yakin ingin melanjutkan tindakan ini?';
+                        const match = onsubmitAttr.match(/confirm\(['"](.*?)['"]\)/);
+                        if (match && match[1]) {
+                            message = match[1];
+                        }
+
+                        // Temporarily bypass the inline onsubmit handler
+                        const tempOnsubmit = form.onsubmit;
+                        form.removeAttribute('onsubmit');
+                        form.onsubmit = null;
+
+                        Swal.fire({
+                            title: 'Konfirmasi Tindakan',
+                            text: message,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#F97316',
+                            cancelButtonColor: '#475569',
+                            confirmButtonText: 'Ya, Lanjutkan',
+                            cancelButtonText: 'Batal',
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                title: 'swal2-custom-title',
+                                htmlContainer: 'swal2-custom-text',
+                                confirmButton: 'swal2-custom-confirm-btn',
+                                cancelButton: 'swal2-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            } else {
+                                // Restore original onsubmit handler if cancelled
+                                form.setAttribute('onsubmit', onsubmitAttr);
+                                form.onsubmit = tempOnsubmit;
+                            }
+                        });
+                    }
+                });
             })();
         </script>
     </body>
