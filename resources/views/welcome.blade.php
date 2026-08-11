@@ -97,6 +97,10 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            padding-bottom: 0.15em;
+            margin-bottom: -0.15em;
+            display: inline-block;
+            vertical-align: bottom;
         }
 
         .hero-title { font-size: 4rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; }
@@ -455,6 +459,23 @@
             </div>
             
             <div class="columns-1 md:columns-2 lg:columns-3 gap-8">
+                <!-- Testimonial Sajadah Aladin -->
+                <div class="pcard break-inside-avoid mb-8">
+                    <div class="mb-6 text-orange-500 opacity-40">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        “Jujur, sampai hari ini gue masih menyeimbangkan antara data dan intuisi saat mengambil keputusan bisnis. Gue lihat angka penjualan, performa produk, dan margin. Tapi feeling tetap punya peran karena data yang gue punya belum selalu bisa kasih jawaban yang jelas.<br><br>Yang paling sering bikin overthinking adalah menentukan apakah produk baru ini layak dilanjutkan atau nggak.<br><br>Beberapa kali gue juga pernah yakin sama keputusan sendiri, tapi hasil akhirnya ternyata jauh dari ekspektasi.<br><br>Makanya menurut gue, proses analisis yang lebih terstruktur itu penting. Bukan buat menghilangkan intuisi, tapi supaya setiap keputusan punya pijakan yang lebih jelas dan bisa dipertanggungjawabkan.”
+                    </p>
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-orange flex items-center justify-center text-white font-bold text-sm">MI</div>
+                        <div>
+                            <p class="font-extrabold text-gray-900 dark:text-white text-sm">Muhammad Fadhillah Irfan</p>
+                            <p class="text-[10px] text-orange-500 font-bold uppercase tracking-widest mt-0.5">Owner Sajadah Aladin</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Testimonial 1 -->
                 <div class="pcard break-inside-avoid mb-8">
                     <div class="mb-6 text-orange-500 opacity-40">

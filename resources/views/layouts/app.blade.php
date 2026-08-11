@@ -190,6 +190,10 @@
                 -webkit-background-clip: text;
                 background-clip: text;
                 color: transparent;
+                padding-bottom: 0.15em;
+                margin-bottom: -0.15em;
+                display: inline-block;
+                vertical-align: bottom;
             }
             
             .glass-nav {

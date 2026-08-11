@@ -196,6 +196,12 @@
                         activeSlide: 0,
                         slides: [
                             {
+                                text: 'Jujur, sampai hari ini gue masih menyeimbangkan antara data dan intuisi saat mengambil keputusan bisnis. Gue lihat angka penjualan, performa produk, dan margin. Tapi feeling tetap punya peran karena data yang gue punya belum selalu bisa kasih jawaban yang jelas.<br><br>Yang paling sering bikin overthinking adalah menentukan apakah produk baru ini layak dilanjutkan atau nggak.<br><br>Beberapa kali gue juga pernah yakin sama keputusan sendiri, tapi hasil akhirnya ternyata jauh dari ekspektasi.<br><br>Makanya menurut gue, proses analisis yang lebih terstruktur itu penting. Bukan buat menghilangkan intuisi, tapi supaya setiap keputusan punya pijakan yang lebih jelas dan bisa dipertanggungjawabkan.',
+                                name: 'Muhammad Fadhillah Irfan',
+                                role: 'Owner Sajadah Aladin',
+                                initial: 'MI'
+                            },
+                            {
                                 text: 'Menurut gue, sistem itu penting banget supaya kerjaan nggak bottleneck di owner.<br><br>Tanpa standar yang jelas, tim bakal terus nanya dan akhirnya semua tetap balik ke kita.',
                                 name: 'Lendra Radyan',
                                 role: 'Owner Auffan',
