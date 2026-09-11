@@ -26,15 +26,16 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
-        // Listen to user login and sync Scalev purchases (if configured)
+        // Listen to user login and sync Scalev purchases in background AFTER response is sent to browser
         Event::listen(Login::class, function ($event) {
-            // Resolve listener from container to allow dependency injection
-            try {
-                $listener = app(SyncScalevPurchases::class);
-                $listener->handle($event);
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning('Failed to dispatch SyncScalevPurchases: ' . $e->getMessage());
-            }
+            dispatch(function () use ($event) {
+                try {
+                    $listener = app(SyncScalevPurchases::class);
+                    $listener->handle($event);
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('Failed to dispatch SyncScalevPurchases: ' . $e->getMessage());
+                }
+            })->afterResponse();
         });
     }
 }
