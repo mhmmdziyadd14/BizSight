@@ -6,8 +6,9 @@ use Illuminate\Auth\Events\Login;
 use App\Services\ScalevClient;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SyncScalevPurchases
+class SyncScalevPurchases implements ShouldQueue
 {
     protected $client;
 

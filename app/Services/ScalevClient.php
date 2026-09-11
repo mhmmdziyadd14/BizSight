@@ -46,7 +46,7 @@ class ScalevClient
                     $query['last_id'] = $last_id;
                 }
 
-                $resp = Http::withHeaders($headers)->timeout(30)->get($url, $query);
+                $resp = Http::withHeaders($headers)->timeout(5)->get($url, $query);
 
                 if (! $resp->ok()) {
                     Log::warning("ScalevClient: Request failed on page {$pages_scanned} with status " . $resp->status());
@@ -77,7 +77,7 @@ class ScalevClient
                 if (!$uuid) continue;
 
                 $detailUrl = rtrim($this->base, '/') . '/v2/order/' . $uuid;
-                $detailResp = Http::withHeaders($headers)->timeout(15)->get($detailUrl);
+                $detailResp = Http::withHeaders($headers)->timeout(3)->get($detailUrl);
 
                 if ($detailResp->ok()) {
                     $detailJson = $detailResp->json();
