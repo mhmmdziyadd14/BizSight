@@ -557,6 +557,16 @@
             function calculateTotals() {
                 let totalMaterials = 0;
 
+                // Konversi satuan ke meter (untuk bahan berbasis panjang)
+                // Jika beli dalam yard → 1 yard = 0.9144 meter → volume efektif dalam meter lebih kecil → harga/meter lebih mahal
+                function getEffectiveVolumeInMeter(purchaseVolume, unit) {
+                    const u = (unit || '').toLowerCase().trim();
+                    if (u === 'yard') return purchaseVolume * 0.9144;  // 1 yard = 0.9144 m
+                    if (u === 'cm')   return purchaseVolume / 100;      // 1 cm   = 0.01 m
+                    // meter, m, roll, pcs, buah, gr, kg, ml, l → gunakan apa adanya
+                    return purchaseVolume;
+                }
+
                 document.querySelectorAll('.material-row').forEach((row, rowIdx) => {
                     const select = row.querySelector('.material-color-select');
                     const usage = parseFloat(row.querySelector('.usage-input').value) || 0;
@@ -564,7 +574,11 @@
 
                     const price = parseFloat(selected?.dataset.price || 0) || 0;
                     const purchaseVolume = parseFloat(selected?.dataset.purchaseVolume || 0) || 0;
-                    const materialUnitPrice = purchaseVolume > 0 ? (price / purchaseVolume) : 0;
+                    const unit = selected?.getAttribute('data-unit') || selected?.dataset.unit || '';
+
+                    // Hitung volume efektif dalam satuan standar (meter untuk bahan kain)
+                    const effectiveVolume = getEffectiveVolumeInMeter(purchaseVolume, unit);
+                    const materialUnitPrice = effectiveVolume > 0 ? (price / effectiveVolume) : 0;
                     const unitPrice = materialUnitPrice * usage;
 
                     const priceEl = row.querySelector('.price-display');
@@ -578,6 +592,7 @@
                     if (unitPriceEl) unitPriceEl.innerText = formatRupiah(unitPrice);
 
                     totalMaterials += unitPrice;
+
                 });
 
                 let totalFees = 0;
