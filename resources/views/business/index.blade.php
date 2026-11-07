@@ -386,20 +386,22 @@
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">HPP (Rp)</label>
-                                        <div class="relative">
-                                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
+                                        <div class="flex items-center border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl px-3.5 py-0.5 focus-within:border-orange-400 focus-within:ring focus-within:ring-orange-200 transition-all input-focus-ring">
+                                            <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-2">Rp</span>
                                             <input type="number" name="hpp" required onfocus="this.select()"
-                                                class="w-full pl-12 pr-4 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
+                                                style="border: none !important; outline: none !important; box-shadow: none !important;"
                                                 value="" placeholder="85000">
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga modal per produk.</p>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Selling (Rp)</label>
-                                        <div class="relative">
-                                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
+                                        <div class="flex items-center border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl px-3.5 py-0.5 focus-within:border-orange-400 focus-within:ring focus-within:ring-orange-200 transition-all input-focus-ring">
+                                            <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-2">Rp</span>
                                             <input type="number" name="selling_price" required onfocus="this.select()"
-                                                class="w-full pl-12 pr-4 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
+                                                style="border: none !important; outline: none !important; box-shadow: none !important;"
                                                 value="" placeholder="175000">
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga jual ke konsumen.</p>
@@ -505,10 +507,11 @@
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Monthly Revenue (Rp)</label>
-                                        <div class="relative">
-                                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
+                                        <div class="flex items-center border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl px-3.5 py-0.5 focus-within:border-orange-400 focus-within:ring focus-within:ring-orange-200 transition-all input-focus-ring">
+                                            <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-2">Rp</span>
                                             <input type="number" name="monthly_revenue" step="10000" min="0" onfocus="this.select()"
-                                                class="w-full pl-12 pr-4 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
+                                                style="border: none !important; outline: none !important; box-shadow: none !important;"
                                                 value="" placeholder="0">
                                         </div>
                                     </div>

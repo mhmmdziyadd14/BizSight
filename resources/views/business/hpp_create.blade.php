@@ -433,10 +433,11 @@
                                         <label class="text-xs font-black text-navy-900 dark:text-white uppercase tracking-widest">HPP Pokok dari Vendor / Konveksi (Per Unit)</label>
                                     </div>
                                     <p class="text-[11px] text-gray-600 dark:text-gray-300 mb-4 ml-10">Masukkan modal per unit yang sudah Anda dapatkan langsung dari vendor (misal makloon/jahit putus). Tidak perlu merinci potongan bahan jika sudah beli jadi.</p>
-                                    <div class="relative max-w-md ml-10">
-                                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 text-sm font-bold select-none">Rp</span>
+                                    <div class="max-w-md ml-10 flex items-center rounded-2xl bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/30 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-1">
+                                        <span class="text-sm font-black text-orange-500 select-none shrink-0 mr-3">Rp</span>
                                         <input type="number" name="manual_hpp" id="manualHppInput"
-                                            class="w-full pl-14 pr-4 bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/30 rounded-xl py-3.5 text-lg font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all shadow-sm"
+                                            class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 text-lg font-black text-navy-800 dark:text-white py-2"
+                                            style="border: none !important; outline: none !important; box-shadow: none !important;"
                                             value="{{ old('manual_hpp') }}" min="0" placeholder="0" onfocus="this.select()">
                                     </div>
                                 </div>
@@ -448,10 +449,11 @@
                                         <div class="grid grid-cols-1 gap-5">
                                             <div>
                                                 <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Branding</label>
-                                                <div class="relative">
-                                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
+                                                <div class="flex items-center rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
+                                                    <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-3">Rp</span>
                                                     <input type="number" name="branding_fee" id="brandingFeeInput"
-                                                        class="fee-input w-full pl-14 pr-4 bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
+                                                        class="fee-input w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 text-sm font-bold text-navy-800 dark:text-white py-2.5"
+                                                        style="border: none !important; outline: none !important; box-shadow: none !important;"
                                                         value="{{ old('branding_fee', old('screen_printing_fee')) }}" min="0" placeholder="0" onfocus="this.select()">
                                                     <input type="hidden" name="screen_printing_fee" id="screenPrintingFeeHidden" value="0">
                                                     <input type="hidden" name="sewing_fee" id="sewingFeeHidden" value="0">

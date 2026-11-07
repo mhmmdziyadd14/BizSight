@@ -246,10 +246,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div>
                                 <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Harga Pembelian</label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 font-bold text-xs select-none">Rp</span>
+                                <div class="flex items-center bg-gray-50 dark:bg-navy-950 border border-orange-100 dark:border-white/5 rounded-xl px-4 py-0.5 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
+                                    <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-2">Rp</span>
                                     <input type="number" name="price" value="{{ old('price') }}" min="0" step="0.01" required placeholder="0" onfocus="this.select()"
-                                        class="w-full pl-12 pr-4 bg-gray-50 dark:bg-navy-950 border border-orange-100 dark:border-white/5 rounded-xl py-3 text-sm font-bold text-navy-800 dark:text-white input-focus-ring transition-all">
+                                        class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-bold text-navy-800 dark:text-white"
+                                        style="border: none !important; outline: none !important; box-shadow: none !important;">
                                 </div>
                             </div>
                             <div>
