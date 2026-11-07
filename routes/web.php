@@ -75,6 +75,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/materials/{id}', [\App\Http\Controllers\MaterialController::class, 'update'])->name('materials.update');
         Route::post('/materials', [\App\Http\Controllers\MaterialController::class, 'store'])->name('materials.store');
         Route::delete('/materials/{id}', [\App\Http\Controllers\MaterialController::class, 'destroy'])->name('materials.destroy');
+
+        // Lightweight polling API endpoints for realtime UI updates
+        Route::get('/api/hpp/list', [BusinessController::class, 'apiHppList'])->name('api.hpp.list');
+        Route::get('/api/materials/list', [BusinessController::class, 'apiMaterialsList'])->name('api.materials.list');
+        Route::get('/api/materials/grouped', [BusinessController::class, 'apiMaterialsByName'])->name('api.materials.grouped');
     });
 
     // --- FITUR DECISION ENGINE (DE) ---
@@ -97,11 +102,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/download-template', function () {
             return response()->json(['status' => 'success', 'message' => 'Resource siap']);
         })->name('download.template');
-
-            // Lightweight polling API endpoints for realtime UI updates
-            Route::get('/api/hpp/list', [BusinessController::class, 'apiHppList'])->name('api.hpp.list');
-            Route::get('/api/materials/list', [BusinessController::class, 'apiMaterialsList'])->name('api.materials.list');
-            Route::get('/api/materials/grouped', [BusinessController::class, 'apiMaterialsByName'])->name('api.materials.grouped');
     });
 
     // Profile

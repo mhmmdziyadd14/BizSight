@@ -421,6 +421,15 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+            try {
+                localStorage.setItem('materials_updated_at', Date.now());
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ action: 'material_added' }, '*');
+                }
+            } catch (err) {}
+            @endif
+
             const materialNameInput = document.getElementById('materialNameInput');
             const materialNameSelect = document.getElementById('materialNameSelect');
             const materialNameValue = document.getElementById('materialNameValue');
@@ -514,6 +523,9 @@
                     sessionStorage.removeItem('hpp_bahan_draft_v1');
                     try {
                         localStorage.setItem('materials_updated_at', Date.now());
+                        if (window.parent && window.parent !== window) {
+                            window.parent.postMessage({ action: 'material_added' }, '*');
+                        }
                     } catch (err) {}
                 });
 

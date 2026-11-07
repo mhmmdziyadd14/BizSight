@@ -92,12 +92,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Only load if src is empty or not yet set to data-src
                 if (!currentSrc || currentSrc === '' || currentSrc === window.location.href) {
                     iframe.setAttribute('src', dataSrc);
+                } else if (tabId === 'tab-profit') {
+                    // Jika iframe Profit Count sudah ter-load, trigger sinkronisasi bahan seketika
+                    try {
+                        if (iframe.contentWindow && iframe.contentWindow.fetchAndSyncMaterials) {
+                            iframe.contentWindow.fetchAndSyncMaterials();
+                        } else if (iframe.contentWindow) {
+                            iframe.contentWindow.postMessage({ action: 'sync_materials' }, '*');
+                        }
+                    } catch(e) {}
                 }
             }
         }
 
         try { sessionStorage.setItem('hpp_active_tab', tabId); } catch(e) {}
     }
+
+    // Listen to material added message from child iframes
+    window.addEventListener('message', function(e) {
+        if (e.data && (e.data.action === 'material_added' || e.data.action === 'sync_materials')) {
+            var profitFrame = document.getElementById('profit-iframe');
+            if (profitFrame && profitFrame.contentWindow) {
+                try {
+                    if (profitFrame.contentWindow.fetchAndSyncMaterials) {
+                        profitFrame.contentWindow.fetchAndSyncMaterials();
+                    } else {
+                        profitFrame.contentWindow.postMessage({ action: 'sync_materials' }, '*');
+                    }
+                } catch(err) {}
+            }
+        }
+    });
 
     // Attach click handlers
     document.querySelectorAll('#hppTabNav .hpp-tab').forEach(function(btn) {

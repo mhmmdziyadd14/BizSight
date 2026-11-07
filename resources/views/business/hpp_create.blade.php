@@ -1428,15 +1428,16 @@
                 icons.forEach(i => i.classList.add('animate-spin'));
 
                 try {
-                    const res = await fetch('/api/materials/grouped', {
+                    const res = await fetch('/api/materials/grouped?_t=' + Date.now(), {
+                        cache: 'no-store',
                         headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     });
-                    if (!res.ok) throw new Error('Network response error');
+                    if (!res.ok) throw new Error('Network response error: ' + res.status);
                     const json = await res.json();
 
                     if (json && json.success && Array.isArray(json.data)) {
-                        const newSignature = JSON.stringify(json.data.map(m => ({ n: m.name, c: m.colors.length })));
-                        const oldSignature = JSON.stringify(currentMaterialsData.map(m => ({ n: m.name, c: m.colors.length })));
+                        const newSignature = JSON.stringify(json.data);
+                        const oldSignature = JSON.stringify(currentMaterialsData);
 
                         if (newSignature !== oldSignature || showToast) {
                             currentMaterialsData = json.data;
@@ -1464,6 +1465,16 @@
                 }
             }
 
+            // Expose globally so parent iframe can call it directly
+            window.fetchAndSyncMaterials = fetchAndSyncMaterials;
+
+            // Listen to postMessage from parent or sibling tabs
+            window.addEventListener('message', (e) => {
+                if (e.data && (e.data.action === 'sync_materials' || e.data.action === 'material_added')) {
+                    fetchAndSyncMaterials(false);
+                }
+            });
+
             // Tombol Sinkron Manual
             document.querySelectorAll('.btn-sync-materials').forEach(btn => {
                 btn.addEventListener('click', () => fetchAndSyncMaterials(true));
@@ -1482,8 +1493,8 @@
                 }
             });
 
-            // Polling background setiap 4 detik untuk memastikan bahan baru selalu tersedia
-            setInterval(fetchAndSyncMaterials, 4000);
+            // Polling background setiap 3 detik untuk memastikan bahan baru selalu tersedia
+            setInterval(fetchAndSyncMaterials, 3000);
         });
     </script>
 </x-app-layout>

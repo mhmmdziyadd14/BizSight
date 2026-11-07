@@ -202,7 +202,10 @@ class BusinessController extends Controller
             ];
         })->values();
 
-        return response()->json(['success' => true, 'data' => $materialsByName]);
+        return response()->json(['success' => true, 'data' => $materialsByName])
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     /**
