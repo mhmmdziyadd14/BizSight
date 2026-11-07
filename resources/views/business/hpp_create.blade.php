@@ -403,37 +403,62 @@
 
                             <!-- Summary & Pricing Section -->
                             <div class="border-t border-gray-100 dark:border-white/5 px-8 py-8 bg-gray-50 dark:bg-navy-950/50 transition-colors">
-                                <div class="flex items-center gap-3 mb-8">
+                                <div class="flex items-center gap-3 mb-6">
                                     <div class="w-8 h-8 bg-navy-900 dark:bg-orange-500 rounded-lg flex items-center justify-center shadow-md">
                                         <span class="text-white text-xs font-bold">04</span>
                                     </div>
                                     <h3 class="text-sm font-black text-navy-800 dark:text-white uppercase tracking-widest">Perhitungan HPP & Harga Jual</h3>
                                 </div>
 
+                                <!-- Mode Selection: Dari Perhitungan Bahan vs HPP Manual Vendor -->
+                                <div class="mb-8">
+                                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em] block mb-3">Pilih Sumber / Metode HPP</label>
+                                    <div class="p-1.5 bg-gray-200/70 dark:bg-navy-950 rounded-2xl inline-flex flex-col sm:flex-row items-center gap-1.5 w-full sm:w-auto border border-gray-200 dark:border-white/5 shadow-inner">
+                                        <button type="button" id="btnModeCalculated" class="hpp-calc-mode-btn w-full sm:w-auto py-2.5 px-5 rounded-xl text-xs font-black uppercase tracking-wider transition-all bg-white dark:bg-navy-900 text-orange-600 dark:text-orange-400 shadow-sm flex items-center justify-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                            <span>1. Hitung Otomatis dari Bahan</span>
+                                        </button>
+                                        <button type="button" id="btnModeManual" class="hpp-calc-mode-btn w-full sm:w-auto py-2.5 px-5 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-gray-500 hover:text-navy-900 dark:hover:text-white flex items-center justify-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            <span>2. HPP Sudah Ada (Vendor / Jahit)</span>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="calculation_type" id="calculationTypeInput" value="calculated">
+                                </div>
+
+                                <!-- Box Input HPP Manual (Tampil jika mode manual aktif) -->
+                                <div id="manualHppContainer" class="hidden mb-8 bg-orange-500/10 dark:bg-orange-500/15 p-6 rounded-3xl border border-orange-500/30 transition-all">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-7 h-7 rounded-xl bg-orange-500 text-white flex items-center justify-center font-black text-xs shadow-md">Rp</div>
+                                        <label class="text-xs font-black text-navy-900 dark:text-white uppercase tracking-widest">HPP Pokok dari Vendor / Konveksi (Per Unit)</label>
+                                    </div>
+                                    <p class="text-[11px] text-gray-600 dark:text-gray-300 mb-4 ml-10">Masukkan modal per unit yang sudah Anda dapatkan langsung dari vendor (misal makloon/jahit putus). Tidak perlu merinci potongan bahan jika sudah beli jadi.</p>
+                                    <div class="relative max-w-md ml-10">
+                                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 text-sm font-bold">Rp</span>
+                                        <input type="number" name="manual_hpp" id="manualHppInput"
+                                            class="w-full pl-12 bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/30 rounded-xl px-4 py-3.5 text-lg font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all shadow-sm"
+                                            value="{{ old('manual_hpp', 0) }}" min="0" placeholder="0">
+                                    </div>
+                                </div>
+
                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                                     <!-- Fees Breakdown -->
                                     <div class="space-y-6">
                                         <h4 class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em] mb-4">Operational Costs (Per Unit)</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div class="grid grid-cols-1 gap-5">
                                             <div>
-                                                <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Jasa Sablon</label>
+                                                <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Branding</label>
                                                 <div class="relative">
                                                     <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 text-xs font-bold">Rp</span>
-                                                    <input type="number" name="screen_printing_fee"
+                                                    <input type="number" name="branding_fee" id="brandingFeeInput"
                                                         class="fee-input w-full pl-10 bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
-                                                        value="{{ old('screen_printing_fee', 0) }}" min="0" placeholder="0">
+                                                        value="{{ old('branding_fee', old('screen_printing_fee', 0)) }}" min="0" placeholder="0">
+                                                    <input type="hidden" name="screen_printing_fee" id="screenPrintingFeeHidden" value="0">
+                                                    <input type="hidden" name="sewing_fee" id="sewingFeeHidden" value="0">
                                                 </div>
+                                                <p class="text-[9px] text-gray-400 mt-1.5 ml-1">Mencakup sablon, bordir, label woven, hangtag, packaging, dll.</p>
                                             </div>
-                                            <div>
-                                                <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Jasa Jahit</label>
-                                                <div class="relative">
-                                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 text-xs font-bold">Rp</span>
-                                                    <input type="number" name="sewing_fee"
-                                                        class="fee-input w-full pl-10 bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
-                                                        value="{{ old('sewing_fee', 0) }}" min="0" placeholder="0">
-                                                </div>
-                                            </div>
-                                            <div class="md:col-span-2 mt-4 border-t border-gray-100 dark:border-white/5 pt-6">
+                                            <div class="mt-4 border-t border-gray-100 dark:border-white/5 pt-6">
                                                 <div class="flex items-center gap-2 mb-2">
                                                     <div class="w-5 h-5 bg-navy-800 dark:bg-gray-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold">2</div>
                                                     <label class="text-xs font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest">OVERHEAD INTELLIGENCE</label>
@@ -494,7 +519,7 @@
                                         
                                         <div class="pt-6 border-t border-gray-100 dark:border-white/5 grid grid-cols-2 gap-4">
                                             <div>
-                                                <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Bahan Baku</p>
+                                                <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1" id="baseCostLabel">Bahan Baku</p>
                                                 <p class="text-base font-bold text-navy-900 dark:text-white" id="totalMaterialDisplay">Rp 0</p>
                                             </div>
                                             <div>
@@ -559,6 +584,64 @@
             }
 
             // =============================================
+            // Calculation Mode (Hitung dari Bahan vs HPP Manual Vendor)
+            // =============================================
+            const btnModeCalculated = document.getElementById('btnModeCalculated');
+            const btnModeManual = document.getElementById('btnModeManual');
+            const calculationTypeInput = document.getElementById('calculationTypeInput');
+            const manualHppContainer = document.getElementById('manualHppContainer');
+            const manualHppInput = document.getElementById('manualHppInput');
+            const brandingFeeInput = document.getElementById('brandingFeeInput');
+            const baseCostLabel = document.getElementById('baseCostLabel');
+
+            function setCalculationMode(mode) {
+                if (!calculationTypeInput) return;
+                calculationTypeInput.value = mode;
+
+                if (mode === 'manual') {
+                    if (btnModeManual) {
+                        btnModeManual.className = 'hpp-calc-mode-btn w-full sm:w-auto py-2.5 px-5 rounded-xl text-xs font-black uppercase tracking-wider transition-all bg-white dark:bg-navy-900 text-orange-600 dark:text-orange-400 shadow-sm flex items-center justify-center gap-2';
+                    }
+                    if (btnModeCalculated) {
+                        btnModeCalculated.className = 'hpp-calc-mode-btn w-full sm:w-auto py-2.5 px-5 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-gray-500 hover:text-navy-900 dark:hover:text-white flex items-center justify-center gap-2';
+                    }
+                    if (manualHppContainer) {
+                        manualHppContainer.classList.remove('hidden');
+                    }
+                    if (baseCostLabel) {
+                        baseCostLabel.innerText = 'HPP Vendor (Manual)';
+                    }
+                } else {
+                    if (btnModeCalculated) {
+                        btnModeCalculated.className = 'hpp-calc-mode-btn w-full sm:w-auto py-2.5 px-5 rounded-xl text-xs font-black uppercase tracking-wider transition-all bg-white dark:bg-navy-900 text-orange-600 dark:text-orange-400 shadow-sm flex items-center justify-center gap-2';
+                    }
+                    if (btnModeManual) {
+                        btnModeManual.className = 'hpp-calc-mode-btn w-full sm:w-auto py-2.5 px-5 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-gray-500 hover:text-navy-900 dark:hover:text-white flex items-center justify-center gap-2';
+                    }
+                    if (manualHppContainer) {
+                        manualHppContainer.classList.add('hidden');
+                    }
+                    if (baseCostLabel) {
+                        baseCostLabel.innerText = 'Bahan Baku';
+                    }
+                }
+                calculateTotals();
+            }
+
+            if (btnModeCalculated) {
+                btnModeCalculated.addEventListener('click', () => setCalculationMode('calculated'));
+            }
+            if (btnModeManual) {
+                btnModeManual.addEventListener('click', () => setCalculationMode('manual'));
+            }
+            if (manualHppInput) {
+                manualHppInput.addEventListener('input', calculateTotals);
+            }
+            if (brandingFeeInput) {
+                brandingFeeInput.addEventListener('input', calculateTotals);
+            }
+
+            // =============================================
             // Section 03 — Komponen Material (Bahan Baku)
             // =============================================
             const tableBody = document.querySelector('#materialsTable tbody');
@@ -598,16 +681,29 @@
                     totalMaterials += unitPrice;
                 });
 
-                let totalFees = 0;
-                
-                const sablonFee = parseFloat(document.querySelector('input[name="screen_printing_fee"]').value) || 0;
-                const sewingFee = parseFloat(document.querySelector('input[name="sewing_fee"]').value) || 0;
-                const baseHpp = totalMaterials + sablonFee + sewingFee;
+                const calcType = calculationTypeInput ? calculationTypeInput.value : 'calculated';
+                const isManual = (calcType === 'manual');
+                let baseCost = 0;
+
+                if (isManual) {
+                    baseCost = parseFloat(manualHppInput?.value) || 0;
+                } else {
+                    baseCost = totalMaterials;
+                }
+
+                const brandingFee = parseFloat(brandingFeeInput?.value) || 0;
+                const screenPrintingFeeHidden = document.getElementById('screenPrintingFeeHidden');
+                const sewingFeeHidden = document.getElementById('sewingFeeHidden');
+                if (screenPrintingFeeHidden) screenPrintingFeeHidden.value = brandingFee;
+                if (sewingFeeHidden) sewingFeeHidden.value = 0;
+
+                const baseHpp = baseCost + brandingFee;
                 
                 const overheadPctInput = document.getElementById('overheadPctInput');
+                let overheadAmount = 0;
                 if (overheadPctInput) {
                     const overheadPct = parseFloat(overheadPctInput.value) || 0;
-                    const overheadAmount = baseHpp * overheadPct;
+                    overheadAmount = baseHpp * overheadPct;
                     const overheadInput = document.getElementById('overheadInput');
                     if (overheadInput) overheadInput.value = overheadAmount;
                     
@@ -618,18 +714,14 @@
                     if (overheadDetail) overheadDetail.innerText = `(${(overheadPct * 100)}% × ${formatRupiah(baseHpp)})`;
                 }
 
-                feeInputs.forEach(input => { totalFees += parseFloat(input.value) || 0; });
-
-                const grandTotal = totalMaterials + totalFees;
+                const grandTotal = baseCost + brandingFee + overheadAmount;
 
                 const totalMaterialDisplay = document.getElementById('totalMaterialDisplay');
-                // const totalHppCalculatedDisplay = document.getElementById('totalHppCalculatedDisplay'); // Removed as per new layout structure
                 const targetMarginInput = document.getElementById('targetMarginInput');
                 const targetMarginAmountDisplay = document.getElementById('targetMarginAmountDisplay');
                 const finalPriceDisplay = document.getElementById('finalPriceDisplay');
 
-                if (totalMaterialDisplay) totalMaterialDisplay.innerText = formatRupiah(totalMaterials);
-                // if (totalHppCalculatedDisplay) totalHppCalculatedDisplay.innerText = formatRupiah(grandTotal);
+                if (totalMaterialDisplay) totalMaterialDisplay.innerText = formatRupiah(baseCost);
 
                 const targetMarginPercent = parseFloat(targetMarginInput?.value || 50) / 100;
                 let targetMarginAmount = 0;
@@ -654,7 +746,6 @@
 
                 if (totalHppDisplay) totalHppDisplay.innerText = formatRupiah(grandTotal);
             }
-
             function syncRow(row) {
                 const colorSelect = row.querySelector('.material-color-select');
                 const selected = colorSelect.selectedOptions[0];
@@ -1119,8 +1210,11 @@
                         hpp_id: document.querySelector('input[name="hpp_id"]')?.value || '',
                         name: document.querySelector('input[name="name"]')?.value || '',
                         category: document.querySelector('select[name="category"]')?.value || '',
-                        screen_printing_fee: document.querySelector('input[name="screen_printing_fee"]')?.value || '',
-                        sewing_fee: document.querySelector('input[name="sewing_fee"]')?.value || '',
+                        calculation_type: document.getElementById('calculationTypeInput')?.value || 'calculated',
+                        manual_hpp: document.getElementById('manualHppInput')?.value || '',
+                        branding_fee: document.getElementById('brandingFeeInput')?.value || '',
+                        screen_printing_fee: document.getElementById('screenPrintingFeeHidden')?.value || '',
+                        sewing_fee: document.getElementById('sewingFeeHidden')?.value || '0',
                         overhead_pct: document.getElementById('overheadPctInput')?.value || '0.25',
                         target_margin: document.getElementById('targetMarginInput')?.value || '50',
                         cards: [],
@@ -1229,6 +1323,15 @@
                     if (!hasMeaningfulData) return;
 
                     // 1. Basic Fields
+                    if (data.calculation_type) {
+                        setCalculationMode(data.calculation_type);
+                    }
+                    if (data.manual_hpp && document.getElementById('manualHppInput')) {
+                        document.getElementById('manualHppInput').value = data.manual_hpp;
+                    }
+                    if (data.branding_fee && document.getElementById('brandingFeeInput')) {
+                        document.getElementById('brandingFeeInput').value = data.branding_fee;
+                    }
                     if (data.hpp_id && document.querySelector('input[name="hpp_id"]')) {
                         document.querySelector('input[name="hpp_id"]').value = data.hpp_id;
                     }
@@ -1238,11 +1341,10 @@
                     if (data.category && document.querySelector('select[name="category"]')) {
                         document.querySelector('select[name="category"]').value = data.category;
                     }
-                    if (data.screen_printing_fee && document.querySelector('input[name="screen_printing_fee"]')) {
-                        document.querySelector('input[name="screen_printing_fee"]').value = data.screen_printing_fee;
-                    }
-                    if (data.sewing_fee && document.querySelector('input[name="sewing_fee"]')) {
-                        document.querySelector('input[name="sewing_fee"]').value = data.sewing_fee;
+                    if (data.branding_fee && document.querySelector('input[name="branding_fee"]')) {
+                        document.querySelector('input[name="branding_fee"]').value = data.branding_fee;
+                    } else if (data.screen_printing_fee && document.querySelector('input[name="branding_fee"]')) {
+                        document.querySelector('input[name="branding_fee"]').value = data.screen_printing_fee;
                     }
                     if (data.target_margin && document.getElementById('targetMarginInput')) {
                         document.getElementById('targetMarginInput').value = data.target_margin;

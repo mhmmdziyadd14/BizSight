@@ -11,6 +11,7 @@ class HppCalculation extends Model
 
     protected $fillable = [
         'user_id', 'hpp_id', 'name', 'category',
+        'calculation_type', 'manual_hpp', 'branding_fee',
         'total_raw_material_cost', 'screen_printing_fee',
         'sewing_fee', 'other_fees', 'total_hpp_per_unit',
         'target_selling_price', 'printed_at',
