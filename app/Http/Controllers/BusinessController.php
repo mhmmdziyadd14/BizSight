@@ -220,7 +220,9 @@ class BusinessController extends Controller
                         'id' => $material->id,
                         'color' => $material->color,
                         'price' => $material->price,
-                        'purchase_volume' => $material->purchase_volume
+                        'purchase_volume' => $material->purchase_volume,
+                        'unit' => $material->unit,
+                        'type' => $material->type,
                     ];
                 })->toArray()
             ];
@@ -528,7 +530,9 @@ class BusinessController extends Controller
                         'id' => $material->id,
                         'color' => $material->color,
                         'price' => $material->price,
-                        'purchase_volume' => $material->purchase_volume
+                        'purchase_volume' => $material->purchase_volume,
+                        'unit' => $material->unit,
+                        'type' => $material->type,
                     ];
                 })->toArray()
             ];

@@ -507,11 +507,78 @@
                 }
             });
 
-            const form = document.querySelector('form');
+            const form = document.querySelector('form[action*="materials"]');
             if (form && materialNameInput && materialNameValue) {
                 form.addEventListener('submit', function(e) {
                     materialNameValue.value = materialNameInput.value.trim();
+                    sessionStorage.removeItem('hpp_bahan_draft_v1');
                 });
+
+                // Auto-save & Restore form bahan (tidak hilang saat pindah halaman kecuali di-refresh)
+                const BAHAN_DRAFT_KEY = 'hpp_bahan_draft_v1';
+
+                function isPageReloaded() {
+                    try {
+                        const nav = performance.getEntriesByType('navigation');
+                        if (nav && nav.length > 0) return nav[0].type === 'reload';
+                        return window.performance && window.performance.navigation && window.performance.navigation.type === 1;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+
+                function saveBahanDraft() {
+                    try {
+                        const data = {
+                            purchase_date: form.querySelector('input[name="purchase_date"]')?.value || '',
+                            type: form.querySelector('select[name="type"]')?.value || '',
+                            name: materialNameInput.value || '',
+                            color: form.querySelector('input[name="color"]')?.value || '',
+                            price: form.querySelector('input[name="price"]')?.value || '',
+                            purchase_volume: form.querySelector('input[name="purchase_volume"]')?.value || '',
+                            unit: form.querySelector('select[name="unit"]')?.value || ''
+                        };
+                        sessionStorage.setItem(BAHAN_DRAFT_KEY, JSON.stringify(data));
+                    } catch (e) {}
+                }
+
+                let saveBahanTimeout = null;
+                form.addEventListener('input', () => {
+                    clearTimeout(saveBahanTimeout);
+                    saveBahanTimeout = setTimeout(saveBahanDraft, 400);
+                });
+                form.addEventListener('change', () => {
+                    clearTimeout(saveBahanTimeout);
+                    saveBahanTimeout = setTimeout(saveBahanDraft, 400);
+                });
+
+                function restoreBahanDraft() {
+                    if (isPageReloaded()) {
+                        sessionStorage.removeItem(BAHAN_DRAFT_KEY);
+                        return;
+                    }
+
+                    const raw = sessionStorage.getItem(BAHAN_DRAFT_KEY);
+                    if (!raw) return;
+
+                    try {
+                        const data = JSON.parse(raw);
+                        if (data.name || data.color || data.price || data.type) {
+                            if (data.purchase_date && form.querySelector('input[name="purchase_date"]')) form.querySelector('input[name="purchase_date"]').value = data.purchase_date;
+                            if (data.type && form.querySelector('select[name="type"]')) form.querySelector('select[name="type"]').value = data.type;
+                            if (data.name) {
+                                materialNameInput.value = data.name;
+                                materialNameValue.value = data.name;
+                            }
+                            if (data.color && form.querySelector('input[name="color"]')) form.querySelector('input[name="color"]').value = data.color;
+                            if (data.price && form.querySelector('input[name="price"]')) form.querySelector('input[name="price"]').value = data.price;
+                            if (data.purchase_volume && form.querySelector('input[name="purchase_volume"]')) form.querySelector('input[name="purchase_volume"]').value = data.purchase_volume;
+                            if (data.unit && form.querySelector('select[name="unit"]')) form.querySelector('select[name="unit"]').value = data.unit;
+                        }
+                    } catch (e) {}
+                }
+
+                restoreBahanDraft();
             }
 
             // Real-time Material Search & Filtering

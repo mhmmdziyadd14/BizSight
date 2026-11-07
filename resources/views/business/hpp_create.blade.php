@@ -117,6 +117,7 @@
                                         <select id="converterFromUnit"
                                             class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
                                             <option value="meter">Meter</option>
+                                            <option value="yard">Yard</option>
                                             <option value="cm">Sentimeter</option>
                                             <option value="kg">Kilogram</option>
                                             <option value="gr">Gram</option>
@@ -128,8 +129,9 @@
                                         <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-2 ml-1">Ke Satuan</label>
                                         <select id="converterToUnit"
                                             class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                            <option value="cm">Sentimeter</option>
+                                            <option value="yard">Yard</option>
                                             <option value="meter">Meter</option>
+                                            <option value="cm">Sentimeter</option>
                                             <option value="gr">Gram</option>
                                             <option value="kg">Kilogram</option>
                                             <option value="mL">Mililiter</option>
@@ -557,16 +559,6 @@
             function calculateTotals() {
                 let totalMaterials = 0;
 
-                // Konversi satuan ke meter (untuk bahan berbasis panjang)
-                // Jika beli dalam yard → 1 yard = 0.9144 meter → volume efektif dalam meter lebih kecil → harga/meter lebih mahal
-                function getEffectiveVolumeInMeter(purchaseVolume, unit) {
-                    const u = (unit || '').toLowerCase().trim();
-                    if (u === 'yard') return purchaseVolume * 0.9144;  // 1 yard = 0.9144 m
-                    if (u === 'cm')   return purchaseVolume / 100;      // 1 cm   = 0.01 m
-                    // meter, m, roll, pcs, buah, gr, kg, ml, l → gunakan apa adanya
-                    return purchaseVolume;
-                }
-
                 document.querySelectorAll('.material-row').forEach((row, rowIdx) => {
                     const select = row.querySelector('.material-color-select');
                     const usage = parseFloat(row.querySelector('.usage-input').value) || 0;
@@ -574,11 +566,7 @@
 
                     const price = parseFloat(selected?.dataset.price || 0) || 0;
                     const purchaseVolume = parseFloat(selected?.dataset.purchaseVolume || 0) || 0;
-                    const unit = selected?.getAttribute('data-unit') || selected?.dataset.unit || '';
-
-                    // Hitung volume efektif dalam satuan standar (meter untuk bahan kain)
-                    const effectiveVolume = getEffectiveVolumeInMeter(purchaseVolume, unit);
-                    const materialUnitPrice = effectiveVolume > 0 ? (price / effectiveVolume) : 0;
+                    const materialUnitPrice = purchaseVolume > 0 ? (price / purchaseVolume) : 0;
                     const unitPrice = materialUnitPrice * usage;
 
                     const priceEl = row.querySelector('.price-display');
@@ -592,7 +580,6 @@
                     if (unitPriceEl) unitPriceEl.innerText = formatRupiah(unitPrice);
 
                     totalMaterials += unitPrice;
-
                 });
 
                 let totalFees = 0;
@@ -699,13 +686,21 @@
                                 const option = document.createElement('option');
                                 option.value = colorItem.id;
                                 option.textContent = colorItem.color ? colorItem.color : 'Tanpa Warna';
-                                option.setAttribute('data-type', materialData.type);
-                                option.setAttribute('data-color', colorItem.color || 'Tanpa Warna');
-                                option.setAttribute('data-unit', materialData.unit);
-                                option.setAttribute('data-price', colorItem.price);
                                 
-                                const volumeToSet = materialData.purchase_volume || colorItem.purchase_volume || 1;
-                                option.setAttribute('data-purchase-volume', volumeToSet);
+                                const typeVal = colorItem.type || materialData.type || '-';
+                                const unitVal = colorItem.unit || materialData.unit || '-';
+                                const volumeVal = colorItem.purchase_volume || materialData.purchase_volume || 1;
+
+                                option.setAttribute('data-type', typeVal);
+                                option.dataset.type = typeVal;
+                                option.setAttribute('data-color', colorItem.color || 'Tanpa Warna');
+                                option.dataset.color = colorItem.color || 'Tanpa Warna';
+                                option.setAttribute('data-unit', unitVal);
+                                option.dataset.unit = unitVal;
+                                option.setAttribute('data-price', colorItem.price);
+                                option.dataset.price = colorItem.price;
+                                option.setAttribute('data-purchase-volume', volumeVal);
+                                option.dataset.purchaseVolume = volumeVal;
                                 colorSelect.appendChild(option);
                             });
                             colorSelect.disabled = false;
@@ -959,8 +954,12 @@
                                 opt.textContent = c.color ? c.color : 'Tanpa Warna';
                                 opt.setAttribute('data-price', c.price);
                                 opt.dataset.price = c.price;
-                                opt.setAttribute('data-purchase-volume', data.purchase_volume || c.purchase_volume || 1);
-                                opt.dataset.purchaseVolume = data.purchase_volume || c.purchase_volume || 1;
+                                const volumeToSet = c.purchase_volume || data.purchase_volume || 1;
+                                opt.setAttribute('data-purchase-volume', volumeToSet);
+                                opt.dataset.purchaseVolume = volumeToSet;
+                                const unitToSet = c.unit || data.unit || '';
+                                opt.setAttribute('data-unit', unitToSet);
+                                opt.dataset.unit = unitToSet;
                                 colorSelect.appendChild(opt);
                             });
                             colorSelect.disabled = false;
@@ -968,13 +967,23 @@
 
                             if (data.colors.length === 1) {
                                 colorSelect.selectedIndex = 1;
+                                if (unitSelect && data.colors[0].unit) {
+                                    unitSelect.value = data.colors[0].unit;
+                                }
                                 performCalcRowCalculation(row);
                             }
                         } catch (err) {}
                     }
                 }
                 if (e.target.classList.contains('calc-color-select')) {
-                    performCalcRowCalculation(e.target.closest('.calc-row'));
+                    const row = e.target.closest('.calc-row');
+                    const selected = e.target.selectedOptions[0];
+                    const unitSelect = row.querySelector('.calc-unit');
+                    if (selected && unitSelect) {
+                        const u = selected.getAttribute('data-unit') || selected.dataset.unit;
+                        if (u) unitSelect.value = u;
+                    }
+                    performCalcRowCalculation(row);
                 }
             });
 
@@ -1050,15 +1059,282 @@
                 if (f === t) res = val;
                 else if (f === 'meter' && t === 'cm') res = val * 100;
                 else if (f === 'cm' && t === 'meter') res = val / 100;
+                else if (f === 'meter' && t === 'yard') res = val / 0.9144;
+                else if (f === 'yard' && t === 'meter') res = val * 0.9144;
+                else if (f === 'yard' && t === 'cm') res = val * 91.44;
+                else if (f === 'cm' && t === 'yard') res = val / 91.44;
                 else if (f === 'kg' && t === 'gr') res = val * 1000;
                 else if (f === 'gr' && t === 'kg') res = val / 1000;
                 else if (f === 'L' && t === 'mL') res = val * 1000;
                 else if (f === 'mL' && t === 'L') res = val / 1000;
-                resDisplay.innerText = res.toFixed(2);
+                resDisplay.innerText = res.toFixed(3);
             }
             valInput.addEventListener('input', convert);
             fromUnit.addEventListener('change', convert);
             toUnit.addEventListener('change', convert);
+
+            // =============================================
+            // Auto-Save & Restore Form State
+            // (Riwayat isian form tidak hilang saat berpindah halaman kecuali di-refresh)
+            // =============================================
+            const DRAFT_STORAGE_KEY = 'hpp_create_form_draft_v1';
+
+            function isPageReloaded() {
+                try {
+                    const nav = performance.getEntriesByType('navigation');
+                    if (nav && nav.length > 0) {
+                        return nav[0].type === 'reload';
+                    }
+                    return window.performance && window.performance.navigation && window.performance.navigation.type === 1;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            function clearDraft() {
+                try {
+                    sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+                } catch (e) {}
+            }
+
+            function saveDraft() {
+                try {
+                    const data = {
+                        hpp_id: document.querySelector('input[name="hpp_id"]')?.value || '',
+                        name: document.querySelector('input[name="name"]')?.value || '',
+                        category: document.querySelector('select[name="category"]')?.value || '',
+                        screen_printing_fee: document.querySelector('input[name="screen_printing_fee"]')?.value || '',
+                        sewing_fee: document.querySelector('input[name="sewing_fee"]')?.value || '',
+                        overhead_pct: document.getElementById('overheadPctInput')?.value || '0.25',
+                        target_margin: document.getElementById('targetMarginInput')?.value || '50',
+                        cards: [],
+                        materials: []
+                    };
+
+                    // Cards (Section 02)
+                    document.querySelectorAll('#calcCardsContainer .calc-card').forEach(card => {
+                        const cardData = { rows: [] };
+                        card.querySelectorAll('.calc-row').forEach(row => {
+                            cardData.rows.push({
+                                desc: row.querySelector('.calc-description-input')?.value || '',
+                                mat_val: row.querySelector('.calc-material-select')?.value || '',
+                                color_id: row.querySelector('.calc-color-select')?.value || '',
+                                length: row.querySelector('.calc-length')?.value || '',
+                                width: row.querySelector('.calc-width')?.value || '',
+                                qty: row.querySelector('.calc-qty-input')?.value || '',
+                                luas: row.querySelector('.calc-luas-bahan-input')?.value || '',
+                            });
+                        });
+                        data.cards.push(cardData);
+                    });
+
+                    // Materials (Section 03)
+                    document.querySelectorAll('#materialsTable tbody .material-row').forEach(row => {
+                        data.materials.push({
+                            mat_val: row.querySelector('.material-name-select')?.value || '',
+                            color_id: row.querySelector('.material-color-select')?.value || '',
+                            source_card: row.querySelector('.source-card-select')?.value || '',
+                            usage: row.querySelector('.usage-input')?.value || '0',
+                        });
+                    });
+
+                    sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(data));
+                } catch (err) {
+                    console.error('Error saving form draft:', err);
+                }
+            }
+
+            let saveDraftTimeout = null;
+            function triggerSaveDraft() {
+                clearTimeout(saveDraftTimeout);
+                saveDraftTimeout = setTimeout(saveDraft, 400);
+            }
+
+            const hppForm = document.getElementById('hppForm');
+            if (hppForm) {
+                hppForm.addEventListener('input', triggerSaveDraft);
+                hppForm.addEventListener('change', triggerSaveDraft);
+                hppForm.addEventListener('submit', () => {
+                    clearDraft();
+                });
+            }
+
+            function showDraftAlert() {
+                const existing = document.getElementById('draftRestoredAlert');
+                if (existing) existing.remove();
+
+                const banner = document.createElement('div');
+                banner.id = 'draftRestoredAlert';
+                banner.className = 'bg-orange-500/10 border border-orange-500/30 text-orange-600 dark:text-orange-400 px-6 py-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs font-bold mb-6 transition-all shadow-sm';
+                banner.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-orange-500/20 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-black text-navy-800 dark:text-white">Riwayat Isian Dipulihkan</p>
+                            <p class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Data Anda otomatis tersimpan saat Anda berpindah halaman untuk mengecek material.</p>
+                        </div>
+                    </div>
+                    <button type="button" id="btnDiscardDraft" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all shadow-sm">
+                        Kosongkan Form
+                    </button>
+                `;
+
+                if (hppForm) {
+                    hppForm.parentNode.insertBefore(banner, hppForm);
+                }
+
+                document.getElementById('btnDiscardDraft')?.addEventListener('click', () => {
+                    clearDraft();
+                    window.location.reload();
+                });
+            }
+
+            function restoreDraft() {
+                // Jika user menekan tombol refresh browser (F5 / reload), bersihkan draft
+                if (isPageReloaded()) {
+                    clearDraft();
+                    return;
+                }
+
+                const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
+                if (!raw) return;
+
+                try {
+                    const data = JSON.parse(raw);
+                    const hasMeaningfulData = (data.name && data.name.trim() !== '') ||
+                        (data.category && data.category !== '') ||
+                        (data.materials && data.materials.some(m => m.mat_val)) ||
+                        (data.cards && data.cards.some(c => c.rows && c.rows.some(r => r.mat_val || r.desc)));
+
+                    if (!hasMeaningfulData) return;
+
+                    // 1. Basic Fields
+                    if (data.hpp_id && document.querySelector('input[name="hpp_id"]')) {
+                        document.querySelector('input[name="hpp_id"]').value = data.hpp_id;
+                    }
+                    if (data.name && document.querySelector('input[name="name"]')) {
+                        document.querySelector('input[name="name"]').value = data.name;
+                    }
+                    if (data.category && document.querySelector('select[name="category"]')) {
+                        document.querySelector('select[name="category"]').value = data.category;
+                    }
+                    if (data.screen_printing_fee && document.querySelector('input[name="screen_printing_fee"]')) {
+                        document.querySelector('input[name="screen_printing_fee"]').value = data.screen_printing_fee;
+                    }
+                    if (data.sewing_fee && document.querySelector('input[name="sewing_fee"]')) {
+                        document.querySelector('input[name="sewing_fee"]').value = data.sewing_fee;
+                    }
+                    if (data.target_margin && document.getElementById('targetMarginInput')) {
+                        document.getElementById('targetMarginInput').value = data.target_margin;
+                    }
+                    if (data.overhead_pct) {
+                        const targetBtn = Array.from(document.querySelectorAll('.overhead-btn')).find(b => b.dataset.pct === data.overhead_pct);
+                        if (targetBtn) targetBtn.click();
+                    }
+
+                    // 2. Section 02 Cards
+                    if (data.cards && data.cards.length > 0) {
+                        while (calcCardsContainer.querySelectorAll('.calc-card').length < data.cards.length) {
+                            document.getElementById('addCalcCard')?.click();
+                        }
+                        const cardEls = calcCardsContainer.querySelectorAll('.calc-card');
+                        data.cards.forEach((cardData, cIdx) => {
+                            const cardEl = cardEls[cIdx];
+                            if (!cardEl) return;
+                            const tbody = cardEl.querySelector('.calc-card-tbody');
+                            const addRowBtn = cardEl.querySelector('.add-calc-row-btn');
+
+                            while (tbody.querySelectorAll('.calc-row').length < cardData.rows.length) {
+                                addRowBtn?.click();
+                            }
+                            const rowEls = tbody.querySelectorAll('.calc-row');
+                            cardData.rows.forEach((rData, rIdx) => {
+                                const row = rowEls[rIdx];
+                                if (!row) return;
+                                if (rData.desc && row.querySelector('.calc-description-input')) {
+                                    row.querySelector('.calc-description-input').value = rData.desc;
+                                }
+                                if (rData.length && row.querySelector('.calc-length')) {
+                                    row.querySelector('.calc-length').value = rData.length;
+                                }
+                                if (rData.width && row.querySelector('.calc-width')) {
+                                    row.querySelector('.calc-width').value = rData.width;
+                                }
+                                if (rData.qty && row.querySelector('.calc-qty-input')) {
+                                    row.querySelector('.calc-qty-input').value = rData.qty;
+                                }
+                                if (rData.luas && row.querySelector('.calc-luas-bahan-input')) {
+                                    row.querySelector('.calc-luas-bahan-input').value = rData.luas;
+                                }
+                                if (rData.mat_val) {
+                                    const matSel = row.querySelector('.calc-material-select');
+                                    if (matSel) {
+                                        matSel.value = rData.mat_val;
+                                        matSel.dispatchEvent(new Event('change', { bubbles: true }));
+                                        if (rData.color_id) {
+                                            const colSel = row.querySelector('.calc-color-select');
+                                            if (colSel) {
+                                                colSel.value = rData.color_id;
+                                                colSel.dispatchEvent(new Event('change', { bubbles: true }));
+                                            }
+                                        }
+                                    }
+                                }
+                                performCalcRowCalculation(row);
+                            });
+                            calculateCardTotal(cardEl);
+                        });
+                    }
+
+                    // 3. Section 03 Materials Table
+                    if (data.materials && data.materials.length > 0) {
+                        while (tableBody.querySelectorAll('.material-row').length < data.materials.length) {
+                            document.getElementById('addRow')?.click();
+                        }
+                        const rowEls = tableBody.querySelectorAll('.material-row');
+                        data.materials.forEach((mData, mIdx) => {
+                            const row = rowEls[mIdx];
+                            if (!row) return;
+                            if (mData.mat_val) {
+                                const matSel = row.querySelector('.material-name-select');
+                                if (matSel) {
+                                    matSel.value = mData.mat_val;
+                                    matSel.dispatchEvent(new Event('change', { bubbles: true }));
+                                    if (mData.color_id) {
+                                        const colSel = row.querySelector('.material-color-select');
+                                        if (colSel) {
+                                            colSel.value = mData.color_id;
+                                            colSel.dispatchEvent(new Event('change', { bubbles: true }));
+                                        }
+                                    }
+                                }
+                            }
+                            if (mData.source_card !== undefined && mData.source_card !== '') {
+                                const srcSel = row.querySelector('.source-card-select');
+                                if (srcSel) srcSel.value = mData.source_card;
+                            }
+                            if (mData.usage !== undefined) {
+                                const usageInp = row.querySelector('.usage-input');
+                                if (usageInp) usageInp.value = mData.usage;
+                            }
+                            syncRow(row);
+                        });
+                    }
+
+                    refreshCardSelects();
+                    calculateTotals();
+                    showDraftAlert();
+                } catch (err) {
+                    console.error('Error restoring draft:', err);
+                }
+            }
+
+            // Restore draft saat halaman dibuka (jika bukan reload)
+            restoreDraft();
         });
     </script>
 </x-app-layout>

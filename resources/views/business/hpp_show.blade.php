@@ -199,7 +199,9 @@
             if (mat && item.color_id) {
                 const col = mat.colors.find(c => String(c.id) === String(item.color_id));
                 if (col) {
-                    const vol = parseFloat(mat.purchase_volume || col.purchase_volume || 1);
+                    if (col.unit) item.unit = col.unit;
+                    if (col.type) item.type = col.type;
+                    const vol = parseFloat(col.purchase_volume || mat.purchase_volume || 1);
                     item.unit_price = vol > 0 ? (col.price / vol) : col.price;
                     item.subtotal = item.unit_price * parseFloat(item.usage_amount || 0);
                 }
