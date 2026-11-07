@@ -245,15 +245,15 @@
                                                 <div class="grid grid-cols-12 gap-4 items-end pr-10">
                                                     <div class="col-span-2">
                                                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Panjang</label>
-                                                        <input type="number" class="calc-length w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                        <input type="number" onfocus="this.select()" class="calc-length w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
                                                     </div>
                                                     <div class="col-span-2">
                                                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Lebar</label>
-                                                        <input type="number" class="calc-width w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                        <input type="number" onfocus="this.select()" class="calc-width w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
                                                     </div>
                                                     <div class="col-span-1">
                                                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Qty</label>
-                                                        <input type="number" class="calc-qty-input w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                        <input type="number" onfocus="this.select()" class="calc-qty-input w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
                                                     </div>
                                                     <div class="col-span-2">
                                                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Hasil</label>
@@ -263,7 +263,7 @@
                                                     </div>
                                                     <div class="col-span-2">
                                                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Luas Bahan</label>
-                                                        <input type="number" class="calc-luas-bahan-input w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                        <input type="number" onfocus="this.select()" class="calc-luas-bahan-input w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
                                                     </div>
                                                     <div class="col-span-2">
                                                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Kebutuhan</label>
@@ -377,7 +377,7 @@
                                                 </select>
                                                 <input type="number" step="0.01" name="usage_amounts[]"
                                                     class="usage-input w-20 text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2.5 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
-                                                    value="0">
+                                                    value="" placeholder="0" onfocus="this.select()">
                                             </td>
                                             <td class="px-6 py-5 text-right font-mono text-xs font-bold text-navy-700 dark:text-gray-300">
                                                 <span class="price-display">Rp 0</span>
@@ -434,10 +434,10 @@
                                     </div>
                                     <p class="text-[11px] text-gray-600 dark:text-gray-300 mb-4 ml-10">Masukkan modal per unit yang sudah Anda dapatkan langsung dari vendor (misal makloon/jahit putus). Tidak perlu merinci potongan bahan jika sudah beli jadi.</p>
                                     <div class="relative max-w-md ml-10">
-                                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 text-sm font-bold">Rp</span>
+                                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 text-sm font-bold select-none">Rp</span>
                                         <input type="number" name="manual_hpp" id="manualHppInput"
-                                            class="w-full pl-12 bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/30 rounded-xl px-4 py-3.5 text-lg font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all shadow-sm"
-                                            value="{{ old('manual_hpp', 0) }}" min="0" placeholder="0">
+                                            class="w-full pl-14 pr-4 bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/30 rounded-xl py-3.5 text-lg font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all shadow-sm"
+                                            value="{{ old('manual_hpp') }}" min="0" placeholder="0" onfocus="this.select()">
                                     </div>
                                 </div>
 
@@ -449,10 +449,10 @@
                                             <div>
                                                 <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Branding</label>
                                                 <div class="relative">
-                                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 text-xs font-bold">Rp</span>
+                                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
                                                     <input type="number" name="branding_fee" id="brandingFeeInput"
-                                                        class="fee-input w-full pl-10 bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
-                                                        value="{{ old('branding_fee', old('screen_printing_fee', 0)) }}" min="0" placeholder="0">
+                                                        class="fee-input w-full pl-14 pr-4 bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl py-3 text-sm font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
+                                                        value="{{ old('branding_fee', old('screen_printing_fee')) }}" min="0" placeholder="0" onfocus="this.select()">
                                                     <input type="hidden" name="screen_printing_fee" id="screenPrintingFeeHidden" value="0">
                                                     <input type="hidden" name="sewing_fee" id="sewingFeeHidden" value="0">
                                                 </div>
@@ -512,7 +512,7 @@
                                             <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em]">Target Margin (%)</label>
                                         </div>
                                         <div class="relative">
-                                            <input type="number" id="targetMarginInput" min="0" max="100" step="1" value="50" class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-lg font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all text-center">
+                                            <input type="number" id="targetMarginInput" min="0" max="100" step="1" value="" placeholder="50" onfocus="this.select()" class="w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-4 py-3 text-lg font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all text-center">
                                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">%</span>
                                         </div>
                                         <input type="hidden" name="target_margin_percent" id="targetMarginValueInput" value="50">
@@ -925,7 +925,7 @@
                         row.querySelector('.material-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
                         row.querySelector('.type-display').innerText = '-';
                         row.querySelector('.unit-display').innerText = '-';
-                        row.querySelector('.usage-input').value = 0;
+                        row.querySelector('.usage-input').value = '';
                         row.querySelector('.price-display').innerText = 'Rp 0';
                         row.querySelector('.volume-display').innerText = '-';
                         row.querySelector('.unit-price-display').innerText = 'Rp 0';
@@ -949,7 +949,7 @@
                 newRow.querySelector('.material-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
                 newRow.querySelector('.type-display').innerText = '-';
                 newRow.querySelector('.unit-display').innerText = '-';
-                newRow.querySelector('.usage-input').value = 0;
+                newRow.querySelector('.usage-input').value = '';
                 newRow.querySelector('.price-display').innerText = 'Rp 0';
                 newRow.querySelector('.volume-display').innerText = '-';
                 newRow.querySelector('.unit-price-display').innerText = 'Rp 0';

@@ -247,14 +247,14 @@
                             <div>
                                 <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Harga Pembelian</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 font-bold text-xs">Rp</span>
-                                    <input type="number" name="price" value="{{ old('price', 0) }}" min="0" step="0.01" required
-                                        class="w-full pl-10 bg-gray-50 dark:bg-navy-950 border border-orange-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white input-focus-ring transition-all">
+                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 font-bold text-xs select-none">Rp</span>
+                                    <input type="number" name="price" value="{{ old('price') }}" min="0" step="0.01" required placeholder="0" onfocus="this.select()"
+                                        class="w-full pl-12 pr-4 bg-gray-50 dark:bg-navy-950 border border-orange-100 dark:border-white/5 rounded-xl py-3 text-sm font-bold text-navy-800 dark:text-white input-focus-ring transition-all">
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Volume Beli</label>
-                                <input type="number" name="purchase_volume" value="{{ old('purchase_volume', 1) }}" min="0" step="0.01" required
+                                <input type="number" name="purchase_volume" value="{{ old('purchase_volume', 1) }}" min="0" step="0.01" required placeholder="1" onfocus="this.select()"
                                     class="w-full bg-gray-50 dark:bg-navy-950 border border-orange-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-navy-800 dark:text-white input-focus-ring transition-all">
                             </div>
                             <div>

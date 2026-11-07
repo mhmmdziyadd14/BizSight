@@ -590,7 +590,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Target Harga Jual (Rp)</label>
-                                        <input type="number" name="target_selling_price" x-model.number="target_selling_price" required
+                                        <input type="number" name="target_selling_price" x-model.number="target_selling_price" required onfocus="this.select()" placeholder="0"
                                             class="w-full border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-navy-950 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 focus:bg-white transition-all">
                                     </div>
                                     
@@ -598,14 +598,14 @@
                                     
                                     <div>
                                         <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Biaya Branding (Rp)</label>
-                                        <input type="number" name="branding_fee" x-model.number="branding_fee"
+                                        <input type="number" name="branding_fee" x-model.number="branding_fee" onfocus="this.select()" placeholder="0"
                                             class="w-full border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-navy-950 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 focus:bg-white transition-all">
                                         <input type="hidden" name="screen_printing_fee" :value="branding_fee">
                                         <input type="hidden" name="sewing_fee" value="0">
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Biaya Lainnya (Rp)</label>
-                                        <input type="number" name="other_fees" x-model.number="other_fees"
+                                        <input type="number" name="other_fees" x-model.number="other_fees" onfocus="this.select()" placeholder="0"
                                             class="w-full border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-navy-950 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 focus:bg-white transition-all">
                                     </div>
                                 </div>
@@ -670,7 +670,7 @@
                                                                 <!-- Kebutuhan -->
                                                                 <td style="width: 20%; text-align: center;" class="py-2 px-3">
                                                                     <div class="flex items-center gap-1 justify-center">
-                                                                        <input type="number" step="0.01" name="usage_amounts[]" x-model.number="item.usage_amount" @input="onUsageChange(item)" required
+                                                                        <input type="number" step="0.01" name="usage_amounts[]" x-model.number="item.usage_amount" @input="onUsageChange(item)" required onfocus="this.select()" placeholder="0"
                                                                             class="w-16 text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-lg px-1 py-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
                                                                         <span class="text-[9px] text-slate-500 font-bold uppercase tracking-wider min-w-[30px]" x-text="item.unit"></span>
                                                                     </div>

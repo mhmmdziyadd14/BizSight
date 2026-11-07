@@ -384,20 +384,24 @@
 
                                 <!-- HPP & Selling Price -->
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div class="relative">
+                                    <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">HPP (Rp)</label>
-                                        <span class="absolute inset-y-7 left-0 pl-3 flex items-center text-gray-400 text-xs font-bold">Rp</span>
-                                        <input type="number" name="hpp" required
-                                            class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                            value="85000" placeholder="HPP">
+                                        <div class="relative">
+                                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
+                                            <input type="number" name="hpp" required onfocus="this.select()"
+                                                class="w-full pl-12 pr-4 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                value="" placeholder="85000">
+                                        </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga modal per produk.</p>
                                     </div>
-                                    <div class="relative">
+                                    <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Selling (Rp)</label>
-                                        <span class="absolute inset-y-7 left-0 pl-3 flex items-center text-gray-400 text-xs font-bold">Rp</span>
-                                        <input type="number" name="selling_price" required
-                                            class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                            value="175000" placeholder="Jual">
+                                        <div class="relative">
+                                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
+                                            <input type="number" name="selling_price" required onfocus="this.select()"
+                                                class="w-full pl-12 pr-4 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                value="" placeholder="175000">
+                                        </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga jual ke konsumen.</p>
                                     </div>
                                 </div>
@@ -408,9 +412,9 @@
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Admin Fee
                                             (%)</label>
                                         <div class="relative">
-                                            <input type="number" step="0.01" name="admin_fee_percent"
+                                            <input type="number" step="0.01" name="admin_fee_percent" onfocus="this.select()"
                                                 class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                                value="0" placeholder="0">
+                                                value="" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Potongan platform/marketplace.</p>
@@ -419,9 +423,9 @@
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Overhead
                                             (%)</label>
                                         <div class="relative">
-                                            <input type="number" step="0.01" name="overhead_percent"
+                                            <input type="number" step="0.01" name="overhead_percent" onfocus="this.select()"
                                                 class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                                value="0" placeholder="0">
+                                                value="" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Biaya ops (listrik, gaji, dll).</p>
@@ -430,9 +434,9 @@
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Pajak
                                             (%)</label>
                                         <div class="relative">
-                                            <input type="number" step="0.01" name="tax_percent"
+                                            <input type="number" step="0.01" name="tax_percent" onfocus="this.select()"
                                                 class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                                value="0" placeholder="0">
+                                                value="" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Pajak PPN/PPH.</p>
@@ -441,9 +445,9 @@
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Promo
                                             (%)</label>
                                         <div class="relative">
-                                            <input type="number" step="0.01" name="promo_percent"
+                                            <input type="number" step="0.01" name="promo_percent" onfocus="this.select()"
                                                 class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                                value="0" placeholder="0">
+                                                value="" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Diskon atau voucher.</p>
@@ -456,9 +460,9 @@
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Ads
                                             (%)</label>
                                         <div class="relative">
-                                            <input type="number" step="0.01" name="ads_percent"
+                                            <input type="number" step="0.01" name="ads_percent" onfocus="this.select()"
                                                 class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                                value="0" placeholder="0">
+                                                value="" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Budget iklan (Meta/TikTok).</p>
@@ -467,9 +471,9 @@
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Affiliate
                                             (%)</label>
                                         <div class="relative">
-                                            <input type="number" step="0.01" name="affiliate_percent"
+                                            <input type="number" step="0.01" name="affiliate_percent" onfocus="this.select()"
                                                 class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                                value="0" placeholder="0">
+                                                value="" placeholder="0">
                                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-xs font-bold">%</span>
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Komisi influencer.</p>
@@ -481,9 +485,9 @@
                                     <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Batch
                                         Quantity</label>
                                     <div class="relative">
-                                        <input type="number" name="est_batch_quantity" required
+                                        <input type="number" name="est_batch_quantity" required onfocus="this.select()"
                                             class="w-full pr-10 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                            value="100">
+                                            value="100" placeholder="100">
                                         <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-[9px] font-bold">PCS</span>
                                     </div>
                                 </div>
@@ -502,17 +506,17 @@
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Monthly Revenue (Rp)</label>
                                         <div class="relative">
-                                            <span class="absolute inset-y-7 left-0 pl-3 flex items-center text-gray-400 text-xs font-bold">Rp</span>
-                                            <input type="number" name="monthly_revenue" step="10000" min="0"
-                                                class="w-full pl-9 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                                value="0" placeholder="0">
+                                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 text-xs font-bold select-none">Rp</span>
+                                            <input type="number" name="monthly_revenue" step="10000" min="0" onfocus="this.select()"
+                                                class="w-full pl-12 pr-4 border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                                value="" placeholder="0">
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Monthly Order</label>
-                                        <input type="number" name="monthly_order" step="1" min="0"
+                                        <input type="number" name="monthly_order" step="1" min="0" onfocus="this.select()"
                                             class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
-                                            value="0" placeholder="0">
+                                            value="" placeholder="0">
                                     </div>
                                 </div>
 
