@@ -175,6 +175,37 @@ class BusinessController extends Controller
     }
 
     /**
+     * API: Return grouped Material list (materialsByName) for realtime dropdown updates
+     */
+    public function apiMaterialsByName()
+    {
+        $materials = Material::where('user_id', Auth::id())
+                        ->orderBy('name')
+                        ->get();
+
+        $materialsByName = $materials->groupBy('name')->map(function($group) {
+            return [
+                'name' => $group->first()->name,
+                'type' => $group->first()->type,
+                'unit' => $group->first()->unit,
+                'purchase_volume' => $group->first()->purchase_volume,
+                'colors' => $group->map(function($material) {
+                    return [
+                        'id' => $material->id,
+                        'color' => $material->color,
+                        'price' => $material->price,
+                        'purchase_volume' => $material->purchase_volume,
+                        'unit' => $material->unit,
+                        'type' => $material->type,
+                    ];
+                })->values()->toArray()
+            ];
+        })->values();
+
+        return response()->json(['success' => true, 'data' => $materialsByName]);
+    }
+
+    /**
      * Menampilkan data persediaan bahan (Inventory).
      */
     public function inventory()

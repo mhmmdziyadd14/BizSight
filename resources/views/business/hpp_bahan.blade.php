@@ -512,6 +512,9 @@
                 form.addEventListener('submit', function(e) {
                     materialNameValue.value = materialNameInput.value.trim();
                     sessionStorage.removeItem('hpp_bahan_draft_v1');
+                    try {
+                        localStorage.setItem('materials_updated_at', Date.now());
+                    } catch (err) {}
                 });
 
                 // Auto-save & Restore form bahan (tidak hilang saat pindah halaman kecuali di-refresh)

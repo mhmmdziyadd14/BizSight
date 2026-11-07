@@ -236,6 +236,26 @@
                 return (this.getLiveProfit() / selling) * 100;
             }
             return 0;
+        },
+
+        async syncMaterials() {
+            try {
+                const res = await fetch('/api/materials/grouped', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.success && Array.isArray(json.data)) {
+                        this.materialsByName = json.data;
+                    }
+                }
+            } catch (e) {}
+        },
+
+        init() {
+            window.addEventListener('focus', () => this.syncMaterials());
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'materials_updated_at') this.syncMaterials();
+            });
+            setInterval(() => this.syncMaterials(), 4000);
         }
     }" class="py-10 bg-gradient-to-br from-orange-50 via-white to-orange-100/20 dark:from-navy-800 dark:via-navy-900 dark:to-navy-950 min-h-screen transition-colors duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 fade-in-up">

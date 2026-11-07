@@ -101,6 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Lightweight polling API endpoints for realtime UI updates
             Route::get('/api/hpp/list', [BusinessController::class, 'apiHppList'])->name('api.hpp.list');
             Route::get('/api/materials/list', [BusinessController::class, 'apiMaterialsList'])->name('api.materials.list');
+            Route::get('/api/materials/grouped', [BusinessController::class, 'apiMaterialsByName'])->name('api.materials.grouped');
     });
 
     // Profile

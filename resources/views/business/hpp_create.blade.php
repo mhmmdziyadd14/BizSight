@@ -164,13 +164,21 @@
                                     </div>
                                     <h3 class="text-sm font-black text-navy-800 dark:text-white uppercase tracking-widest">Kalkulator Kebutuhan Bahan</h3>
                                 </div>
-                                <button type="button" id="addCalcCard"
-                                    class="bg-navy-900 dark:bg-orange-500 text-white inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider hover:shadow-lg transition-all">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                    Tambah Card
-                                </button>
+                                <div class="flex items-center gap-3">
+                                    <button type="button" class="btn-sync-materials bg-gray-100 dark:bg-navy-800 hover:bg-orange-500 hover:text-white text-navy-800 dark:text-gray-300 inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all" title="Sinkronkan bahan terbaru dari database">
+                                        <svg class="sync-materials-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                        </svg>
+                                        <span>Sinkron Bahan</span>
+                                    </button>
+                                    <button type="button" id="addCalcCard"
+                                        class="bg-navy-900 dark:bg-orange-500 text-white inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider hover:shadow-lg transition-all">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        Tambah Card
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="space-y-6" id="calcCardsContainer">
@@ -307,13 +315,21 @@
                                     </div>
                                     <h3 class="text-sm font-black text-navy-800 dark:text-white uppercase tracking-widest">Komponen Material (Bahan Baku)</h3>
                                 </div>
-                                <button type="button" id="addRow"
-                                    class="bg-orange-500 text-white inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider hover:shadow-lg transition-all">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                    Tambah Baris
-                                </button>
+                                <div class="flex items-center gap-3">
+                                    <button type="button" class="btn-sync-materials bg-gray-100 dark:bg-navy-800 hover:bg-orange-500 hover:text-white text-navy-800 dark:text-gray-300 inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all" title="Sinkronkan bahan terbaru dari database">
+                                        <svg class="sync-materials-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                        </svg>
+                                        <span>Sinkron Bahan</span>
+                                    </button>
+                                    <button type="button" id="addRow"
+                                        class="bg-orange-500 text-white inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider hover:shadow-lg transition-all">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        Tambah Baris
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="overflow-x-auto">
@@ -1335,6 +1351,139 @@
 
             // Restore draft saat halaman dibuka (jika bukan reload)
             restoreDraft();
+
+            // =============================================
+            // Real-Time Material Auto-Sync (Bahan Baru Otomatis Muncul Tanpa Refresh/Restart)
+            // =============================================
+            let currentMaterialsData = @json($materialsByName);
+
+            function updateSelectOptions(selectEl, materialsList) {
+                let currentVal = selectEl.value;
+                let currentName = '';
+                if (currentVal) {
+                    try {
+                        const parsed = JSON.parse(currentVal);
+                        currentName = parsed.name || '';
+                    } catch (e) {
+                        currentName = selectEl.getAttribute('data-name') || '';
+                    }
+                }
+
+                const isCalcSelect = selectEl.classList.contains('calc-material-select');
+                selectEl.innerHTML = '<option value="">-- Pilih Bahan --</option>';
+
+                let foundMatch = false;
+                materialsList.forEach(material => {
+                    const opt = document.createElement('option');
+                    opt.value = JSON.stringify(material);
+                    opt.textContent = material.name;
+                    opt.setAttribute('data-name', material.name);
+                    if (isCalcSelect) {
+                        opt.setAttribute('data-unit', material.unit || '');
+                    }
+                    if (currentName && material.name.toLowerCase() === currentName.toLowerCase()) {
+                        opt.selected = true;
+                        foundMatch = true;
+                    }
+                    selectEl.appendChild(opt);
+                });
+
+                // Perbarui dropdown warna jika row sudah memiliki bahan yang cocok
+                if (foundMatch) {
+                    const row = selectEl.closest('.material-row') || selectEl.closest('.calc-row');
+                    if (row) {
+                        const colorSelect = row.querySelector('.material-color-select') || row.querySelector('.calc-color-select');
+                        const currentColorId = colorSelect ? colorSelect.value : '';
+                        const matchedMat = materialsList.find(m => m.name.toLowerCase() === currentName.toLowerCase());
+                        
+                        if (matchedMat && colorSelect && colorSelect.children.length > 1) {
+                            colorSelect.innerHTML = '<option value="">-- Pilih Warna --</option>';
+                            matchedMat.colors.forEach(c => {
+                                const opt = document.createElement('option');
+                                opt.value = c.id;
+                                opt.textContent = c.color ? c.color : 'Tanpa Warna';
+                                const typeVal = c.type || matchedMat.type || '-';
+                                const unitVal = c.unit || matchedMat.unit || '-';
+                                const volVal = c.purchase_volume || matchedMat.purchase_volume || 1;
+                                opt.setAttribute('data-type', typeVal);
+                                opt.dataset.type = typeVal;
+                                opt.setAttribute('data-unit', unitVal);
+                                opt.dataset.unit = unitVal;
+                                opt.setAttribute('data-price', c.price);
+                                opt.dataset.price = c.price;
+                                opt.setAttribute('data-purchase-volume', volVal);
+                                opt.dataset.purchaseVolume = volVal;
+                                if (currentColorId && String(c.id) === String(currentColorId)) {
+                                    opt.selected = true;
+                                }
+                                colorSelect.appendChild(opt);
+                            });
+                        }
+                    }
+                }
+            }
+
+            async function fetchAndSyncMaterials(showToast = false) {
+                const icons = document.querySelectorAll('.sync-materials-icon');
+                icons.forEach(i => i.classList.add('animate-spin'));
+
+                try {
+                    const res = await fetch('/api/materials/grouped', {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    if (!res.ok) throw new Error('Network response error');
+                    const json = await res.json();
+
+                    if (json && json.success && Array.isArray(json.data)) {
+                        const newSignature = JSON.stringify(json.data.map(m => ({ n: m.name, c: m.colors.length })));
+                        const oldSignature = JSON.stringify(currentMaterialsData.map(m => ({ n: m.name, c: m.colors.length })));
+
+                        if (newSignature !== oldSignature || showToast) {
+                            currentMaterialsData = json.data;
+
+                            document.querySelectorAll('.material-name-select').forEach(sel => {
+                                updateSelectOptions(sel, currentMaterialsData);
+                            });
+
+                            document.querySelectorAll('.calc-material-select').forEach(sel => {
+                                updateSelectOptions(sel, currentMaterialsData);
+                            });
+
+                            if (showToast && typeof Toast !== 'undefined') {
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Daftar bahan berhasil disinkronkan (' + json.data.length + ' bahan)'
+                                });
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.debug('Material sync notice:', e);
+                } finally {
+                    icons.forEach(i => i.classList.remove('animate-spin'));
+                }
+            }
+
+            // Tombol Sinkron Manual
+            document.querySelectorAll('.btn-sync-materials').forEach(btn => {
+                btn.addEventListener('click', () => fetchAndSyncMaterials(true));
+            });
+
+            // Sinkronkan otomatis saat tab browser dibuka / kembali aktif
+            window.addEventListener('focus', () => fetchAndSyncMaterials());
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) fetchAndSyncMaterials();
+            });
+
+            // Sinkronkan instan saat ada trigger dari tab input bahan lain
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'materials_updated_at') {
+                    fetchAndSyncMaterials();
+                }
+            });
+
+            // Polling background setiap 4 detik untuk memastikan bahan baru selalu tersedia
+            setInterval(fetchAndSyncMaterials, 4000);
         });
     </script>
 </x-app-layout>
