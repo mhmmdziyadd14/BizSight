@@ -446,20 +446,46 @@
                                     <!-- Fees Breakdown -->
                                     <div class="space-y-6">
                                         <h4 class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em] mb-4">Operational Costs (Per Unit)</h4>
-                                        <div class="grid grid-cols-1 gap-5">
-                                            <div>
+                                        <div>
+                                            <!-- Mode 1: Hitung Otomatis dari Bahan -> Biaya Sablon & Biaya Jahit -->
+                                            <div id="calculatedFeesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Sablon</label>
+                                                    <div class="flex items-center rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
+                                                        <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-3">Rp</span>
+                                                        <input type="number" name="screen_printing_fee" id="screenPrintingFeeInput"
+                                                            class="fee-input w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 text-sm font-bold text-navy-800 dark:text-white py-2.5"
+                                                            style="border: none !important; outline: none !important; box-shadow: none !important;"
+                                                            value="{{ old('screen_printing_fee') }}" min="0" placeholder="0" onfocus="this.select()">
+                                                    </div>
+                                                    <p class="text-[9px] text-gray-400 mt-1.5 ml-1">Biaya sablon / print per unit.</p>
+                                                </div>
+                                                <div>
+                                                    <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Jahit</label>
+                                                    <div class="flex items-center rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
+                                                        <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-3">Rp</span>
+                                                        <input type="number" name="sewing_fee" id="sewingFeeInput"
+                                                            class="fee-input w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 text-sm font-bold text-navy-800 dark:text-white py-2.5"
+                                                            style="border: none !important; outline: none !important; box-shadow: none !important;"
+                                                            value="{{ old('sewing_fee') }}" min="0" placeholder="0" onfocus="this.select()">
+                                                    </div>
+                                                    <p class="text-[9px] text-gray-400 mt-1.5 ml-1">Ongkos jahit / CMT per unit.</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Mode 2: HPP Vendor -> Biaya Branding -->
+                                            <div id="manualFeesContainer" class="hidden">
                                                 <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Branding</label>
                                                 <div class="flex items-center rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/5 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
                                                     <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-3">Rp</span>
                                                     <input type="number" name="branding_fee" id="brandingFeeInput"
                                                         class="fee-input w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 text-sm font-bold text-navy-800 dark:text-white py-2.5"
                                                         style="border: none !important; outline: none !important; box-shadow: none !important;"
-                                                        value="{{ old('branding_fee', old('screen_printing_fee')) }}" min="0" placeholder="0" onfocus="this.select()">
-                                                    <input type="hidden" name="screen_printing_fee" id="screenPrintingFeeHidden" value="0">
-                                                    <input type="hidden" name="sewing_fee" id="sewingFeeHidden" value="0">
+                                                        value="{{ old('branding_fee') }}" min="0" placeholder="0" onfocus="this.select()">
                                                 </div>
                                                 <p class="text-[9px] text-gray-400 mt-1.5 ml-1">Mencakup sablon, bordir, label woven, hangtag, packaging, dll.</p>
                                             </div>
+
                                             <div class="mt-4 border-t border-gray-100 dark:border-white/5 pt-6">
                                                 <div class="flex items-center gap-2 mb-2">
                                                     <div class="w-5 h-5 bg-navy-800 dark:bg-gray-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold">2</div>
@@ -593,6 +619,10 @@
             const calculationTypeInput = document.getElementById('calculationTypeInput');
             const manualHppContainer = document.getElementById('manualHppContainer');
             const manualHppInput = document.getElementById('manualHppInput');
+            const calculatedFeesContainer = document.getElementById('calculatedFeesContainer');
+            const manualFeesContainer = document.getElementById('manualFeesContainer');
+            const screenPrintingFeeInput = document.getElementById('screenPrintingFeeInput');
+            const sewingFeeInput = document.getElementById('sewingFeeInput');
             const brandingFeeInput = document.getElementById('brandingFeeInput');
             const baseCostLabel = document.getElementById('baseCostLabel');
 
@@ -610,6 +640,12 @@
                     if (manualHppContainer) {
                         manualHppContainer.classList.remove('hidden');
                     }
+                    if (manualFeesContainer) {
+                        manualFeesContainer.classList.remove('hidden');
+                    }
+                    if (calculatedFeesContainer) {
+                        calculatedFeesContainer.classList.add('hidden');
+                    }
                     if (baseCostLabel) {
                         baseCostLabel.innerText = 'HPP Vendor (Manual)';
                     }
@@ -622,6 +658,12 @@
                     }
                     if (manualHppContainer) {
                         manualHppContainer.classList.add('hidden');
+                    }
+                    if (manualFeesContainer) {
+                        manualFeesContainer.classList.add('hidden');
+                    }
+                    if (calculatedFeesContainer) {
+                        calculatedFeesContainer.classList.remove('hidden');
                     }
                     if (baseCostLabel) {
                         baseCostLabel.innerText = 'Bahan Baku';
@@ -638,6 +680,12 @@
             }
             if (manualHppInput) {
                 manualHppInput.addEventListener('input', calculateTotals);
+            }
+            if (screenPrintingFeeInput) {
+                screenPrintingFeeInput.addEventListener('input', calculateTotals);
+            }
+            if (sewingFeeInput) {
+                sewingFeeInput.addEventListener('input', calculateTotals);
             }
             if (brandingFeeInput) {
                 brandingFeeInput.addEventListener('input', calculateTotals);
@@ -686,20 +734,19 @@
                 const calcType = calculationTypeInput ? calculationTypeInput.value : 'calculated';
                 const isManual = (calcType === 'manual');
                 let baseCost = 0;
+                let operationalFees = 0;
 
                 if (isManual) {
                     baseCost = parseFloat(manualHppInput?.value) || 0;
+                    operationalFees = parseFloat(brandingFeeInput?.value) || 0;
                 } else {
                     baseCost = totalMaterials;
+                    const sablonFee = parseFloat(screenPrintingFeeInput?.value) || 0;
+                    const sewingFee = parseFloat(sewingFeeInput?.value) || 0;
+                    operationalFees = sablonFee + sewingFee;
                 }
 
-                const brandingFee = parseFloat(brandingFeeInput?.value) || 0;
-                const screenPrintingFeeHidden = document.getElementById('screenPrintingFeeHidden');
-                const sewingFeeHidden = document.getElementById('sewingFeeHidden');
-                if (screenPrintingFeeHidden) screenPrintingFeeHidden.value = brandingFee;
-                if (sewingFeeHidden) sewingFeeHidden.value = 0;
-
-                const baseHpp = baseCost + brandingFee;
+                const baseHpp = baseCost + operationalFees;
                 
                 const overheadPctInput = document.getElementById('overheadPctInput');
                 let overheadAmount = 0;
@@ -716,7 +763,7 @@
                     if (overheadDetail) overheadDetail.innerText = `(${(overheadPct * 100)}% × ${formatRupiah(baseHpp)})`;
                 }
 
-                const grandTotal = baseCost + brandingFee + overheadAmount;
+                const grandTotal = baseCost + operationalFees + overheadAmount;
 
                 const totalMaterialDisplay = document.getElementById('totalMaterialDisplay');
                 const targetMarginInput = document.getElementById('targetMarginInput');
@@ -1215,8 +1262,8 @@
                         calculation_type: document.getElementById('calculationTypeInput')?.value || 'calculated',
                         manual_hpp: document.getElementById('manualHppInput')?.value || '',
                         branding_fee: document.getElementById('brandingFeeInput')?.value || '',
-                        screen_printing_fee: document.getElementById('screenPrintingFeeHidden')?.value || '',
-                        sewing_fee: document.getElementById('sewingFeeHidden')?.value || '0',
+                        screen_printing_fee: document.getElementById('screenPrintingFeeInput')?.value || '',
+                        sewing_fee: document.getElementById('sewingFeeInput')?.value || '',
                         overhead_pct: document.getElementById('overheadPctInput')?.value || '0.25',
                         target_margin: document.getElementById('targetMarginInput')?.value || '50',
                         cards: [],
@@ -1334,6 +1381,12 @@
                     if (data.branding_fee && document.getElementById('brandingFeeInput')) {
                         document.getElementById('brandingFeeInput').value = data.branding_fee;
                     }
+                    if (data.screen_printing_fee && document.getElementById('screenPrintingFeeInput')) {
+                        document.getElementById('screenPrintingFeeInput').value = data.screen_printing_fee;
+                    }
+                    if (data.sewing_fee && document.getElementById('sewingFeeInput')) {
+                        document.getElementById('sewingFeeInput').value = data.sewing_fee;
+                    }
                     if (data.hpp_id && document.querySelector('input[name="hpp_id"]')) {
                         document.querySelector('input[name="hpp_id"]').value = data.hpp_id;
                     }
@@ -1342,11 +1395,6 @@
                     }
                     if (data.category && document.querySelector('select[name="category"]')) {
                         document.querySelector('select[name="category"]').value = data.category;
-                    }
-                    if (data.branding_fee && document.querySelector('input[name="branding_fee"]')) {
-                        document.querySelector('input[name="branding_fee"]').value = data.branding_fee;
-                    } else if (data.screen_printing_fee && document.querySelector('input[name="branding_fee"]')) {
-                        document.querySelector('input[name="branding_fee"]').value = data.screen_printing_fee;
                     }
                     if (data.target_margin && document.getElementById('targetMarginInput')) {
                         document.getElementById('targetMarginInput').value = data.target_margin;

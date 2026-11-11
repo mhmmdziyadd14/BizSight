@@ -288,6 +288,16 @@
                 <tr>
                     <td class="col" style="border-right: 1px solid rgba(249, 115, 22, 0.2);">
                         <table class="summary-inner">
+                            @if(($hpp->calculation_type ?? 'calculated') === 'manual')
+                            <tr>
+                                <td class="summary-label">HPP Pokok Vendor (1 Unit)</td>
+                                <td class="summary-value">Rp{{ number_format($hpp->manual_hpp ?? $hpp->total_raw_material_cost,0,',','.') }}</td>
+                            </tr>
+                            <tr>
+                                <td class="summary-label">Biaya Branding (1 Unit)</td>
+                                <td class="summary-value">Rp{{ number_format($hpp->branding_fee,0,',','.') }}</td>
+                            </tr>
+                            @else
                             <tr>
                                 <td class="summary-label">Total Bahan Baku (1 Unit)</td>
                                 <td class="summary-value">Rp{{ number_format($hpp->total_raw_material_cost,0,',','.') }}</td>
@@ -300,6 +310,7 @@
                                 <td class="summary-label">Biaya Jahit (1 Unit)</td>
                                 <td class="summary-value">Rp{{ number_format($hpp->sewing_fee,0,',','.') }}</td>
                             </tr>
+                            @endif
                         </table>
                     </td>
                     <td class="col">
@@ -327,6 +338,16 @@
                 <tr>
                     <td class="col" style="border-right: 1px solid rgba(249, 115, 22, 0.2);">
                         <table class="summary-inner">
+                            @if(($hpp->calculation_type ?? 'calculated') === 'manual')
+                            <tr>
+                                <td class="summary-label">HPP Pokok Vendor ({{ $qty }} Unit)</td>
+                                <td class="summary-value">Rp{{ number_format(($hpp->manual_hpp ?? $hpp->total_raw_material_cost) * $qty,0,',','.') }}</td>
+                            </tr>
+                            <tr>
+                                <td class="summary-label">Biaya Branding ({{ $qty }} Unit)</td>
+                                <td class="summary-value">Rp{{ number_format(($hpp->branding_fee ?? 0) * $qty,0,',','.') }}</td>
+                            </tr>
+                            @else
                             <tr>
                                 <td class="summary-label">Total Bahan Baku ({{ $qty }} Unit)</td>
                                 <td class="summary-value">Rp{{ number_format($totalRaw,0,',','.') }}</td>
@@ -339,6 +360,7 @@
                                 <td class="summary-label">Biaya Jahit ({{ $qty }} Unit)</td>
                                 <td class="summary-value">Rp{{ number_format($totalJahit,0,',','.') }}</td>
                             </tr>
+                            @endif
                         </table>
                     </td>
                     <td class="col">
