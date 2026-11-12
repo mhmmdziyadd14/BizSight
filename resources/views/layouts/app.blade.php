@@ -4,6 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Clarity Labs</title>
@@ -169,6 +170,81 @@
             }
             .logo-text, .clarity-labs-brand {
                 font-family: 'Plus Jakarta Sans', sans-serif !important;
+            }
+
+            /* Dark Mode System / Browser Color Scheme */
+            html.dark {
+                color-scheme: dark;
+            }
+            html:not(.dark) {
+                color-scheme: light;
+            }
+
+            /* Safari / iOS / Mobile WebKit input reset & number arrow hide */
+            input, select, textarea {
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+                border-radius: 0;
+            }
+            input[type="number"]::-webkit-outer-spin-button,
+            input[type="number"]::-webkit-inner-spin-button {
+                -webkit-appearance: none !important;
+                margin: 0 !important;
+            }
+            input[type="number"] {
+                -moz-appearance: textfield !important;
+            }
+
+            /* Dark mode mobile & desktop contrast fix */
+            .dark input,
+            .dark select,
+            .dark textarea {
+                color: #ffffff !important;
+                -webkit-text-fill-color: #ffffff !important;
+            }
+            
+            /* Prevent iOS / Mobile Safari from applying native white box on transparent inputs */
+            input.bg-transparent,
+            .bg-transparent input,
+            input[class*="bg-transparent"],
+            .input-transparent {
+                background-color: transparent !important;
+                background: transparent !important;
+                -webkit-appearance: none !important;
+            }
+
+            .dark input.bg-transparent,
+            .dark .bg-transparent input,
+            .dark input[class*="bg-transparent"],
+            .dark .input-transparent {
+                background-color: transparent !important;
+                background: transparent !important;
+                color: #ffffff !important;
+                -webkit-text-fill-color: #ffffff !important;
+            }
+
+            /* Fix iOS autofill background in dark mode */
+            .dark input:-webkit-autofill,
+            .dark input:-webkit-autofill:hover, 
+            .dark input:-webkit-autofill:focus,
+            .dark textarea:-webkit-autofill,
+            .dark textarea:-webkit-autofill:hover,
+            .dark textarea:-webkit-autofill:focus,
+            .dark select:-webkit-autofill,
+            .dark select:-webkit-autofill:hover,
+            .dark select:-webkit-autofill:focus {
+                -webkit-text-fill-color: #ffffff !important;
+                -webkit-box-shadow: 0 0 0px 1000px #0b132b inset !important;
+                box-shadow: 0 0 0px 1000px #0b132b inset !important;
+                transition: background-color 5000s ease-in-out 0s;
+            }
+
+            .dark input::placeholder,
+            .dark textarea::placeholder {
+                color: #64748b !important;
+                -webkit-text-fill-color: #64748b !important;
+                opacity: 0.8;
             }
             
             body {

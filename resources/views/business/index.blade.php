@@ -264,7 +264,7 @@
                             @csrf
 
                             <!-- SECTION A: Business/Product Condition -->
-                            <div class="bg-gradient-navy px-6 py-5 flex items-center justify-between border-b border-orange-500/30">
+                            <div class="bg-gradient-navy px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between border-b border-orange-500/30">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 bg-gradient-orange rounded-xl flex items-center justify-center">
                                         <span class="text-white text-xs font-black">A</span>
@@ -278,7 +278,7 @@
                                 </svg>
                             </div>
 
-                            <div class="p-6 border-b border-orange-100 dark:border-navy-700">
+                            <div class="p-4 sm:p-6 border-b border-orange-100 dark:border-navy-700">
                                 <div class="flex gap-3 mb-1">
                                     <button type="button" class="product-toggle active flex-1 py-2.5 px-4 rounded-lg font-bold text-xs uppercase tracking-wider text-white bg-gradient-orange transition-all" data-type="existing">
                                         ✓ Existing
@@ -291,7 +291,7 @@
                             </div>
 
                             <!-- SECTION B: Business Variables -->
-                            <div class="p-6 border-b border-orange-100 dark:border-navy-700 space-y-5">
+                            <div class="p-4 sm:p-6 border-b border-orange-100 dark:border-navy-700 space-y-5">
                                 <div class="flex items-center gap-2 pb-3 border-b border-orange-100 dark:border-navy-700">
                                     <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
                                         <span class="text-orange-500 text-xs font-black">B</span>
@@ -383,14 +383,14 @@
                                 </div>
 
                                 <!-- HPP & Selling Price -->
-                                <div class="grid grid-cols-2 gap-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">HPP (Rp)</label>
                                         <div class="flex items-center border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl px-3.5 py-0.5 focus-within:border-orange-400 focus-within:ring focus-within:ring-orange-200 transition-all input-focus-ring">
                                             <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-2">Rp</span>
                                             <input type="number" name="hpp" required onfocus="this.select()"
-                                                class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
-                                                style="border: none !important; outline: none !important; box-shadow: none !important;"
+                                                class="w-full bg-transparent input-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
+                                                style="border: none !important; outline: none !important; box-shadow: none !important; background-color: transparent !important; -webkit-appearance: none !important; -webkit-text-fill-color: currentColor !important;"
                                                 value="" placeholder="85000">
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga modal per produk.</p>
@@ -400,8 +400,8 @@
                                         <div class="flex items-center border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl px-3.5 py-0.5 focus-within:border-orange-400 focus-within:ring focus-within:ring-orange-200 transition-all input-focus-ring">
                                             <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-2">Rp</span>
                                             <input type="number" name="selling_price" required onfocus="this.select()"
-                                                class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
-                                                style="border: none !important; outline: none !important; box-shadow: none !important;"
+                                                class="w-full bg-transparent input-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
+                                                style="border: none !important; outline: none !important; box-shadow: none !important; background-color: transparent !important; -webkit-appearance: none !important; -webkit-text-fill-color: currentColor !important;"
                                                 value="" placeholder="175000">
                                         </div>
                                         <p class="mt-1 text-[9px] text-gray-400 font-medium">Harga jual ke konsumen.</p>
@@ -409,7 +409,7 @@
                                 </div>
 
                                 <!-- Fees -->
-                                <div class="grid grid-cols-2 gap-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Admin Fee
                                             (%)</label>
@@ -457,7 +457,7 @@
                                 </div>
 
                                 <!-- Ads & Affiliate -->
-                                <div class="grid grid-cols-2 gap-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Ads
                                             (%)</label>
@@ -496,7 +496,7 @@
                             </div>
 
                             <!-- SECTION C: Performance (New Products Only) -->
-                            <div id="section-c" class="section-toggle hidden p-6 border-b border-orange-100 dark:border-navy-700 space-y-4">
+                            <div id="section-c" class="section-toggle hidden p-4 sm:p-6 border-b border-orange-100 dark:border-navy-700 space-y-4">
                                 <div class="flex items-center gap-2 pb-3 border-b border-orange-100 dark:border-navy-700">
                                     <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
                                         <span class="text-orange-500 text-xs font-black">C</span>
@@ -504,21 +504,22 @@
                                     <h4 class="font-bold text-sm text-navy-800 dark:text-white">Performance</h4>
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Monthly Revenue (Rp)</label>
                                         <div class="flex items-center border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl px-3.5 py-0.5 focus-within:border-orange-400 focus-within:ring focus-within:ring-orange-200 transition-all input-focus-ring">
                                             <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-2">Rp</span>
                                             <input type="number" name="monthly_revenue" step="10000" min="0" onfocus="this.select()"
-                                                class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
-                                                style="border: none !important; outline: none !important; box-shadow: none !important;"
+                                                class="w-full bg-transparent input-transparent border-0 focus:ring-0 focus:outline-none p-0 py-2.5 text-sm font-semibold text-navy-800 dark:text-white"
+                                                style="border: none !important; outline: none !important; box-shadow: none !important; background-color: transparent !important; -webkit-appearance: none !important; -webkit-text-fill-color: currentColor !important;"
                                                 value="" placeholder="0">
                                         </div>
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-orange-500 uppercase tracking-wider mb-2">Monthly Order</label>
                                         <input type="number" name="monthly_order" step="1" min="0" onfocus="this.select()"
-                                            class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            class="w-full border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-950 rounded-xl py-3 px-3.5 text-sm font-semibold text-navy-800 dark:text-white focus:border-orange-400 focus:ring focus:ring-orange-200 transition-all input-focus-ring"
+                                            style="-webkit-appearance: none !important;"
                                             value="" placeholder="0">
                                     </div>
                                 </div>
@@ -545,7 +546,7 @@
                             </div>
 
                             <!-- SECTION D: Business Condition (New Products Only) -->
-                            <div id="section-d" class="section-toggle hidden p-6 border-b border-orange-100 dark:border-navy-700 space-y-4">
+                            <div id="section-d" class="section-toggle hidden p-4 sm:p-6 border-b border-orange-100 dark:border-navy-700 space-y-4">
                                 <div class="flex items-center gap-2 pb-3 border-b border-orange-100 dark:border-navy-700">
                                     <div class="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center">
                                         <span class="text-orange-500 text-xs font-black">D</span>
@@ -596,7 +597,7 @@
                             </div>
 
                             <!-- Submit Button -->
-                            <div class="p-6">
+                            <div class="p-4 sm:p-6">
                                 <button type="submit"
                                     class="btn-analyze w-full flex items-center justify-center gap-2 text-white py-4 rounded-2xl font-extrabold text-sm uppercase tracking-widest shadow-xl active:scale-95 transition-all">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

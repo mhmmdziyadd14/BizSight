@@ -139,8 +139,7 @@
         calculation_type: {{ json_encode($hpp->calculation_type ?? 'calculated') }},
         manual_hpp: {{ (float) ($hpp->manual_hpp ?? 0) }},
         target_selling_price: {{ (float) $hpp->target_selling_price }},
-        branding_fee: {{ (float) ($hpp->branding_fee ?? 0) }},
-        screen_printing_fee: {{ (float) ($hpp->screen_printing_fee ?? 0) }},
+        branding_fee: {{ (float) ($hpp->branding_fee ?: ($hpp->screen_printing_fee ?? 0)) }},
         sewing_fee: {{ (float) ($hpp->sewing_fee ?? 0) }},
         other_fees: {{ (float) $hpp->other_fees }},
         
@@ -229,7 +228,7 @@
                        parseFloat(this.other_fees || 0);
             }
             return this.getLiveRawCost() +
-                   parseFloat(this.screen_printing_fee || 0) +
+                   parseFloat(this.branding_fee || 0) +
                    parseFloat(this.sewing_fee || 0) +
                    parseFloat(this.other_fees || 0);
         },
@@ -437,8 +436,9 @@
                 @if(($hpp->calculation_type ?? 'calculated') === 'manual')
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="fee-card">
-                        <div class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-2">Biaya Branding</div>
-                        <div class="text-2xl font-black text-navy-900 dark:text-white">Rp {{ number_format($hpp->branding_fee, 0, ',', '.') }}</div>
+                        <div class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">Biaya Branding</div>
+                        <div class="text-[9px] text-gray-400 mb-2 font-medium">sablon, bordir, dtf, etc</div>
+                        <div class="text-2xl font-black text-navy-900 dark:text-white">Rp {{ number_format($hpp->branding_fee ?: $hpp->screen_printing_fee, 0, ',', '.') }}</div>
                     </div>
                     <div class="fee-card">
                         <div class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-2">Biaya Overhead / Operasional Lainnya</div>
@@ -448,12 +448,13 @@
                 @else
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div class="fee-card">
-                        <div class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-2">Biaya Sablon</div>
-                        <div class="text-2xl font-black text-navy-900 dark:text-white">Rp {{ number_format($hpp->screen_printing_fee, 0, ',', '.') }}</div>
-                    </div>
-                    <div class="fee-card">
                         <div class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-2">Biaya Jahit</div>
                         <div class="text-2xl font-black text-navy-900 dark:text-white">Rp {{ number_format($hpp->sewing_fee, 0, ',', '.') }}</div>
+                    </div>
+                    <div class="fee-card">
+                        <div class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">Biaya Branding</div>
+                        <div class="text-[9px] text-gray-400 mb-2 font-medium">sablon, bordir, dtf, etc</div>
+                        <div class="text-2xl font-black text-navy-900 dark:text-white">Rp {{ number_format($hpp->branding_fee ?: $hpp->screen_printing_fee, 0, ',', '.') }}</div>
                     </div>
                     <div class="fee-card">
                         <div class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-2">Biaya Overhead / Operasional Lainnya</div>
@@ -624,26 +625,24 @@
                                     
                                     <template x-if="calculation_type === 'manual'">
                                         <div>
-                                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Biaya Branding (Rp)</label>
+                                            <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Biaya Branding (sablon, bordir, dtf, etc) (Rp)</label>
                                             <input type="number" name="branding_fee" x-model.number="branding_fee" onfocus="this.select()" placeholder="0"
                                                 class="w-full border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-navy-950 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 focus:bg-white transition-all">
-                                            <input type="hidden" name="screen_printing_fee" value="0">
                                             <input type="hidden" name="sewing_fee" value="0">
                                         </div>
                                     </template>
                                     <template x-if="calculation_type !== 'manual'">
                                         <div class="grid grid-cols-2 gap-3">
                                             <div>
-                                                <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Biaya Sablon (Rp)</label>
-                                                <input type="number" name="screen_printing_fee" x-model.number="screen_printing_fee" onfocus="this.select()" placeholder="0"
-                                                    class="w-full border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-navy-950 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 focus:bg-white transition-all">
-                                            </div>
-                                            <div>
                                                 <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Biaya Jahit (Rp)</label>
                                                 <input type="number" name="sewing_fee" x-model.number="sewing_fee" onfocus="this.select()" placeholder="0"
                                                     class="w-full border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-navy-950 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 focus:bg-white transition-all">
                                             </div>
-                                            <input type="hidden" name="branding_fee" value="0">
+                                            <div>
+                                                <label class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 ml-1">Biaya Branding (sablon, bordir, dtf, etc) (Rp)</label>
+                                                <input type="number" name="branding_fee" x-model.number="branding_fee" onfocus="this.select()" placeholder="0"
+                                                    class="w-full border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-navy-950 rounded-xl px-3 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 focus:bg-white transition-all">
+                                            </div>
                                         </div>
                                     </template>
                                     <div>

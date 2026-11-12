@@ -524,19 +524,16 @@ class BusinessController extends Controller
 
         $otherFees = floatval($request->input('other_fees', 0));
         $manualHpp = floatval($request->input('manual_hpp', 0));
+        $brandingFee = floatval($request->input('branding_fee', $request->input('screen_printing_fee', 0)));
 
         if ($isManual) {
-            $brandingFee = floatval($request->input('branding_fee', 0));
-            $screenPrintingFee = 0;
             $sewingFee = 0;
             $baseCost = $manualHpp;
             $totalHpp = $manualHpp + $brandingFee + $otherFees;
         } else {
-            $brandingFee = 0;
-            $screenPrintingFee = floatval($request->input('screen_printing_fee', 0));
             $sewingFee = floatval($request->input('sewing_fee', 0));
             $baseCost = $totalRaw;
-            $totalHpp = $totalRaw + $screenPrintingFee + $sewingFee + $otherFees;
+            $totalHpp = $totalRaw + $sewingFee + $brandingFee + $otherFees;
         }
 
         $calculation = HppCalculation::create([
@@ -548,7 +545,7 @@ class BusinessController extends Controller
             'manual_hpp' => $isManual ? $manualHpp : null,
             'total_raw_material_cost' => $baseCost,
             'branding_fee' => $brandingFee,
-            'screen_printing_fee' => $screenPrintingFee,
+            'screen_printing_fee' => $brandingFee, // backward compatibility
             'sewing_fee' => $sewingFee,
             'other_fees' => $otherFees,
             'total_hpp_per_unit' => $totalHpp,
@@ -682,19 +679,16 @@ class BusinessController extends Controller
 
         $otherFees = floatval($request->input('other_fees', 0));
         $manualHpp = floatval($request->input('manual_hpp', 0));
+        $brandingFee = floatval($request->input('branding_fee', $request->input('screen_printing_fee', 0)));
 
         if ($isManual) {
-            $brandingFee = floatval($request->input('branding_fee', 0));
-            $screenPrintingFee = 0;
             $sewingFee = 0;
             $baseCost = $manualHpp;
             $totalHpp = $manualHpp + $brandingFee + $otherFees;
         } else {
-            $brandingFee = 0;
-            $screenPrintingFee = floatval($request->input('screen_printing_fee', 0));
             $sewingFee = floatval($request->input('sewing_fee', 0));
             $baseCost = $totalRaw;
-            $totalHpp = $totalRaw + $screenPrintingFee + $sewingFee + $otherFees;
+            $totalHpp = $totalRaw + $sewingFee + $brandingFee + $otherFees;
         }
 
         $hpp->update([
@@ -704,7 +698,7 @@ class BusinessController extends Controller
             'manual_hpp' => $isManual ? $manualHpp : null,
             'total_raw_material_cost' => $baseCost,
             'branding_fee' => $brandingFee,
-            'screen_printing_fee' => $screenPrintingFee,
+            'screen_printing_fee' => $brandingFee, // backward compatibility
             'sewing_fee' => $sewingFee,
             'other_fees' => $otherFees,
             'total_hpp_per_unit' => $totalHpp,

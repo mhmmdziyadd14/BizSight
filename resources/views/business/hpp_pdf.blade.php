@@ -213,8 +213,9 @@
 <body>
     @php 
         $qty = $qty ?? 1; 
+        $brandingPerUnit = $hpp->branding_fee ?: ($hpp->screen_printing_fee ?? 0);
         $totalRaw = $hpp->total_raw_material_cost * $qty;
-        $totalSablon = $hpp->screen_printing_fee * $qty;
+        $totalBranding = $brandingPerUnit * $qty;
         $totalJahit = $hpp->sewing_fee * $qty;
         $totalLainnya = $hpp->other_fees * $qty;
         $targetJual = $hpp->target_selling_price * $qty;
@@ -295,7 +296,7 @@
                             </tr>
                             <tr>
                                 <td class="summary-label">Biaya Branding (1 Unit)</td>
-                                <td class="summary-value">Rp{{ number_format($hpp->branding_fee,0,',','.') }}</td>
+                                <td class="summary-value">Rp{{ number_format($brandingPerUnit,0,',','.') }}</td>
                             </tr>
                             @else
                             <tr>
@@ -303,12 +304,12 @@
                                 <td class="summary-value">Rp{{ number_format($hpp->total_raw_material_cost,0,',','.') }}</td>
                             </tr>
                             <tr>
-                                <td class="summary-label">Biaya Sablon (1 Unit)</td>
-                                <td class="summary-value">Rp{{ number_format($hpp->screen_printing_fee,0,',','.') }}</td>
-                            </tr>
-                            <tr>
                                 <td class="summary-label">Biaya Jahit (1 Unit)</td>
                                 <td class="summary-value">Rp{{ number_format($hpp->sewing_fee,0,',','.') }}</td>
+                            </tr>
+                            <tr>
+                                <td class="summary-label">Biaya Branding (1 Unit)</td>
+                                <td class="summary-value">Rp{{ number_format($brandingPerUnit,0,',','.') }}</td>
                             </tr>
                             @endif
                         </table>
@@ -345,7 +346,7 @@
                             </tr>
                             <tr>
                                 <td class="summary-label">Biaya Branding ({{ $qty }} Unit)</td>
-                                <td class="summary-value">Rp{{ number_format(($hpp->branding_fee ?? 0) * $qty,0,',','.') }}</td>
+                                <td class="summary-value">Rp{{ number_format($totalBranding,0,',','.') }}</td>
                             </tr>
                             @else
                             <tr>
@@ -353,12 +354,12 @@
                                 <td class="summary-value">Rp{{ number_format($totalRaw,0,',','.') }}</td>
                             </tr>
                             <tr>
-                                <td class="summary-label">Biaya Sablon ({{ $qty }} Unit)</td>
-                                <td class="summary-value">Rp{{ number_format($totalSablon,0,',','.') }}</td>
-                            </tr>
-                            <tr>
                                 <td class="summary-label">Biaya Jahit ({{ $qty }} Unit)</td>
                                 <td class="summary-value">Rp{{ number_format($totalJahit,0,',','.') }}</td>
+                            </tr>
+                            <tr>
+                                <td class="summary-label">Biaya Branding ({{ $qty }} Unit)</td>
+                                <td class="summary-value">Rp{{ number_format($totalBranding,0,',','.') }}</td>
                             </tr>
                             @endif
                         </table>
