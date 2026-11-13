@@ -307,9 +307,31 @@
 
                         /* --- SECTION 03: KOMPONEN MATERIAL TABLE --- */
                         @media (min-width: 1024px) {
-                            .mat-desktop-thead {
+                            #materialsTable {
+                                display: table !important;
+                                width: 100% !important;
+                            }
+                            #materialsTable thead.mat-desktop-thead {
                                 display: table-header-group !important;
                             }
+                            #materialsTable tbody {
+                                display: table-row-group !important;
+                                padding: 0 !important;
+                            }
+                            #materialsTable tr.material-row {
+                                display: table-row !important;
+                                padding: 0 !important;
+                                background: transparent !important;
+                                border: none !important;
+                                box-shadow: none !important;
+                            }
+                            #materialsTable td {
+                                display: table-cell !important;
+                                background: transparent !important;
+                                border: none !important;
+                                box-shadow: none !important;
+                            }
+                            #materialsTable td.mat-mobile-header-cell,
                             .mat-mobile-header-cell {
                                 display: none !important;
                             }
@@ -319,35 +341,29 @@
                             .mat-mobile-unit {
                                 display: none !important;
                             }
-                            .mat-usage-box {
-                                width: 6rem !important;
-                            }
-                            .mat-usage-box input {
-                                text-align: center !important;
-                            }
                             .mat-col-no,
                             .mat-col-jenis,
                             .mat-col-satuan,
                             .mat-col-aksi {
                                 display: table-cell !important;
                             }
-                            #materialsTable {
-                                display: table !important;
-                                width: 100% !important;
+                            .mat-kebutuhan-wrap {
+                                display: flex !important;
+                                flex-direction: column !important;
+                                align-items: center !important;
+                                gap: 0.5rem !important;
                             }
-                            #materialsTable tbody {
-                                display: table-row-group !important;
+                            .mat-usage-box {
+                                width: 6rem !important;
+                                margin: 0 auto !important;
                             }
-                            #materialsTable tr.material-row {
-                                display: table-row !important;
-                            }
-                            #materialsTable td {
-                                display: table-cell !important;
+                            .mat-usage-box input {
+                                text-align: center !important;
                             }
                         }
 
                         @media (max-width: 1023px) {
-                            .mat-desktop-thead {
+                            #materialsTable thead.mat-desktop-thead {
                                 display: none !important;
                             }
                             #materialsTable {
@@ -370,6 +386,7 @@
                                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
                                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
                             }
+                            #materialsTable td.mat-mobile-header-cell,
                             .mat-mobile-header-cell {
                                 display: block !important;
                                 padding: 0 !important;
@@ -388,6 +405,12 @@
                                 padding: 0 !important;
                                 width: 100% !important;
                                 border: none !important;
+                            }
+                            .mat-kebutuhan-wrap {
+                                display: flex !important;
+                                flex-direction: row !important;
+                                align-items: center !important;
+                                gap: 0.5rem !important;
                             }
                             .mat-col-harga,
                             .mat-col-vol,
@@ -702,7 +725,7 @@
                                             <!-- Col Kebutuhan -->
                                             <td class="mat-col-kebutuhan px-6 py-5">
                                                 <label class="mat-mobile-label text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Kebutuhan Bahan per Unit</label>
-                                                <div class="flex flex-row lg:flex-col items-center gap-2">
+                                                <div class="mat-kebutuhan-wrap w-full">
                                                     <select class="source-card-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-1.5 text-[9px] font-bold text-navy-800 dark:text-gray-400 focus:border-orange-500 focus:ring-0 transition-all">
                                                         <option value="">- Manual -</option>
                                                         <option value="0">Bahan #1</option>
