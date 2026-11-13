@@ -204,108 +204,138 @@
                                         </div>
                                     </div>
 
-                                    <div class="calc-card-table px-5 sm:px-8 py-6">
-                                        <div class="calc-card-tbody space-y-5">
-                                            <div class="calc-row bg-gray-50/80 dark:bg-navy-950/80 p-4 sm:p-6 rounded-2xl border border-gray-200/80 dark:border-white/10 relative space-y-4 shadow-sm transition-all">
-                                                <!-- Row Header: Item Badge + Remove Button -->
-                                                <div class="flex items-center justify-between pb-3 border-b border-gray-200/70 dark:border-white/5">
-                                                    <div class="flex items-center gap-2">
-                                                        <div class="w-6 h-6 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 font-black text-xs flex items-center justify-center">
-                                                            <span class="calc-row-number">1</span>
-                                                        </div>
-                                                        <span class="text-xs font-black text-navy-800 dark:text-white uppercase tracking-wider">Potongan / Pola Bahan</span>
-                                                    </div>
-                                                    <button type="button" class="calc-remove-row text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-lg text-lg font-bold transition-all" title="Hapus baris" aria-label="Hapus baris">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                    </button>
-                                                </div>
-                                                
-                                                <!-- Bagian 1: Identitas Pola (Deskripsi, Bahan, Warna) -->
-                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                                    <div>
-                                                        <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Deskripsi Pola</label>
-                                                        <input type="text" class="calc-description-input w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="Misal: Badan Depan / Lengan">
-                                                    </div>
-                                                    <div>
-                                                        <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Pilih Bahan</label>
-                                                        <select class="calc-material-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                            <option value="">-- Pilih Bahan --</option>
-                                                            @foreach($materialsByName as $material)
-                                                                <option value="{{ json_encode($material) }}" data-unit="{{ $material['unit'] }}" data-name="{{ $material['name'] }}">
-                                                                    {{ $material['name'] }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div>
-                                                        <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Pilih Warna</label>
-                                                        <select class="calc-color-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" disabled>
-                                                            <option value="">-- Pilih Warna --</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                    <div class="calc-card-table px-4 sm:px-6 lg:px-8 py-5 sm:py-6 overflow-x-auto custom-scrollbar">
+                                        <div class="lg:min-w-[1020px]">
+                                            <!-- Desktop Table Header for Section 02 (Only on lg+) -->
+                                            <div class="hidden lg:flex items-center gap-2.5 px-4 py-2 text-[9px] font-black text-gray-400 dark:text-gray-400 uppercase tracking-widest border-b border-gray-100 dark:border-white/5 mb-3">
+                                                <div class="w-6 text-center shrink-0">No</div>
+                                                <div class="flex-1 min-w-[130px]">Deskripsi Pola</div>
+                                                <div class="flex-1 min-w-[130px]">Pilih Bahan</div>
+                                                <div class="w-32 shrink-0">Pilih Warna</div>
+                                                <div class="w-16 text-center shrink-0">P (cm)</div>
+                                                <div class="w-16 text-center shrink-0">L (cm)</div>
+                                                <div class="w-14 text-center shrink-0">Qty</div>
+                                                <div class="w-20 text-center shrink-0">Hasil</div>
+                                                <div class="w-20 text-center shrink-0">Lebar (cm)</div>
+                                                <div class="w-20 text-center shrink-0">Kebutuhan</div>
+                                                <div class="w-16 text-center shrink-0">Satuan</div>
+                                                <div class="w-7 text-center shrink-0">Aksi</div>
+                                            </div>
 
-                                                <!-- Bagian 2: Dimensi & Input (Panjang, Lebar, Qty) -->
-                                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 pt-1 items-stretch">
-                                                    <!-- Dimensi Pola (5 cols) -->
-                                                    <div class="lg:col-span-5 grid grid-cols-3 gap-2.5 bg-white dark:bg-navy-900 p-3 rounded-xl border border-gray-200/80 dark:border-white/5">
-                                                        <div>
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">Panjang (P)</label>
-                                                            <div class="relative">
-                                                                <input type="number" onfocus="this.select()" class="calc-length w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-lg py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                                <span class="hidden sm:inline absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">cm</span>
+                                            <div class="calc-card-tbody space-y-4">
+                                                <div class="calc-row bg-gray-50/80 dark:bg-navy-950/80 p-4 sm:p-5 lg:py-2.5 lg:px-4 rounded-2xl border border-gray-200/80 dark:border-white/10 shadow-sm transition-all flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-2.5">
+                                                    <!-- Row Header (Mobile only): Item Badge + Remove Button -->
+                                                    <div class="flex lg:hidden items-center justify-between pb-3 border-b border-gray-200/70 dark:border-white/5">
+                                                        <div class="flex items-center gap-2">
+                                                            <div class="w-6 h-6 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 font-black text-xs flex items-center justify-center">
+                                                                <span class="calc-row-number">1</span>
                                                             </div>
+                                                            <span class="text-xs font-black text-navy-800 dark:text-white uppercase tracking-wider">Potongan / Pola Bahan</span>
                                                         </div>
-                                                        <div>
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">Lebar (L)</label>
-                                                            <div class="relative">
-                                                                <input type="number" onfocus="this.select()" class="calc-width w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-lg py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                                <span class="hidden sm:inline absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">cm</span>
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">Qty Pcs</label>
-                                                            <div class="relative">
-                                                                <input type="number" onfocus="this.select()" class="calc-qty-input w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-lg py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                                <span class="hidden sm:inline absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">pcs</span>
-                                                            </div>
-                                                        </div>
+                                                        <button type="button" class="calc-remove-row text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-lg text-lg font-bold transition-all" title="Hapus baris" aria-label="Hapus baris">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                        </button>
                                                     </div>
 
-                                                    <!-- Hasil & Kebutuhan Bahan (7 cols) -->
-                                                    <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-orange-50/50 dark:bg-navy-900 p-3 rounded-xl border border-orange-100 dark:border-white/5">
-                                                        <div>
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">Hasil (P×L×Qty)</label>
-                                                            <div class="h-9 flex items-center justify-center bg-white dark:bg-navy-950 rounded-lg border border-gray-200 dark:border-white/10">
-                                                                <span class="calc-hasil-display text-xs font-black text-orange-600 dark:text-orange-400">0</span>
-                                                            </div>
+                                                    <!-- Desktop Row Number (Only on lg+) -->
+                                                    <div class="hidden lg:flex items-center justify-center w-6 shrink-0 font-black text-xs text-navy-800 dark:text-white">
+                                                        <span class="calc-row-number">1</span>
+                                                    </div>
+                                                    
+                                                    <!-- Bagian 1: Identitas Pola (Deskripsi, Bahan, Warna) -->
+                                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:contents">
+                                                        <div class="w-full lg:flex-1 lg:min-w-[130px]">
+                                                            <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1 lg:hidden">Deskripsi Pola</label>
+                                                            <input type="text" class="calc-description-input w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="Misal: Badan Depan / Lengan">
                                                         </div>
-                                                        <div>
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">Lebar Kain (cm)</label>
-                                                            <input type="number" onfocus="this.select()" class="calc-luas-bahan-input w-full h-9 text-center bg-white dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-lg px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                        </div>
-                                                        <div>
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">Kebutuhan</label>
-                                                            <div class="h-9 flex items-center justify-center bg-white dark:bg-navy-950 rounded-lg border border-orange-300 dark:border-orange-500/30">
-                                                                <span class="calc-kebutuhan-display text-xs font-black text-navy-800 dark:text-white">0</span>
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">Satuan</label>
-                                                            <select class="calc-unit w-full h-9 bg-white dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-lg px-1 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all text-center" disabled>
-                                                                <option value="">-</option>
-                                                                <option value="mL">mL</option>
-                                                                <option value="L">L</option>
-                                                                <option value="gr">gr</option>
-                                                                <option value="kg">kg</option>
-                                                                <option value="buah">buah</option>
-                                                                <option value="pcs">pcs</option>
-                                                                <option value="lembar">lembar</option>
-                                                                <option value="meter">m</option>
-                                                                <option value="cm">cm</option>
-                                                                <option value="roll">roll</option>
-                                                                <option value="yard">yard</option>
+                                                        <div class="w-full lg:flex-1 lg:min-w-[130px]">
+                                                            <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1 lg:hidden">Pilih Bahan</label>
+                                                            <select class="calc-material-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                                <option value="">-- Pilih Bahan --</option>
+                                                                @foreach($materialsByName as $material)
+                                                                    <option value="{{ json_encode($material) }}" data-unit="{{ $material['unit'] }}" data-name="{{ $material['name'] }}">
+                                                                        {{ $material['name'] }}
+                                                                    </option>
+                                                                @endforeach
                                                             </select>
+                                                        </div>
+                                                        <div class="w-full lg:w-32 lg:shrink-0">
+                                                            <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1 lg:hidden">Pilih Warna</label>
+                                                            <select class="calc-color-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" disabled>
+                                                                <option value="">-- Pilih Warna --</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Bagian 2: Dimensi & Input (Panjang, Lebar, Qty) and Hasil/Kebutuhan -->
+                                                    <div class="grid grid-cols-1 gap-3.5 pt-1 lg:pt-0 items-stretch lg:items-center lg:contents">
+                                                        <!-- Dimensi Pola (P, L, Qty) -->
+                                                        <div class="grid grid-cols-3 gap-2.5 bg-white dark:bg-navy-900 p-3 rounded-xl border border-gray-200/80 dark:border-white/5 lg:bg-transparent lg:p-0 lg:rounded-none lg:border-0 lg:contents">
+                                                            <div class="w-full lg:w-16 lg:shrink-0">
+                                                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center lg:hidden">Panjang (P)</label>
+                                                                <div class="relative">
+                                                                    <input type="number" onfocus="this.select()" class="calc-length w-full text-center bg-gray-50 dark:bg-navy-950 lg:bg-white lg:dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-lg py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                                    <span class="hidden sm:inline lg:hidden absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">cm</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="w-full lg:w-16 lg:shrink-0">
+                                                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center lg:hidden">Lebar (L)</label>
+                                                                <div class="relative">
+                                                                    <input type="number" onfocus="this.select()" class="calc-width w-full text-center bg-gray-50 dark:bg-navy-950 lg:bg-white lg:dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-lg py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                                    <span class="hidden sm:inline lg:hidden absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">cm</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="w-full lg:w-14 lg:shrink-0">
+                                                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center lg:hidden">Qty Pcs</label>
+                                                                <div class="relative">
+                                                                    <input type="number" onfocus="this.select()" class="calc-qty-input w-full text-center bg-gray-50 dark:bg-navy-950 lg:bg-white lg:dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-lg py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                                    <span class="hidden sm:inline lg:hidden absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">pcs</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Hasil & Kebutuhan Bahan -->
+                                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-orange-50/50 dark:bg-navy-900 p-3 rounded-xl border border-orange-100 dark:border-white/5 lg:bg-transparent lg:p-0 lg:rounded-none lg:border-0 lg:contents">
+                                                            <div class="w-full lg:w-20 lg:shrink-0">
+                                                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center lg:hidden">Hasil (P×L×Qty)</label>
+                                                                <div class="h-9 flex items-center justify-center bg-white dark:bg-navy-950 lg:bg-gray-100 lg:dark:bg-navy-900 rounded-lg border border-gray-200 dark:border-white/10 px-1">
+                                                                    <span class="calc-hasil-display text-xs font-black text-orange-600 dark:text-orange-400 truncate">0</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="w-full lg:w-20 lg:shrink-0">
+                                                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center lg:hidden">Lebar Kain (cm)</label>
+                                                                <input type="number" onfocus="this.select()" class="calc-luas-bahan-input w-full h-9 text-center bg-white dark:bg-navy-950 lg:bg-white lg:dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-lg px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
+                                                            </div>
+                                                            <div class="w-full lg:w-20 lg:shrink-0">
+                                                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center lg:hidden">Kebutuhan</label>
+                                                                <div class="h-9 flex items-center justify-center bg-white dark:bg-navy-950 lg:bg-orange-50/60 lg:dark:bg-orange-500/10 rounded-lg border border-orange-300 dark:border-orange-500/30 px-1">
+                                                                    <span class="calc-kebutuhan-display text-xs font-black text-navy-800 dark:text-white truncate">0</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="w-full lg:w-16 lg:shrink-0">
+                                                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center lg:hidden">Satuan</label>
+                                                                <select class="calc-unit w-full h-9 bg-white dark:bg-navy-950 lg:bg-white lg:dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-lg px-1 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all text-center" disabled>
+                                                                    <option value="">-</option>
+                                                                    <option value="mL">mL</option>
+                                                                    <option value="L">L</option>
+                                                                    <option value="gr">gr</option>
+                                                                    <option value="kg">kg</option>
+                                                                    <option value="buah">buah</option>
+                                                                    <option value="pcs">pcs</option>
+                                                                    <option value="lembar">lembar</option>
+                                                                    <option value="meter">m</option>
+                                                                    <option value="cm">cm</option>
+                                                                    <option value="roll">roll</option>
+                                                                    <option value="yard">yard</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Desktop Remove Button (only lg+) -->
+                                                        <div class="hidden lg:flex items-center justify-center w-7 shrink-0">
+                                                            <button type="button" class="calc-remove-row text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-lg text-lg font-bold transition-all" title="Hapus baris" aria-label="Hapus baris">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -353,81 +383,111 @@
                             </div>
 
                             <!-- Materials Card Form Container -->
-                            <div id="materialsTable" class="px-5 sm:px-8 py-6">
-                                <div id="materialsBody" class="space-y-4">
-                                    <!-- Material Row Card Form -->
-                                    <div class="material-row bg-gray-50/80 dark:bg-navy-950/80 p-4 sm:p-6 rounded-2xl border border-gray-200/80 dark:border-white/10 space-y-4 shadow-sm transition-all">
-                                        <!-- Header: Badge No, Title, Jenis Badge, & Remove Button -->
-                                        <div class="flex items-center justify-between pb-3 border-b border-gray-200/70 dark:border-white/5">
-                                            <div class="flex items-center gap-2.5">
-                                                <div class="w-6 h-6 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 font-black text-xs flex items-center justify-center">
-                                                    <span class="row-number">1</span>
-                                                </div>
-                                                <span class="text-xs font-black text-navy-800 dark:text-white uppercase tracking-wider">Komponen Bahan Baku</span>
-                                                <span class="type-display text-[9px] font-black text-gray-500 dark:text-gray-400 bg-gray-200/80 dark:bg-navy-900 px-2 py-0.5 rounded-md uppercase tracking-wider">-</span>
-                                            </div>
-                                            <button type="button" class="remove-row text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-lg text-lg font-bold transition-all" title="Hapus baris" aria-label="Hapus baris">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                            </button>
-                                        </div>
+                            <div id="materialsTable" class="px-5 sm:px-8 py-6 overflow-x-auto custom-scrollbar">
+                                <div class="lg:min-w-[1040px]">
+                                    <!-- Desktop Table Header (Only on lg+) -->
+                                    <div class="hidden lg:flex items-center gap-3 px-6 py-2.5 text-[10px] font-black text-gray-400 dark:text-gray-400 uppercase tracking-widest border-b border-gray-100 dark:border-white/5 mb-3">
+                                        <div class="w-7 text-center shrink-0">No</div>
+                                        <div class="w-24 text-center shrink-0">Jenis</div>
+                                        <div class="flex-1 min-w-[150px]">Bahan</div>
+                                        <div class="w-40 shrink-0">Warna</div>
+                                        <div class="w-56 shrink-0 text-center">Kebutuhan per Unit</div>
+                                        <div class="w-28 shrink-0 text-right">Harga Beli</div>
+                                        <div class="w-16 shrink-0 text-center">Vol Beli</div>
+                                        <div class="w-28 shrink-0 text-right">HPP Bahan</div>
+                                        <div class="w-8 shrink-0 text-center">Aksi</div>
+                                    </div>
 
-                                        <!-- Bagian 1: Pilih Bahan & Pilihan Warna -->
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                                            <div>
-                                                <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Pilih Bahan</label>
-                                                <select class="material-name-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
-                                                    <option value="">-- Pilih Bahan --</option>
-                                                    @foreach($materialsByName as $material)
-                                                        <option value="{{ json_encode($material) }}" data-name="{{ $material['name'] }}">{{ $material['name'] }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1">Pilihan Warna</label>
-                                                <select name="material_ids[]"
-                                                    class="material-color-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" disabled>
-                                                    <option value="">-- Pilih Warna --</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <!-- Bagian 2: Kebutuhan, Info Pembelian & Subtotal HPP Bahan -->
-                                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 pt-1 items-stretch">
-                                            <!-- Input Kebutuhan: Sumber Card & Jumlah Usage (5 cols) -->
-                                            <div class="lg:col-span-5 bg-white dark:bg-navy-900 p-3.5 rounded-xl border border-gray-200/80 dark:border-white/5 space-y-2 flex flex-col justify-between">
-                                                <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block">Kebutuhan Bahan per Unit</label>
-                                                <div class="flex items-center gap-2">
-                                                    <div class="w-1/2">
-                                                        <select class="source-card-select w-full bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-2 text-[10px] font-bold text-navy-800 dark:text-gray-300 focus:border-orange-500 focus:ring-0 transition-all">
-                                                            <option value="">- Manual -</option>
-                                                            <option value="0">Bahan #1</option>
-                                                        </select>
+                                    <div id="materialsBody" class="space-y-4">
+                                        <!-- Material Row Card Form -->
+                                        <div class="material-row bg-gray-50/80 dark:bg-navy-950/80 p-4 sm:p-5 lg:py-2.5 lg:px-6 rounded-2xl border border-gray-200/80 dark:border-white/10 shadow-sm transition-all flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-3">
+                                            <!-- Mobile Header: Badge No, Title, Jenis Badge, & Remove Button -->
+                                            <div class="flex lg:hidden items-center justify-between pb-3 border-b border-gray-200/70 dark:border-white/5">
+                                                <div class="flex items-center gap-2.5">
+                                                    <div class="w-6 h-6 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 font-black text-xs flex items-center justify-center">
+                                                        <span class="row-number">1</span>
                                                     </div>
-                                                    <div class="w-1/2 relative flex items-center">
-                                                        <input type="number" step="0.01" name="usage_amounts[]"
-                                                            class="usage-input w-full text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-lg px-2 py-2 pr-12 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
-                                                            value="" placeholder="0" onfocus="this.select()">
-                                                        <span class="unit-display absolute right-2.5 text-[10px] font-black text-orange-500 uppercase select-none">-</span>
+                                                    <span class="text-xs font-black text-navy-800 dark:text-white uppercase tracking-wider">Komponen Bahan Baku</span>
+                                                    <span class="type-display text-[9px] font-black text-gray-500 dark:text-gray-400 bg-gray-200/80 dark:bg-navy-900 px-2 py-0.5 rounded-md uppercase tracking-wider">-</span>
+                                                </div>
+                                                <button type="button" class="remove-row text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-lg text-lg font-bold transition-all" title="Hapus baris" aria-label="Hapus baris">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                </button>
+                                            </div>
+
+                                            <!-- Desktop No & Jenis (lg+) -->
+                                            <div class="hidden lg:flex items-center justify-center w-7 shrink-0 font-black text-xs text-navy-800 dark:text-white">
+                                                <span class="row-number">1</span>
+                                            </div>
+                                            <div class="hidden lg:flex items-center justify-center w-24 shrink-0">
+                                                <span class="type-display text-[9px] font-black text-gray-500 dark:text-gray-400 bg-gray-200/80 dark:bg-navy-900 px-2.5 py-1 rounded-md uppercase tracking-wider text-center truncate">-</span>
+                                            </div>
+
+                                            <!-- Bagian 1: Pilih Bahan & Pilihan Warna -->
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 lg:contents">
+                                                <div class="w-full lg:flex-1 lg:min-w-[150px]">
+                                                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1 lg:hidden">Pilih Bahan</label>
+                                                    <select class="material-name-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all">
+                                                        <option value="">-- Pilih Bahan --</option>
+                                                        @foreach($materialsByName as $material)
+                                                            <option value="{{ json_encode($material) }}" data-name="{{ $material['name'] }}">{{ $material['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="w-full lg:w-40 lg:shrink-0">
+                                                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block mb-1.5 ml-1 lg:hidden">Pilihan Warna</label>
+                                                    <select name="material_ids[]"
+                                                        class="material-color-select w-full bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-3.5 py-2 text-xs font-bold text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" disabled>
+                                                        <option value="">-- Pilih Warna --</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <!-- Bagian 2: Kebutuhan, Info Pembelian & Subtotal HPP Bahan -->
+                                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5 pt-1 lg:pt-0 items-stretch lg:items-center lg:contents">
+                                                <!-- Input Kebutuhan: Sumber Card & Jumlah Usage -->
+                                                <div class="sm:col-span-5 bg-white dark:bg-navy-900 p-3.5 lg:p-0 rounded-xl border border-gray-200/80 dark:border-white/5 lg:border-0 lg:bg-transparent space-y-2 lg:space-y-0 flex flex-col lg:flex-row justify-between lg:w-56 lg:shrink-0">
+                                                    <label class="text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block lg:hidden">Kebutuhan Bahan per Unit</label>
+                                                    <div class="flex items-center gap-1.5 w-full">
+                                                        <div class="w-1/2">
+                                                            <select class="source-card-select w-full bg-gray-50 dark:bg-navy-950 lg:bg-white lg:dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-2 py-2 text-[10px] font-bold text-navy-800 dark:text-gray-300 focus:border-orange-500 focus:ring-0 transition-all">
+                                                                <option value="">- Manual -</option>
+                                                                <option value="0">Bahan #1</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="w-1/2 relative flex items-center">
+                                                            <input type="number" step="0.01" name="usage_amounts[]"
+                                                                class="usage-input w-full text-center bg-gray-50 dark:bg-navy-950 lg:bg-white lg:dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-2 py-2 pr-10 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
+                                                                value="" placeholder="0" onfocus="this.select()">
+                                                            <span class="unit-display absolute right-2 text-[9px] font-black text-orange-500 uppercase select-none">-</span>
+                                                        </div>
                                                     </div>
                                                 </div>
+
+                                                <!-- Info Pembelian: Harga Beli & Vol Beli -->
+                                                <div class="sm:col-span-4 grid grid-cols-2 gap-2 bg-white dark:bg-navy-900 p-3.5 lg:p-0 rounded-xl border border-gray-200/80 dark:border-white/5 lg:border-0 lg:bg-transparent lg:flex lg:items-center lg:gap-3 lg:w-44 lg:shrink-0">
+                                                    <div class="flex flex-col justify-center lg:w-28 lg:text-right">
+                                                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 lg:hidden">Harga Beli</span>
+                                                        <span class="price-display text-xs font-bold text-navy-800 dark:text-gray-200 block truncate">Rp 0</span>
+                                                    </div>
+                                                    <div class="flex flex-col justify-center lg:w-16 lg:text-center">
+                                                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 lg:hidden">Vol Beli</span>
+                                                        <span class="volume-display text-xs font-bold text-navy-800 dark:text-gray-200 block">-</span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Subtotal HPP Bahan -->
+                                                <div class="sm:col-span-3 bg-orange-500/10 dark:bg-orange-500/15 p-3.5 lg:p-0 rounded-xl border border-orange-500/20 lg:border-0 lg:bg-transparent flex flex-col justify-center text-right lg:w-28 lg:shrink-0">
+                                                    <span class="text-[9px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest block mb-1 lg:hidden">HPP Bahan Ini</span>
+                                                    <span class="unit-price-display text-base lg:text-sm font-black text-orange-600 dark:text-orange-400 block truncate">Rp 0</span>
+                                                </div>
                                             </div>
 
-                                            <!-- Info Pembelian: Harga Beli & Vol Beli (4 cols) -->
-                                            <div class="lg:col-span-4 grid grid-cols-2 gap-2 bg-white dark:bg-navy-900 p-3.5 rounded-xl border border-gray-200/80 dark:border-white/5">
-                                                <div class="flex flex-col justify-center">
-                                                    <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">Harga Beli</span>
-                                                    <span class="price-display text-xs font-bold text-navy-800 dark:text-gray-200 block truncate">Rp 0</span>
-                                                </div>
-                                                <div class="flex flex-col justify-center">
-                                                    <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">Vol Beli</span>
-                                                    <span class="volume-display text-xs font-bold text-navy-800 dark:text-gray-200 block">-</span>
-                                                </div>
-                                            </div>
-
-                                            <!-- Subtotal HPP Bahan (3 cols) -->
-                                            <div class="lg:col-span-3 bg-orange-500/10 dark:bg-orange-500/15 p-3.5 rounded-xl border border-orange-500/20 flex flex-col justify-center text-right">
-                                                <span class="text-[9px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest block mb-1">HPP Bahan Ini</span>
-                                                <span class="unit-price-display text-base font-black text-orange-600 dark:text-orange-400 block">Rp 0</span>
+                                            <!-- Desktop Remove Button (only lg+) -->
+                                            <div class="hidden lg:flex items-center justify-center w-8 shrink-0">
+                                                <button type="button" class="remove-row text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-500/10 p-1.5 rounded-lg text-lg font-bold transition-all" title="Hapus baris" aria-label="Hapus baris">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -712,8 +772,9 @@
 
             function refreshRowNumbers() {
                 document.querySelectorAll('.material-row').forEach((row, index) => {
-                    const numEl = row.querySelector('.row-number');
-                    if (numEl) numEl.innerText = index + 1;
+                    row.querySelectorAll('.row-number').forEach(numEl => {
+                        numEl.innerText = index + 1;
+                    });
                 });
             }
 
@@ -810,20 +871,20 @@
             function syncRow(row) {
                 const colorSelect = row.querySelector('.material-color-select');
                 const selected = colorSelect.selectedOptions[0];
-                const typeEl = row.querySelector('.type-display');
-                const unitEl = row.querySelector('.unit-display');
-                const volumeEl = row.querySelector('.volume-display');
+                const typeEls = row.querySelectorAll('.type-display');
+                const unitEls = row.querySelectorAll('.unit-display');
+                const volumeEls = row.querySelectorAll('.volume-display');
 
                 if (!selected || !selected.value) {
-                    if (unitEl) unitEl.innerText = '-';
-                    if (volumeEl) volumeEl.innerText = '-';
+                    unitEls.forEach(el => el.innerText = '-');
+                    volumeEls.forEach(el => el.innerText = '-');
                 } else {
-                    if (typeEl) typeEl.innerText = selected.getAttribute('data-type') || selected.dataset.type || '-';
-                    if (unitEl) unitEl.innerText = selected.getAttribute('data-unit') || selected.dataset.unit || '-';
-                    if (volumeEl) {
-                        const volume = parseFloat(selected.getAttribute('data-purchase-volume') || selected.dataset.purchaseVolume || 0);
-                        volumeEl.innerText = volume > 0 ? volume : '-';
-                    }
+                    const typeText = selected.getAttribute('data-type') || selected.dataset.type || '-';
+                    typeEls.forEach(el => el.innerText = typeText);
+                    const unitText = selected.getAttribute('data-unit') || selected.dataset.unit || '-';
+                    unitEls.forEach(el => el.innerText = unitText);
+                    const volume = parseFloat(selected.getAttribute('data-purchase-volume') || selected.dataset.purchaseVolume || 0);
+                    volumeEls.forEach(el => el.innerText = volume > 0 ? volume : '-');
                 }
 
                 refreshRowNumbers();
@@ -834,21 +895,21 @@
                 if (e.target.classList.contains('material-name-select')) {
                     const row = e.target.closest('.material-row');
                     const colorSelect = row.querySelector('.material-color-select');
-                    const typeEl = row.querySelector('.type-display');
-                    const unitEl = row.querySelector('.unit-display');
-                    const volumeEl = row.querySelector('.volume-display');
+                    const typeEls = row.querySelectorAll('.type-display');
+                    const unitEls = row.querySelectorAll('.unit-display');
+                    const volumeEls = row.querySelectorAll('.volume-display');
 
                     colorSelect.innerHTML = '<option value="">-- Pilih Warna --</option>';
                     colorSelect.disabled = true;
-                    if (typeEl) typeEl.innerText = '-';
-                    if (unitEl) unitEl.innerText = '-';
-                    if (volumeEl) volumeEl.innerText = '-';
+                    typeEls.forEach(el => el.innerText = '-');
+                    unitEls.forEach(el => el.innerText = '-');
+                    volumeEls.forEach(el => el.innerText = '-');
 
                     if (e.target.value) {
                         try {
                             const materialData = JSON.parse(e.target.value);
-                            if (typeEl) typeEl.innerText = materialData.type || '-';
-                            if (unitEl) unitEl.innerText = materialData.unit || '-';
+                            typeEls.forEach(el => el.innerText = materialData.type || '-');
+                            unitEls.forEach(el => el.innerText = materialData.unit || '-');
                             
                             materialData.colors.forEach(colorItem => {
                                 const option = document.createElement('option');
@@ -975,27 +1036,27 @@
             });
 
             function attachRemoveHandler(row) {
-                const btn = row.querySelector('.remove-row');
-                if (!btn) return;
-                btn.addEventListener('click', () => {
-                    const rowCount = tableBody.querySelectorAll('.material-row').length;
-                    if (rowCount <= 1) {
-                        row.querySelector('.material-name-select').value = '';
-                        row.querySelector('.material-color-select').value = '';
-                        row.querySelector('.material-color-select').disabled = true;
-                        row.querySelector('.material-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
-                        row.querySelector('.type-display').innerText = '-';
-                        row.querySelector('.unit-display').innerText = '-';
-                        row.querySelector('.usage-input').value = '';
-                        row.querySelector('.price-display').innerText = 'Rp 0';
-                        row.querySelector('.volume-display').innerText = '-';
-                        row.querySelector('.unit-price-display').innerText = 'Rp 0';
+                row.querySelectorAll('.remove-row').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const rowCount = tableBody.querySelectorAll('.material-row').length;
+                        if (rowCount <= 1) {
+                            row.querySelector('.material-name-select').value = '';
+                            row.querySelector('.material-color-select').value = '';
+                            row.querySelector('.material-color-select').disabled = true;
+                            row.querySelector('.material-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
+                            row.querySelectorAll('.type-display').forEach(el => el.innerText = '-');
+                            row.querySelectorAll('.unit-display').forEach(el => el.innerText = '-');
+                            row.querySelector('.usage-input').value = '';
+                            row.querySelectorAll('.price-display').forEach(el => el.innerText = 'Rp 0');
+                            row.querySelectorAll('.volume-display').forEach(el => el.innerText = '-');
+                            row.querySelectorAll('.unit-price-display').forEach(el => el.innerText = 'Rp 0');
+                            calculateTotals();
+                            return;
+                        }
+                        row.remove();
+                        refreshRowNumbers();
                         calculateTotals();
-                        return;
-                    }
-                    row.remove();
-                    refreshRowNumbers();
-                    calculateTotals();
+                    });
                 });
             }
 
@@ -1008,12 +1069,12 @@
                 newRow.querySelector('.material-color-select').value = '';
                 newRow.querySelector('.material-color-select').disabled = true;
                 newRow.querySelector('.material-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
-                newRow.querySelector('.type-display').innerText = '-';
-                newRow.querySelector('.unit-display').innerText = '-';
+                newRow.querySelectorAll('.type-display').forEach(el => el.innerText = '-');
+                newRow.querySelectorAll('.unit-display').forEach(el => el.innerText = '-');
                 newRow.querySelector('.usage-input').value = '';
-                newRow.querySelector('.price-display').innerText = 'Rp 0';
-                newRow.querySelector('.volume-display').innerText = '-';
-                newRow.querySelector('.unit-price-display').innerText = 'Rp 0';
+                newRow.querySelectorAll('.price-display').forEach(el => el.innerText = 'Rp 0');
+                newRow.querySelectorAll('.volume-display').forEach(el => el.innerText = '-');
+                newRow.querySelectorAll('.unit-price-display').forEach(el => el.innerText = 'Rp 0');
                 attachRemoveHandler(newRow);
                 tableBody.appendChild(newRow);
                 refreshRowNumbers();
@@ -1037,8 +1098,9 @@
 
             function refreshCalcRowNumbersInCard(tbody) {
                 tbody.querySelectorAll('.calc-row').forEach((row, index) => {
-                    const numEl = row.querySelector('.calc-row-number');
-                    if (numEl) numEl.innerText = index + 1;
+                    row.querySelectorAll('.calc-row-number').forEach(numEl => {
+                        numEl.innerText = index + 1;
+                    });
                 });
             }
 
@@ -1156,14 +1218,16 @@
             });
 
             function attachCalcRowHandlers(row) {
-                row.querySelector('.calc-remove-row').addEventListener('click', () => {
-                    const tbody = row.closest('.calc-card-tbody');
-                    const card = row.closest('.calc-card');
-                    if (tbody.querySelectorAll('.calc-row').length > 1) {
-                        row.remove();
-                        refreshCalcRowNumbersInCard(tbody);
-                        calculateCardTotal(card);
-                    }
+                row.querySelectorAll('.calc-remove-row').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tbody = row.closest('.calc-card-tbody');
+                        const card = row.closest('.calc-card');
+                        if (tbody.querySelectorAll('.calc-row').length > 1) {
+                            row.remove();
+                            refreshCalcRowNumbersInCard(tbody);
+                            calculateCardTotal(card);
+                        }
+                    });
                 });
             }
 
@@ -1176,8 +1240,8 @@
                     const firstRow = tbody.querySelector('.calc-row');
                     const newRow = firstRow.cloneNode(true);
                     newRow.querySelectorAll('input').forEach(i => i.value = '');
-                    newRow.querySelector('.calc-hasil-display').innerText = '0';
-                    newRow.querySelector('.calc-kebutuhan-display').innerText = '0';
+                    newRow.querySelectorAll('.calc-hasil-display').forEach(el => el.innerText = '0');
+                    newRow.querySelectorAll('.calc-kebutuhan-display').forEach(el => el.innerText = '0');
                     newRow.querySelector('.calc-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
                     newRow.querySelector('.calc-color-select').disabled = true;
                     newRow.querySelector('.calc-material-select').value = '';
@@ -1200,8 +1264,8 @@
                 while (tbody.children.length > 1) tbody.removeChild(tbody.lastChild);
                 tbody.querySelectorAll('input').forEach(i => i.value = '');
                 newCard.querySelector('.calc-card-total-kebutuhan').innerText = '0.00';
-                newCard.querySelector('.calc-hasil-display').innerText = '0';
-                newCard.querySelector('.calc-kebutuhan-display').innerText = '0';
+                newCard.querySelectorAll('.calc-hasil-display').forEach(el => el.innerText = '0');
+                newCard.querySelectorAll('.calc-kebutuhan-display').forEach(el => el.innerText = '0');
                 newCard.querySelector('.calc-color-select').innerHTML = '<option value="">-- Pilih Warna --</option>';
                 newCard.querySelector('.calc-color-select').disabled = true;
                 newCard.querySelector('.calc-material-select').value = '';
