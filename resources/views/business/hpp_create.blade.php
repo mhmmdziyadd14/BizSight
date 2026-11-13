@@ -160,6 +160,58 @@
                            RESPONSIVE SECTION 02 & SECTION 03 (HYBRID DESKTOP/MOBILE)
                            ======================================================== */
 
+                        /* --- Base Form & Bubble Components --- */
+                        .calc-dim-box {
+                            display: flex !important;
+                            align-items: center !important;
+                            justify-content: space-between !important;
+                            position: relative !important;
+                            height: 2.5rem !important; /* 40px */
+                            box-sizing: border-box !important;
+                        }
+                        .calc-dim-box input {
+                            flex: 1 1 0% !important;
+                            width: 100% !important;
+                            min-width: 0 !important;
+                        }
+                        .calc-unit-hint {
+                            user-select: none !important;
+                            white-space: nowrap !important;
+                        }
+
+                        .mat-usage-box {
+                            display: flex !important;
+                            align-items: center !important;
+                            justify-content: space-between !important;
+                            position: relative !important;
+                            height: 2.5rem !important; /* 40px */
+                            box-sizing: border-box !important;
+                        }
+                        .mat-usage-box input {
+                            flex: 1 1 0% !important;
+                            width: 100% !important;
+                            min-width: 0 !important;
+                        }
+                        .mat-mobile-unit {
+                            user-select: none !important;
+                            white-space: nowrap !important;
+                        }
+
+                        /* Currency Input Prefix & Box */
+                        .input-currency-box {
+                            display: flex !important;
+                            align-items: center !important;
+                        }
+                        .input-currency-prefix {
+                            flex-shrink: 0 !important;
+                            margin-right: 0.75rem !important;
+                            user-select: none !important;
+                        }
+                        .input-currency-box input {
+                            flex: 1 1 0% !important;
+                            width: 100% !important;
+                        }
+
                         /* --- SECTION 02: KALKULATOR KEBUTUHAN BAHAN --- */
                         @media (min-width: 1024px) {
                             .calc-mobile-header {
@@ -197,6 +249,9 @@
                             }
                             .calc-unit-hint {
                                 display: none !important;
+                            }
+                            .calc-dim-box input {
+                                text-align: center !important;
                             }
                         }
 
@@ -239,7 +294,14 @@
                                 border: 1px solid rgba(249, 115, 22, 0.1);
                             }
                             .calc-unit-hint {
-                                display: inline !important;
+                                display: inline-block !important;
+                                flex-shrink: 0 !important;
+                                margin-left: 0.25rem !important;
+                                font-size: 10px !important;
+                            }
+                            .calc-dim-box input {
+                                text-align: right !important;
+                                padding-right: 0.25rem !important;
                             }
                         }
 
@@ -256,6 +318,12 @@
                             }
                             .mat-mobile-unit {
                                 display: none !important;
+                            }
+                            .mat-usage-box {
+                                width: 6rem !important;
+                            }
+                            .mat-usage-box input {
+                                text-align: center !important;
                             }
                             .mat-col-no,
                             .mat-col-jenis,
@@ -348,7 +416,17 @@
                                 margin-bottom: 0 !important;
                             }
                             .mat-mobile-unit {
-                                display: inline !important;
+                                display: inline-block !important;
+                                flex-shrink: 0 !important;
+                                margin-left: 0.35rem !important;
+                                font-size: 10px !important;
+                            }
+                            .mat-usage-box {
+                                width: 100% !important;
+                            }
+                            .mat-usage-box input {
+                                text-align: right !important;
+                                padding-right: 0.25rem !important;
                             }
                         }
                         </style>
@@ -456,24 +534,24 @@
                                                 <div class="calc-grid-row-2">
                                                     <div class="calc-sub-dimensi">
                                                         <div class="calc-col-p">
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Panjang (P)</label>
-                                                            <div class="relative">
-                                                                <input type="number" onfocus="this.select()" class="calc-length w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                                <span class="calc-unit-hint absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">cm</span>
+                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 text-center">Panjang (P)</label>
+                                                            <div class="calc-dim-box bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 transition-all focus-within:border-orange-500 focus-within:ring-1 focus-within:ring-orange-500/20">
+                                                                <input type="number" onfocus="this.select()" class="calc-length w-full bg-transparent border-0 p-0 text-xs font-black text-navy-800 dark:text-white focus:outline-none focus:ring-0" style="border:none!important;outline:none!important;box-shadow:none!important;background:transparent!important;" placeholder="0" step="0.01" min="0">
+                                                                <span class="calc-unit-hint text-[10px] font-bold text-gray-400 dark:text-gray-400 select-none">cm</span>
                                                             </div>
                                                         </div>
                                                         <div class="calc-col-l">
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Lebar (L)</label>
-                                                            <div class="relative">
-                                                                <input type="number" onfocus="this.select()" class="calc-width w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                                <span class="calc-unit-hint absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">cm</span>
+                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 text-center">Lebar (L)</label>
+                                                            <div class="calc-dim-box bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 transition-all focus-within:border-orange-500 focus-within:ring-1 focus-within:ring-orange-500/20">
+                                                                <input type="number" onfocus="this.select()" class="calc-width w-full bg-transparent border-0 p-0 text-xs font-black text-navy-800 dark:text-white focus:outline-none focus:ring-0" style="border:none!important;outline:none!important;box-shadow:none!important;background:transparent!important;" placeholder="0" step="0.01" min="0">
+                                                                <span class="calc-unit-hint text-[10px] font-bold text-gray-400 dark:text-gray-400 select-none">cm</span>
                                                             </div>
                                                         </div>
                                                         <div class="calc-col-qty">
-                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-2 text-center">Qty Pcs</label>
-                                                            <div class="relative">
-                                                                <input type="number" onfocus="this.select()" class="calc-qty-input w-full text-center bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/5 rounded-xl py-2 px-1 text-xs font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all" placeholder="0" step="0.01" min="0">
-                                                                <span class="calc-unit-hint absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-bold text-gray-400 select-none">pcs</span>
+                                                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1.5 text-center">Qty Pcs</label>
+                                                            <div class="calc-dim-box bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 transition-all focus-within:border-orange-500 focus-within:ring-1 focus-within:ring-orange-500/20">
+                                                                <input type="number" onfocus="this.select()" class="calc-qty-input w-full bg-transparent border-0 p-0 text-xs font-black text-navy-800 dark:text-white focus:outline-none focus:ring-0" style="border:none!important;outline:none!important;box-shadow:none!important;background:transparent!important;" placeholder="0" step="0.01" min="0">
+                                                                <span class="calc-unit-hint text-[10px] font-bold text-gray-400 dark:text-gray-400 select-none">pcs</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -629,11 +707,12 @@
                                                         <option value="">- Manual -</option>
                                                         <option value="0">Bahan #1</option>
                                                     </select>
-                                                    <div class="w-full relative flex items-center justify-center">
+                                                    <div class="mat-usage-box bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-1.5 transition-all focus-within:border-orange-500">
                                                         <input type="number" step="0.01" name="usage_amounts[]"
-                                                            class="usage-input w-full lg:w-24 text-center bg-gray-50 dark:bg-navy-950 border border-gray-200 dark:border-white/5 rounded-xl px-2 py-2 font-black text-navy-800 dark:text-white focus:border-orange-500 focus:ring-0 transition-all"
+                                                            class="usage-input w-full bg-transparent border-0 p-0 text-xs font-black text-navy-800 dark:text-white focus:outline-none focus:ring-0"
+                                                            style="border: none !important; outline: none !important; box-shadow: none !important; background: transparent !important;"
                                                             value="" placeholder="0" onfocus="this.select()">
-                                                        <span class="unit-display mat-mobile-unit absolute right-2 text-[9px] font-black text-orange-500 uppercase select-none">-</span>
+                                                        <span class="unit-display mat-mobile-unit text-[10px] font-black text-orange-500 uppercase select-none">-</span>
                                                     </div>
                                                 </div>
                                             </td>
@@ -702,8 +781,8 @@
                                         <label class="text-xs font-black text-navy-900 dark:text-white uppercase tracking-wider">HPP Pokok dari Vendor / Konveksi (Per Unit)</label>
                                     </div>
                                     <p class="text-[11px] text-gray-600 dark:text-gray-300 mb-4 sm:ml-10">Masukkan modal per unit yang sudah Anda dapatkan langsung dari vendor (misal makloon/jahit putus). Tidak perlu merinci potongan bahan jika sudah beli jadi.</p>
-                                    <div class="w-full sm:max-w-md sm:ml-10 flex items-center rounded-2xl bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/30 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-1">
-                                        <span class="text-sm font-black text-orange-500 select-none shrink-0 mr-3">Rp</span>
+                                    <div class="input-currency-box w-full sm:max-w-md sm:ml-10 rounded-2xl bg-white dark:bg-navy-900 border border-orange-300 dark:border-orange-500/30 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-1">
+                                        <span class="input-currency-prefix text-sm font-black text-orange-500 select-none mr-3">Rp</span>
                                         <input type="number" name="manual_hpp" id="manualHppInput"
                                             class="w-full bg-transparent input-transparent border-0 focus:ring-0 focus:outline-none p-0 text-lg font-black text-navy-800 dark:text-white py-2"
                                             style="border: none !important; outline: none !important; box-shadow: none !important; background-color: transparent !important; -webkit-appearance: none !important; -webkit-text-fill-color: currentColor !important;"
@@ -720,8 +799,8 @@
                                                 <!-- Biaya Jahit (Mode 1 / Calculated) -->
                                                 <div id="sewingFeeContainer">
                                                     <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Jahit</label>
-                                                    <div class="flex items-center rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
-                                                        <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-3">Rp</span>
+                                                    <div class="input-currency-box rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
+                                                        <span class="input-currency-prefix text-xs font-bold text-gray-400 select-none mr-3">Rp</span>
                                                         <input type="number" name="sewing_fee" id="sewingFeeInput"
                                                             class="fee-input w-full bg-transparent input-transparent border-0 focus:ring-0 focus:outline-none p-0 text-sm font-bold text-navy-800 dark:text-white py-2.5"
                                                             style="border: none !important; outline: none !important; box-shadow: none !important; background-color: transparent !important; -webkit-appearance: none !important; -webkit-text-fill-color: currentColor !important;"
@@ -733,8 +812,8 @@
                                                 <!-- Biaya Branding (Mode 1 & Mode 2) -->
                                                 <div id="brandingFeeContainer">
                                                     <label class="text-[10px] font-black text-navy-800 dark:text-gray-300 uppercase tracking-widest block mb-2 ml-1">Biaya Branding</label>
-                                                    <div class="flex items-center rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
-                                                        <span class="text-xs font-bold text-gray-400 select-none shrink-0 mr-3">Rp</span>
+                                                    <div class="input-currency-box rounded-xl bg-white dark:bg-navy-900 border border-gray-200 dark:border-white/10 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-sm transition-all px-4 py-0.5">
+                                                        <span class="input-currency-prefix text-xs font-bold text-gray-400 select-none mr-3">Rp</span>
                                                         <input type="number" name="branding_fee" id="brandingFeeInput"
                                                             class="fee-input w-full bg-transparent input-transparent border-0 focus:ring-0 focus:outline-none p-0 text-sm font-bold text-navy-800 dark:text-white py-2.5"
                                                             style="border: none !important; outline: none !important; box-shadow: none !important; background-color: transparent !important; -webkit-appearance: none !important; -webkit-text-fill-color: currentColor !important;"
